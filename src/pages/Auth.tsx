@@ -15,9 +15,13 @@ const authSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
+const emailSchema = z.object({
+  email: z.string().email('Invalid email address'),
+});
+
 export default function Auth() {
   const { t, isRTL } = useI18n();
-  const { user, isLoading: authLoading, signIn, signUp } = useAuth();
+  const { user, isLoading: authLoading, signIn, signUp, resetPassword } = useAuth();
   const navigate = useNavigate();
   
   const [email, setEmail] = useState('');
@@ -25,6 +29,7 @@ export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   // Redirect if already logged in
   useEffect(() => {
@@ -83,10 +88,90 @@ export default function Auth() {
     }
   };
 
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+    
+    const result = emailSchema.safeParse({ email });
+    if (!result.success) {
+      setError(result.error.errors[0].message);
+      return;
+    }
+    
+    setIsLoading(true);
+    const { error } = await resetPassword(email);
+    setIsLoading(false);
+    
+    if (error) {
+      setError(error.message);
+    } else {
+      setSuccess(t('resetEmailSent'));
+    }
+  };
+
   if (authLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (showForgotPassword) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">{t('resetPassword')}</CardTitle>
+            <CardDescription>{t('resetPasswordInstructions')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleResetPassword} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="reset-email">{t('email')}</Label>
+                <Input
+                  id="reset-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="email@example.com"
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+              
+              {error && (
+                <p className="text-sm text-destructive">{error}</p>
+              )}
+              
+              {success && (
+                <p className="text-sm text-green-600">{success}</p>
+              )}
+              
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  t('resetPassword')
+                )}
+              </Button>
+              
+              <Button 
+                type="button" 
+                variant="link" 
+                className="w-full" 
+                onClick={() => {
+                  setShowForgotPassword(false);
+                  setError(null);
+                  setSuccess(null);
+                }}
+              >
+                {t('backToSignIn')}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -120,7 +205,21 @@ export default function Auth() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signin-password">{t('password')}</Label>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="signin-password">{t('password')}</Label>
+                    <Button 
+                      type="button" 
+                      variant="link" 
+                      className="px-0 h-auto font-normal text-sm"
+                      onClick={() => {
+                        setShowForgotPassword(true);
+                        setError(null);
+                        setSuccess(null);
+                      }}
+                    >
+                      {t('forgotPassword')}
+                    </Button>
+                  </div>
                   <Input
                     id="signin-password"
                     type="password"
@@ -176,7 +275,7 @@ export default function Auth() {
                 )}
                 
                 {success && (
-                  <p className="text-sm text-success">{success}</p>
+                  <p className="text-sm text-green-600">{success}</p>
                 )}
                 
                 <Button type="submit" className="w-full" disabled={isLoading}>

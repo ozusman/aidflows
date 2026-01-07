@@ -122,6 +122,11 @@ const translations = {
     invalidCredentials: 'פרטי התחברות שגויים',
     emailAlreadyRegistered: 'כתובת הדוא"ל כבר רשומה',
     accountCreated: 'החשבון נוצר בהצלחה! תוכלו להתחבר כעת',
+    forgotPassword: 'שכחת סיסמה?',
+    resetPassword: 'איפוס סיסמה',
+    resetPasswordInstructions: 'הזינו את כתובת הדוא"ל שלכם ונשלח לכם קישור לאיפוס הסיסמה',
+    resetEmailSent: 'נשלח אליכם מייל עם קישור לאיפוס הסיסמה',
+    backToSignIn: 'חזרה להתחברות',
     
     // Language
     language: 'שפה',
@@ -245,6 +250,11 @@ const translations = {
     invalidCredentials: 'Invalid credentials',
     emailAlreadyRegistered: 'Email is already registered',
     accountCreated: 'Account created successfully! You can now sign in',
+    forgotPassword: 'Forgot password?',
+    resetPassword: 'Reset Password',
+    resetPasswordInstructions: 'Enter your email address and we will send you a link to reset your password',
+    resetEmailSent: 'We have sent you an email with a link to reset your password',
+    backToSignIn: 'Back to sign in',
     
     // Language
     language: 'Language',
