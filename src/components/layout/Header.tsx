@@ -3,13 +3,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { CalendarDays, ClipboardList, PlusCircle, BarChart3, Menu, X, LogOut } from 'lucide-react';
+import { CalendarDays, ClipboardList, PlusCircle, BarChart3, Menu, X, LogOut, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import aidflowLogo from '@/assets/aidflow-logo.svg';
 
 const navigation = [
   { key: 'navShifts', href: '/', icon: ClipboardList },
+  { key: 'navCaregivers', href: '/caregivers', icon: Users },
   { key: 'navDailyCoverage', href: '/coverage', icon: CalendarDays },
   { key: 'navWeeklySummary', href: '/summary', icon: BarChart3 },
 ] as const;
