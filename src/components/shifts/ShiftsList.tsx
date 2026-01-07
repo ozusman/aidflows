@@ -228,8 +228,7 @@ export function ShiftsList() {
         <PaymentReceiptsDialog
           open={dialogOpen}
           onOpenChange={handleDialogClose}
-          shiftId={selectedShift.id}
-          shiftDate={format(new Date(selectedShift.date), 'dd/MM/yyyy')}
+          shift={selectedShift}
         />
       )}
     </>
