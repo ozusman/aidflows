@@ -24,6 +24,8 @@ export interface Shift {
   paymentAmount: number;
   paymentMethod: PaymentMethod;
   paymentDate?: string;
+  travelCost: number;
+  parkingCost: number;
   paymentStatus: PaymentStatus;
   
   // Layer 2: Strong Legal Reinforcement
@@ -51,6 +53,8 @@ export interface ShiftFormData {
   paymentAmount: number;
   paymentMethod: PaymentMethod;
   paymentStatus: PaymentStatus;
+  travelCost: number;
+  parkingCost: number;
   purpose?: ShiftPurpose;
   medicalEvent?: MedicalEvent;
   enteredBy?: string;

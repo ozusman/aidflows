@@ -29,6 +29,8 @@ export function ShiftForm() {
     paymentAmount: 0,
     paymentMethod: 'bank_transfer',
     paymentStatus: 'unpaid',
+    travelCost: 0,
+    parkingCost: 0,
     purpose: undefined,
     medicalEvent: undefined,
     enteredBy: '',
@@ -239,6 +241,28 @@ export function ShiftForm() {
                 <SelectItem value="unpaid">{t('statusUnpaid')}</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="travelCost">{t('travelCost')}</Label>
+            <Input
+              id="travelCost"
+              type="number"
+              min="0"
+              step="0.01"
+              value={formData.travelCost}
+              onChange={(e) => updateField('travelCost', parseFloat(e.target.value) || 0)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="parkingCost">{t('parkingCost')}</Label>
+            <Input
+              id="parkingCost"
+              type="number"
+              min="0"
+              step="0.01"
+              value={formData.parkingCost}
+              onChange={(e) => updateField('parkingCost', parseFloat(e.target.value) || 0)}
+            />
           </div>
         </CardContent>
       </Card>
