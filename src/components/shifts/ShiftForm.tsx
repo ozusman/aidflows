@@ -64,12 +64,21 @@ export function ShiftForm() {
     // Save caregiver to database
     await saveCaregiver(formData.caregiverName, formData.caregiverType);
 
-    addShift(formData);
-    toast({
-      title: t('success'),
-      description: t('shiftSaved'),
-    });
-    navigate('/');
+    const result = await addShift(formData);
+    
+    if (result) {
+      toast({
+        title: t('success'),
+        description: t('shiftSaved'),
+      });
+      navigate('/');
+    } else {
+      toast({
+        title: t('error'),
+        description: 'Failed to save shift',
+        variant: 'destructive',
+      });
+    }
   };
 
   const isFamilyMember = formData.caregiverType === 'family_member';
