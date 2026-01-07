@@ -1,0 +1,115 @@
+import { useI18n } from '@/lib/i18n';
+import { LanguageToggle } from '@/components/LanguageToggle';
+import { Link, useLocation } from 'react-router-dom';
+import { cn } from '@/lib/utils';
+import { CalendarDays, ClipboardList, PlusCircle, BarChart3, Menu, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+
+const navigation = [
+  { key: 'navShifts', href: '/', icon: ClipboardList },
+  { key: 'navDailyCoverage', href: '/coverage', icon: CalendarDays },
+  { key: 'navWeeklySummary', href: '/summary', icon: BarChart3 },
+] as const;
+
+export function Header() {
+  const { t, isRTL } = useI18n();
+  const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  return (
+    <header className="sticky top-0 z-50 bg-background border-b border-border">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
+              <span className="text-primary-foreground font-semibold text-sm">AF</span>
+            </div>
+            <span className="font-semibold text-lg text-foreground">{t('appName')}</span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-1">
+            {navigation.map((item) => {
+              const isActive = location.pathname === item.href;
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors",
+                    isActive
+                      ? "bg-secondary text-foreground"
+                      : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  )}
+                >
+                  <Icon className="w-4 h-4" />
+                  {t(item.key as any)}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Actions */}
+          <div className="flex items-center gap-3">
+            <Link to="/new-shift" className="hidden sm:block">
+              <Button size="sm" className="gap-2">
+                <PlusCircle className="w-4 h-4" />
+                <span className="hidden sm:inline">{t('navNewShift')}</span>
+              </Button>
+            </Link>
+            <LanguageToggle />
+            
+            {/* Mobile menu button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </Button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        {mobileMenuOpen && (
+          <nav className="md:hidden py-4 border-t border-border">
+            <div className="flex flex-col gap-2">
+              {navigation.map((item) => {
+                const isActive = location.pathname === item.href;
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={cn(
+                      "flex items-center gap-3 px-4 py-3 rounded-md text-base font-medium transition-colors",
+                      isActive
+                        ? "bg-secondary text-foreground"
+                        : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                    )}
+                  >
+                    <Icon className="w-5 h-5" />
+                    {t(item.key as any)}
+                  </Link>
+                );
+              })}
+              <Link
+                to="/new-shift"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 mt-2 rounded-md text-base font-medium bg-primary text-primary-foreground"
+              >
+                <PlusCircle className="w-5 h-5" />
+                {t('navNewShift')}
+              </Link>
+            </div>
+          </nav>
+        )}
+      </div>
+    </header>
+  );
+}
