@@ -123,14 +123,25 @@ export function ShiftsList() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => deleteShift(shift.id)}
-                      className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    <div className="flex gap-1">
+                      <Link to={`/edit-shift/${shift.id}`}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted-foreground hover:text-primary"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => deleteShift(shift.id)}
+                        className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
