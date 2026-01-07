@@ -11,7 +11,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   const { isRTL } = useI18n();
 
   return (
-    <div className={cn("min-h-screen bg-background", isRTL && "font-hebrew")}>
+    <div dir={isRTL ? 'rtl' : 'ltr'} className={cn("min-h-screen bg-background", isRTL && "font-hebrew")}>
       <Header />
       <main className="container mx-auto px-4 py-6">
         {children}

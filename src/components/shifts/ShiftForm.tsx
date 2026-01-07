@@ -36,9 +36,13 @@ export function ShiftForm() {
     notes: '',
   });
 
+  const HOURLY_RATE = 70; // shekels per hour
+  
   const calculatedHours = formData.startTime && formData.endTime 
     ? calculateShiftHours(formData.startTime, formData.endTime)
     : 0;
+
+  const calculatedAmount = calculatedHours * HOURLY_RATE;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,7 +65,17 @@ export function ShiftForm() {
   };
 
   const updateField = <K extends keyof ShiftFormData>(field: K, value: ShiftFormData[K]) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      const updated = { ...prev, [field]: value };
+      // Auto-calculate payment amount when times change
+      if (field === 'startTime' || field === 'endTime') {
+        const hours = updated.startTime && updated.endTime 
+          ? calculateShiftHours(updated.startTime, updated.endTime)
+          : 0;
+        updated.paymentAmount = hours * HOURLY_RATE;
+      }
+      return updated;
+    });
   };
 
   return (
@@ -190,14 +204,9 @@ export function ShiftForm() {
         <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="paymentAmount">{t('paymentAmount')}</Label>
-            <Input
-              id="paymentAmount"
-              type="number"
-              min="0"
-              step="0.01"
-              value={formData.paymentAmount}
-              onChange={(e) => updateField('paymentAmount', parseFloat(e.target.value) || 0)}
-            />
+            <div className="h-10 px-3 py-2 rounded-md border border-input bg-muted text-foreground flex items-center">
+              ₪{formData.paymentAmount.toFixed(2)}
+            </div>
           </div>
           <div className="space-y-2">
             <Label>{t('paymentMethod')}</Label>
