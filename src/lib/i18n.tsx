@@ -25,7 +25,7 @@ const translations = {
     caregiverType: 'סוג מטפל',
     typePrivatePaid: 'מטפל פרטי בתשלום',
     typeFamilyMember: 'בן משפחה',
-    typeForeignCaregiver: 'מטפל זר',
+    typeForeignCaregiver: 'השגחה בתשלום',
     typeOther: 'אחר',
     
     // Location
@@ -48,6 +48,8 @@ const translations = {
     methodPayBox: 'PayBox',
     methodBit: 'ביט',
     methodCash: 'מזומן',
+    travelCost: 'עלות נסיעות',
+    parkingCost: 'עלות חניה',
     
     // Purpose
     shiftPurpose: 'מטרת המשמרת',
@@ -127,7 +129,7 @@ const translations = {
     caregiverType: 'Caregiver Type',
     typePrivatePaid: 'Paid Private Caregiver',
     typeFamilyMember: 'Family Member',
-    typeForeignCaregiver: 'Foreign Caregiver',
+    typeForeignCaregiver: 'Paid Supervision',
     typeOther: 'Other',
     
     // Location
@@ -150,6 +152,8 @@ const translations = {
     methodPayBox: 'PayBox',
     methodBit: 'Bit',
     methodCash: 'Cash',
+    travelCost: 'Travel Cost',
+    parkingCost: 'Parking Cost',
     
     // Purpose
     shiftPurpose: 'Shift Purpose',
