@@ -112,6 +112,17 @@ const translations = {
     download: 'הורדה',
     receiptsCount: 'קבלות',
     
+    // Auth
+    signIn: 'התחברות',
+    signUp: 'הרשמה',
+    signOut: 'יציאה',
+    email: 'דוא"ל',
+    password: 'סיסמה',
+    welcomeMessage: 'ברוכים הבאים, אנא התחברו להמשיך',
+    invalidCredentials: 'פרטי התחברות שגויים',
+    emailAlreadyRegistered: 'כתובת הדוא"ל כבר רשומה',
+    accountCreated: 'החשבון נוצר בהצלחה! תוכלו להתחבר כעת',
+    
     // Language
     language: 'שפה',
     hebrew: 'עברית',
@@ -223,6 +234,17 @@ const translations = {
     uploading: 'Uploading...',
     download: 'Download',
     receiptsCount: 'receipts',
+    
+    // Auth
+    signIn: 'Sign In',
+    signUp: 'Sign Up',
+    signOut: 'Sign Out',
+    email: 'Email',
+    password: 'Password',
+    welcomeMessage: 'Welcome, please sign in to continue',
+    invalidCredentials: 'Invalid credentials',
+    emailAlreadyRegistered: 'Email is already registered',
+    accountCreated: 'Account created successfully! You can now sign in',
     
     // Language
     language: 'Language',

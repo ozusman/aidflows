@@ -13,7 +13,7 @@ export interface PaymentReceipt {
 }
 
 // Ensure shift exists in cloud database before uploading receipts
-async function ensureShiftInDatabase(shift: Shift): Promise<boolean> {
+async function ensureShiftInDatabase(shift: Shift, userId: string): Promise<boolean> {
   // Check if shift already exists
   const { data: existing } = await supabase
     .from('shifts')
@@ -23,11 +23,12 @@ async function ensureShiftInDatabase(shift: Shift): Promise<boolean> {
 
   if (existing) return true;
 
-  // Insert shift into database
+  // Insert shift into database with user_id
   const { error } = await supabase
     .from('shifts')
     .insert({
       id: shift.id,
+      user_id: userId,
       date: shift.date,
       start_time: shift.startTime,
       end_time: shift.endTime,
@@ -67,8 +68,15 @@ export function usePaymentReceipts() {
     const uploadedReceipts: PaymentReceipt[] = [];
 
     try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        console.error('User not authenticated');
+        return [];
+      }
+
       // Ensure shift exists in database first
-      const synced = await ensureShiftInDatabase(shift);
+      const synced = await ensureShiftInDatabase(shift, user.id);
       if (!synced) {
         console.error('Failed to sync shift to database');
         return [];
@@ -76,7 +84,8 @@ export function usePaymentReceipts() {
 
       for (const file of files) {
         const fileExt = file.name.split('.').pop();
-        const fileName = `${shift.id}/${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+        // Use user_id as the folder prefix for storage RLS
+        const fileName = `${user.id}/${shift.id}/${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
 
         // Upload to storage
         const { error: uploadError } = await supabase.storage
@@ -88,11 +97,12 @@ export function usePaymentReceipts() {
           continue;
         }
 
-        // Save metadata to database
+        // Save metadata to database with user_id
         const { data, error: dbError } = await supabase
           .from('payment_receipts')
           .insert({
             shift_id: shift.id,
+            user_id: user.id,
             file_name: file.name,
             file_path: fileName,
             file_type: file.type,
@@ -171,12 +181,18 @@ export function usePaymentReceipts() {
     return true;
   }, []);
 
-  const getReceiptUrl = useCallback((filePath: string): string => {
-    const { data } = supabase.storage
+  const getReceiptUrl = useCallback(async (filePath: string): Promise<string> => {
+    // Use signed URL for private bucket (1 hour expiry)
+    const { data, error } = await supabase.storage
       .from('payment-receipts')
-      .getPublicUrl(filePath);
+      .createSignedUrl(filePath, 3600);
     
-    return data.publicUrl;
+    if (error || !data) {
+      console.error('Error creating signed URL:', error);
+      return '';
+    }
+    
+    return data.signedUrl;
   }, []);
 
   const getReceiptCountByShift = useCallback(async (shiftId: string): Promise<number> => {

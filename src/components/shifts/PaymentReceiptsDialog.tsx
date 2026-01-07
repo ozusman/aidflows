@@ -44,12 +44,41 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+// Component to handle async image loading
+function ReceiptThumbnail({ filePath, fileName, getReceiptUrl }: { 
+  filePath: string; 
+  fileName: string; 
+  getReceiptUrl: (path: string) => Promise<string>;
+}) {
+  const [url, setUrl] = useState<string>('');
+
+  useEffect(() => {
+    getReceiptUrl(filePath).then(setUrl);
+  }, [filePath, getReceiptUrl]);
+
+  if (!url) {
+    return (
+      <div className="w-12 h-12 flex items-center justify-center bg-background rounded">
+        <Loader2 className="w-4 h-4 animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={url}
+      alt={fileName}
+      className="w-12 h-12 object-cover rounded"
+    />
+  );
+}
+
 export function PaymentReceiptsDialog({ 
   open, 
   onOpenChange, 
   shift 
 }: PaymentReceiptsDialogProps) {
-  const { t, isRTL } = useI18n();
+  const { t } = useI18n();
   const { 
     isUploading, 
     uploadReceipts, 
@@ -95,9 +124,11 @@ export function PaymentReceiptsDialog({
     }
   };
 
-  const handleDownload = (receipt: PaymentReceipt) => {
-    const url = getReceiptUrl(receipt.filePath);
-    window.open(url, '_blank');
+  const handleDownload = async (receipt: PaymentReceipt) => {
+    const url = await getReceiptUrl(receipt.filePath);
+    if (url) {
+      window.open(url, '_blank');
+    }
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -178,10 +209,10 @@ export function PaymentReceiptsDialog({
               >
                 {/* Preview/Icon */}
                 {receipt.fileType.startsWith('image/') ? (
-                  <img
-                    src={getReceiptUrl(receipt.filePath)}
-                    alt={receipt.fileName}
-                    className="w-12 h-12 object-cover rounded"
+                  <ReceiptThumbnail 
+                    filePath={receipt.filePath} 
+                    fileName={receipt.fileName}
+                    getReceiptUrl={getReceiptUrl}
                   />
                 ) : (
                   <div className="w-12 h-12 flex items-center justify-center bg-background rounded">
