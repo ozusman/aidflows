@@ -7,6 +7,7 @@ import { I18nProvider } from "@/lib/i18n";
 import { AppLayout } from "@/components/layout/AppLayout";
 import Index from "./pages/Index";
 import NewShift from "./pages/NewShift";
+import EditShift from "./pages/EditShift";
 import Coverage from "./pages/Coverage";
 import Summary from "./pages/Summary";
 import NotFound from "./pages/NotFound";
@@ -24,6 +25,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/new-shift" element={<NewShift />} />
+              <Route path="/edit-shift/:id" element={<EditShift />} />
               <Route path="/coverage" element={<Coverage />} />
               <Route path="/summary" element={<Summary />} />
               <Route path="*" element={<NotFound />} />

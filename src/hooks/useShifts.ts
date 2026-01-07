@@ -2,11 +2,24 @@ import { useState, useCallback, useEffect } from 'react';
 import { Shift, ShiftFormData, calculateShiftHours, generateShiftId } from '@/types/shift';
 
 const STORAGE_KEY = 'aidflow_shifts';
+const HOURLY_RATE = 70;
 
 function loadShifts(): Shift[] {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
+    if (!stored) return [];
+    
+    // Recalculate payment amounts for shifts that have 0 or missing values
+    const shifts: Shift[] = JSON.parse(stored);
+    return shifts.map(shift => {
+      const calculatedAmount = shift.totalHours * HOURLY_RATE;
+      return {
+        ...shift,
+        paymentAmount: shift.paymentAmount || calculatedAmount,
+        travelCost: shift.travelCost || 0,
+        parkingCost: shift.parkingCost || 0,
+      };
+    });
   } catch {
     return [];
   }
@@ -93,6 +106,10 @@ export function useShifts() {
     return [...new Set(shifts.map(shift => shift.caregiverName))];
   }, [shifts]);
 
+  const getShiftById = useCallback((id: string): Shift | undefined => {
+    return shifts.find(shift => shift.id === id);
+  }, [shifts]);
+
   return {
     shifts,
     isLoading,
@@ -103,5 +120,6 @@ export function useShifts() {
     getShiftsByWeek,
     getShiftsByCaregiver,
     getUniqueCaregivers,
+    getShiftById,
   };
 }
