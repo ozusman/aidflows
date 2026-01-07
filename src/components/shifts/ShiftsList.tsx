@@ -108,16 +108,16 @@ export function ShiftsList() {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="font-mono">
+                    <TableCell>
                       {shift.totalHours.toFixed(2)}
                     </TableCell>
-                    <TableCell className="font-mono">
+                    <TableCell>
                       ₪{(shift.travelCost || 0).toFixed(0)}
                     </TableCell>
-                    <TableCell className="font-mono">
+                    <TableCell>
                       ₪{(shift.parkingCost || 0).toFixed(0)}
                     </TableCell>
-                    <TableCell className="font-mono">
+                    <TableCell>
                       ₪{totalAmount.toFixed(0)}
                     </TableCell>
                     <TableCell>
