@@ -82,11 +82,22 @@ export default function EditShift() {
     navigate('/');
   };
 
+  const isFamilyMember = formData.caregiverType === 'family_member';
+
   const updateField = <K extends keyof ShiftFormData>(field: K, value: ShiftFormData[K]) => {
     setFormData(prev => {
       if (!prev) return prev;
       const updated = { ...prev, [field]: value };
-      if (field === 'startTime' || field === 'endTime') {
+      
+      // When caregiver type changes to family_member, clear all costs
+      if (field === 'caregiverType' && value === 'family_member') {
+        updated.paymentAmount = 0;
+        updated.travelCost = 0;
+        updated.parkingCost = 0;
+      }
+      
+      // Auto-calculate payment amount when times change (only for non-family members)
+      if ((field === 'startTime' || field === 'endTime') && updated.caregiverType !== 'family_member') {
         const hours = updated.startTime && updated.endTime 
           ? calculateShiftHours(updated.startTime, updated.endTime)
           : 0;
@@ -211,73 +222,78 @@ export default function EditShift() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base font-medium">{t('payment')}</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="paymentAmount">{t('paymentAmount')}</Label>
-            <div className="h-10 px-3 py-2 rounded-md border border-input bg-muted text-foreground flex items-center">
-              ₪{formData.paymentAmount.toFixed(2)}
+      {/* Payment - only show for non-family members */}
+      {!isFamilyMember && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base font-medium">{t('payment')}</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="paymentAmount">{t('paymentAmount')}</Label>
+              <div dir="ltr" className="h-10 px-3 py-2 rounded-md border border-input bg-hover-light text-foreground flex items-center">
+                ₪{formData.paymentAmount.toFixed(2)}
+              </div>
             </div>
-          </div>
-          <div className="space-y-2">
-            <Label>{t('paymentMethod')}</Label>
-            <Select
-              value={formData.paymentMethod}
-              onValueChange={(value: PaymentMethod) => updateField('paymentMethod', value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="bank_transfer">{t('methodBankTransfer')}</SelectItem>
-                <SelectItem value="paybox">{t('methodPayBox')}</SelectItem>
-                <SelectItem value="bit">{t('methodBit')}</SelectItem>
-                <SelectItem value="cash">{t('methodCash')}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label>{t('paymentStatus')}</Label>
-            <Select
-              value={formData.paymentStatus}
-              onValueChange={(value: 'paid' | 'unpaid') => updateField('paymentStatus', value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="paid">{t('statusPaid')}</SelectItem>
-                <SelectItem value="unpaid">{t('statusUnpaid')}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="travelCost">{t('travelCost')}</Label>
-            <Input
-              id="travelCost"
-              type="number"
-              min="0"
-              step="0.01"
-              value={formData.travelCost}
-              onChange={(e) => updateField('travelCost', parseFloat(e.target.value) || 0)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="parkingCost">{t('parkingCost')}</Label>
-            <Input
-              id="parkingCost"
-              type="number"
-              min="0"
-              step="0.01"
-              value={formData.parkingCost}
-              onChange={(e) => updateField('parkingCost', parseFloat(e.target.value) || 0)}
-            />
-          </div>
-        </CardContent>
-      </Card>
+            <div className="space-y-2">
+              <Label>{t('paymentMethod')}</Label>
+              <Select
+                value={formData.paymentMethod}
+                onValueChange={(value: PaymentMethod) => updateField('paymentMethod', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="bank_transfer">{t('methodBankTransfer')}</SelectItem>
+                  <SelectItem value="paybox">{t('methodPayBox')}</SelectItem>
+                  <SelectItem value="bit">{t('methodBit')}</SelectItem>
+                  <SelectItem value="cash">{t('methodCash')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>{t('paymentStatus')}</Label>
+              <Select
+                value={formData.paymentStatus}
+                onValueChange={(value: 'paid' | 'unpaid') => updateField('paymentStatus', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="paid">{t('statusPaid')}</SelectItem>
+                  <SelectItem value="unpaid">{t('statusUnpaid')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="travelCost">{t('travelCost')}</Label>
+              <Input
+                id="travelCost"
+                type="number"
+                dir="ltr"
+                min="0"
+                step="0.01"
+                value={formData.travelCost}
+                onChange={(e) => updateField('travelCost', parseFloat(e.target.value) || 0)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="parkingCost">{t('parkingCost')}</Label>
+              <Input
+                id="parkingCost"
+                type="number"
+                dir="ltr"
+                min="0"
+                step="0.01"
+                value={formData.parkingCost}
+                onChange={(e) => updateField('parkingCost', parseFloat(e.target.value) || 0)}
+              />
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
