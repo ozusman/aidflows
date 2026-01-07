@@ -65,9 +65,10 @@ export default {
   				DEFAULT: 'hsl(var(--warning))',
   				foreground: 'hsl(var(--warning-foreground))'
   			},
-  			'shift-paid': 'hsl(var(--shift-paid))',
-  			'shift-family': 'hsl(var(--shift-family))',
-  			'shift-gap': 'hsl(var(--shift-gap))'
+			'shift-paid': 'hsl(var(--shift-paid))',
+			'shift-family': 'hsl(var(--shift-family))',
+			'shift-gap': 'hsl(var(--shift-gap))',
+			'hover-light': 'hsl(var(--hover-light))'
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
