@@ -14,7 +14,119 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      payment_receipts: {
+        Row: {
+          created_at: string
+          file_name: string
+          file_path: string
+          file_size: number
+          file_type: string
+          id: string
+          shift_id: string
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          file_path: string
+          file_size: number
+          file_type: string
+          id?: string
+          shift_id: string
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          file_path?: string
+          file_size?: number
+          file_type?: string
+          id?: string
+          shift_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_receipts_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "shifts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shifts: {
+        Row: {
+          caregiver_name: string
+          caregiver_type: string
+          created_at: string
+          date: string
+          end_time: string
+          entered_by: string | null
+          id: string
+          location_name: string
+          location_type: string
+          medical_event: string | null
+          notes: string | null
+          parking_cost: number
+          payment_amount: number
+          payment_date: string | null
+          payment_method: string
+          payment_status: string
+          purpose: string | null
+          shift_performed: boolean | null
+          start_time: string
+          total_hours: number
+          travel_cost: number
+          updated_at: string
+        }
+        Insert: {
+          caregiver_name: string
+          caregiver_type: string
+          created_at?: string
+          date: string
+          end_time: string
+          entered_by?: string | null
+          id: string
+          location_name: string
+          location_type: string
+          medical_event?: string | null
+          notes?: string | null
+          parking_cost?: number
+          payment_amount?: number
+          payment_date?: string | null
+          payment_method: string
+          payment_status?: string
+          purpose?: string | null
+          shift_performed?: boolean | null
+          start_time: string
+          total_hours: number
+          travel_cost?: number
+          updated_at?: string
+        }
+        Update: {
+          caregiver_name?: string
+          caregiver_type?: string
+          created_at?: string
+          date?: string
+          end_time?: string
+          entered_by?: string | null
+          id?: string
+          location_name?: string
+          location_type?: string
+          medical_event?: string | null
+          notes?: string | null
+          parking_cost?: number
+          payment_amount?: number
+          payment_date?: string | null
+          payment_method?: string
+          payment_status?: string
+          purpose?: string | null
+          shift_performed?: boolean | null
+          start_time?: string
+          total_hours?: number
+          travel_cost?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
