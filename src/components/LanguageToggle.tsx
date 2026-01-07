@@ -42,13 +42,13 @@ export function LanguageToggle() {
       <DropdownMenuContent align="end" className="bg-popover">
         <DropdownMenuItem 
           onClick={() => setLanguage('he')}
-          className={language === 'he' ? 'bg-secondary' : ''}
+          className={language === 'he' ? 'bg-hover-light' : ''}
         >
           {t('hebrew')}
         </DropdownMenuItem>
         <DropdownMenuItem 
           onClick={() => setLanguage('en')}
-          className={language === 'en' ? 'bg-secondary' : ''}
+          className={language === 'en' ? 'bg-hover-light' : ''}
         >
           {t('english')}
         </DropdownMenuItem>
