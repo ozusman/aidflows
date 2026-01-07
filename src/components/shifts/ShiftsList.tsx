@@ -75,76 +75,87 @@ export function ShiftsList() {
                 <TableHead className="text-start">{t('caregiver')}</TableHead>
                 <TableHead className="text-start">{t('location')}</TableHead>
                 <TableHead className="text-start">{t('hours')}</TableHead>
+                <TableHead className="text-start">{t('travelCost')}</TableHead>
+                <TableHead className="text-start">{t('parkingCost')}</TableHead>
                 <TableHead className="text-start">{t('paymentAmount')}</TableHead>
                 <TableHead className="text-start">{t('paymentStatus')}</TableHead>
                 <TableHead className="w-[80px]"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {sortedShifts.map((shift) => (
-                <TableRow key={shift.id}>
-                  <TableCell className="font-medium">
-                    {format(new Date(shift.date), 'dd/MM/yyyy')}
-                  </TableCell>
-                  <TableCell>{shift.startTime}</TableCell>
-                  <TableCell>{shift.endTime}</TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{shift.caregiverName}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {getCaregiverTypeLabel(shift.caregiverType, t)}
+              {sortedShifts.map((shift) => {
+                const totalAmount = shift.paymentAmount + (shift.travelCost || 0) + (shift.parkingCost || 0);
+                return (
+                  <TableRow key={shift.id}>
+                    <TableCell className="font-medium">
+                      {format(new Date(shift.date), 'dd/MM/yyyy')}
+                    </TableCell>
+                    <TableCell>{shift.startTime}</TableCell>
+                    <TableCell>{shift.endTime}</TableCell>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{shift.caregiverName}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {getCaregiverTypeLabel(shift.caregiverType, t)}
+                        </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <div>{shift.locationName}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {getLocationTypeLabel(shift.locationType, t)}
+                    </TableCell>
+                    <TableCell>
+                      <div>
+                        <div>{shift.locationName}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {getLocationTypeLabel(shift.locationType, t)}
+                        </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-mono">
-                    {shift.totalHours.toFixed(2)}
-                  </TableCell>
-                  <TableCell className="font-mono">
-                    ₪{shift.paymentAmount.toFixed(0)}
-                  </TableCell>
-                  <TableCell>
-                    <Badge 
-                      variant={shift.paymentStatus === 'paid' ? 'default' : 'secondary'}
-                      className={cn(
-                        shift.paymentStatus === 'paid' 
-                          ? 'bg-success text-success-foreground' 
-                          : ''
-                      )}
-                    >
-                      {shift.paymentStatus === 'paid' ? t('statusPaid') : t('statusUnpaid')}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-1">
-                      <Link to={`/edit-shift/${shift.id}`}>
+                    </TableCell>
+                    <TableCell className="font-mono">
+                      {shift.totalHours.toFixed(2)}
+                    </TableCell>
+                    <TableCell className="font-mono">
+                      ₪{(shift.travelCost || 0).toFixed(0)}
+                    </TableCell>
+                    <TableCell className="font-mono">
+                      ₪{(shift.parkingCost || 0).toFixed(0)}
+                    </TableCell>
+                    <TableCell className="font-mono">
+                      ₪{totalAmount.toFixed(0)}
+                    </TableCell>
+                    <TableCell>
+                      <Badge 
+                        variant={shift.paymentStatus === 'paid' ? 'default' : 'secondary'}
+                        className={cn(
+                          shift.paymentStatus === 'paid' 
+                            ? 'bg-success text-success-foreground' 
+                            : ''
+                        )}
+                      >
+                        {shift.paymentStatus === 'paid' ? t('statusPaid') : t('statusUnpaid')}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Link to={`/edit-shift/${shift.id}`}>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-muted-foreground hover:text-primary"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                        </Link>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-muted-foreground hover:text-primary"
+                          onClick={() => deleteShift(shift.id)}
+                          className="h-8 w-8 text-muted-foreground hover:text-destructive"
                         >
-                          <Edit className="w-4 h-4" />
+                          <Trash2 className="w-4 h-4" />
                         </Button>
-                      </Link>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => deleteShift(shift.id)}
-                        className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
