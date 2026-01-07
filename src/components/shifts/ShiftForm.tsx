@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
 import { useShifts } from '@/hooks/useShifts';
+import { useCaregivers } from '@/hooks/useCaregivers';
 import { ShiftFormData, CaregiverType, LocationType, PaymentMethod, ShiftPurpose, MedicalEvent, calculateShiftHours } from '@/types/shift';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 export function ShiftForm() {
   const { t } = useI18n();
   const { addShift } = useShifts();
+  const { saveCaregiver } = useCaregivers();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -46,7 +48,7 @@ export function ShiftForm() {
 
   const calculatedAmount = calculatedHours * HOURLY_RATE;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.startTime || !formData.endTime || !formData.caregiverName) {
@@ -57,6 +59,9 @@ export function ShiftForm() {
       });
       return;
     }
+
+    // Save caregiver to database
+    await saveCaregiver(formData.caregiverName, formData.caregiverType);
 
     addShift(formData);
     toast({
