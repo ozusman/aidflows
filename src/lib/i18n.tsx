@@ -132,6 +132,14 @@ const translations = {
     language: 'שפה',
     hebrew: 'עברית',
     english: 'English',
+
+    // Caregivers
+    navCaregivers: 'מטפלים',
+    caregiversTitle: 'ניהול מטפלים',
+    noCaregivers: 'אין מטפלים שמורים',
+    addNewCaregiver: 'הוסף מטפל חדש',
+    selectOrAddCaregiver: 'בחר או הוסף מטפל',
+    confirmDeleteCaregiver: 'האם למחוק את המטפל?',
   },
   en: {
     // App
@@ -260,6 +268,14 @@ const translations = {
     language: 'Language',
     hebrew: 'עברית',
     english: 'English',
+
+    // Caregivers
+    navCaregivers: 'Caregivers',
+    caregiversTitle: 'Manage Caregivers',
+    noCaregivers: 'No saved caregivers',
+    addNewCaregiver: 'Add new caregiver',
+    selectOrAddCaregiver: 'Select or add caregiver',
+    confirmDeleteCaregiver: 'Delete this caregiver?',
   },
 } as const;
 

@@ -5,13 +5,14 @@ import { useShifts } from '@/hooks/useShifts';
 import { useCaregivers } from '@/hooks/useCaregivers';
 import { ShiftFormData, CaregiverType, LocationType, PaymentMethod, ShiftPurpose, MedicalEvent, calculateShiftHours } from '@/types/shift';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { CaregiverAutocomplete } from './CaregiverAutocomplete';
 
 export function ShiftForm() {
   const { t } = useI18n();
@@ -152,12 +153,15 @@ export function ShiftForm() {
         </CardHeader>
         <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="caregiverName">{t('caregiverName')} *</Label>
-            <Input
-              id="caregiverName"
-              type="text"
+            <Label>{t('caregiverName')} *</Label>
+            <CaregiverAutocomplete
               value={formData.caregiverName}
-              onChange={(e) => updateField('caregiverName', e.target.value)}
+              onChange={(name, caregiverType) => {
+                updateField('caregiverName', name);
+                if (caregiverType) {
+                  updateField('caregiverType', caregiverType as CaregiverType);
+                }
+              }}
               required
             />
           </div>

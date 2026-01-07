@@ -12,6 +12,7 @@ import NewShift from "./pages/NewShift";
 import EditShift from "./pages/EditShift";
 import Coverage from "./pages/Coverage";
 import Summary from "./pages/Summary";
+import Caregivers from "./pages/Caregivers";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -73,6 +74,16 @@ const App = () => (
                   <ProtectedRoute>
                     <AppLayout>
                       <Summary />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/caregivers"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <Caregivers />
                     </AppLayout>
                   </ProtectedRoute>
                 }

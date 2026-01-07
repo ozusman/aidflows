@@ -12,6 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { CaregiverAutocomplete } from '@/components/shifts/CaregiverAutocomplete';
 
 const HOURLY_RATE = 70;
 
@@ -164,12 +165,15 @@ export default function EditShift() {
         </CardHeader>
         <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="caregiverName">{t('caregiverName')} *</Label>
-            <Input
-              id="caregiverName"
-              type="text"
+            <Label>{t('caregiverName')} *</Label>
+            <CaregiverAutocomplete
               value={formData.caregiverName}
-              onChange={(e) => updateField('caregiverName', e.target.value)}
+              onChange={(name, caregiverType) => {
+                updateField('caregiverName', name);
+                if (caregiverType) {
+                  updateField('caregiverType', caregiverType as CaregiverType);
+                }
+              }}
               required
             />
           </div>
