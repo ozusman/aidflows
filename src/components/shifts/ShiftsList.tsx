@@ -148,12 +148,7 @@ export function ShiftsList() {
                         <div className="font-medium">{shift.caregiverName}</div>
                       </TableCell>
                       <TableCell>
-                        <div>
-                          <div>{shift.locationName}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {getLocationTypeLabel(shift.locationType, t)}
-                          </div>
-                        </div>
+                        <div>{shift.locationName}</div>
                       </TableCell>
                       <TableCell>
                         {shift.totalHours.toFixed(2)}
