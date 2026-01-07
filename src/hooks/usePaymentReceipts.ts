@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { Shift } from '@/types/shift';
 
 export interface PaymentReceipt {
   id: string;
@@ -11,17 +12,71 @@ export interface PaymentReceipt {
   createdAt: string;
 }
 
+// Ensure shift exists in cloud database before uploading receipts
+async function ensureShiftInDatabase(shift: Shift): Promise<boolean> {
+  // Check if shift already exists
+  const { data: existing } = await supabase
+    .from('shifts')
+    .select('id')
+    .eq('id', shift.id)
+    .single();
+
+  if (existing) return true;
+
+  // Insert shift into database
+  const { error } = await supabase
+    .from('shifts')
+    .insert({
+      id: shift.id,
+      date: shift.date,
+      start_time: shift.startTime,
+      end_time: shift.endTime,
+      total_hours: shift.totalHours,
+      caregiver_name: shift.caregiverName,
+      caregiver_type: shift.caregiverType,
+      location_type: shift.locationType,
+      location_name: shift.locationName,
+      payment_amount: shift.paymentAmount,
+      payment_method: shift.paymentMethod,
+      payment_date: shift.paymentDate || null,
+      travel_cost: shift.travelCost,
+      parking_cost: shift.parkingCost,
+      payment_status: shift.paymentStatus,
+      purpose: shift.purpose || null,
+      medical_event: shift.medicalEvent || null,
+      entered_by: shift.enteredBy || null,
+      shift_performed: shift.shiftPerformed ?? true,
+      notes: shift.notes || null,
+      created_at: shift.createdAt,
+      updated_at: shift.updatedAt,
+    });
+
+  if (error) {
+    console.error('Error syncing shift to database:', error);
+    return false;
+  }
+
+  return true;
+}
+
 export function usePaymentReceipts() {
   const [isUploading, setIsUploading] = useState(false);
 
-  const uploadReceipts = useCallback(async (shiftId: string, files: File[]): Promise<PaymentReceipt[]> => {
+  const uploadReceipts = useCallback(async (shift: Shift, files: File[]): Promise<PaymentReceipt[]> => {
     setIsUploading(true);
     const uploadedReceipts: PaymentReceipt[] = [];
 
     try {
+      // Ensure shift exists in database first
+      const synced = await ensureShiftInDatabase(shift);
+      if (!synced) {
+        console.error('Failed to sync shift to database');
+        return [];
+      }
+
       for (const file of files) {
         const fileExt = file.name.split('.').pop();
-        const fileName = `${shiftId}/${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+        const fileName = `${shift.id}/${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
 
         // Upload to storage
         const { error: uploadError } = await supabase.storage
@@ -37,7 +92,7 @@ export function usePaymentReceipts() {
         const { data, error: dbError } = await supabase
           .from('payment_receipts')
           .insert({
-            shift_id: shiftId,
+            shift_id: shift.id,
             file_name: file.name,
             file_path: fileName,
             file_type: file.type,

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useI18n } from '@/lib/i18n';
 import { usePaymentReceipts, PaymentReceipt } from '@/hooks/usePaymentReceipts';
+import { Shift } from '@/types/shift';
 import {
   Dialog,
   DialogContent,
@@ -8,14 +9,13 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Upload, Download, Trash2, FileText, FileSpreadsheet, Image, X, Loader2 } from 'lucide-react';
+import { Upload, Download, Trash2, FileText, FileSpreadsheet, Image, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PaymentReceiptsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  shiftId: string;
-  shiftDate: string;
+  shift: Shift;
 }
 
 const ACCEPTED_TYPES = [
@@ -47,8 +47,7 @@ function formatFileSize(bytes: number): string {
 export function PaymentReceiptsDialog({ 
   open, 
   onOpenChange, 
-  shiftId, 
-  shiftDate 
+  shift 
 }: PaymentReceiptsDialogProps) {
   const { t, isRTL } = useI18n();
   const { 
@@ -65,10 +64,10 @@ export function PaymentReceiptsDialog({
 
   const loadReceipts = useCallback(async () => {
     setIsLoading(true);
-    const data = await getReceiptsByShift(shiftId);
+    const data = await getReceiptsByShift(shift.id);
     setReceipts(data);
     setIsLoading(false);
-  }, [shiftId, getReceiptsByShift]);
+  }, [shift.id, getReceiptsByShift]);
 
   useEffect(() => {
     if (open) {
@@ -85,7 +84,7 @@ export function PaymentReceiptsDialog({
 
     if (validFiles.length === 0) return;
 
-    const uploaded = await uploadReceipts(shiftId, validFiles);
+    const uploaded = await uploadReceipts(shift, validFiles);
     setReceipts(prev => [...uploaded, ...prev]);
   };
 
@@ -122,7 +121,7 @@ export function PaymentReceiptsDialog({
       <DialogContent className="sm:max-w-lg max-h-[80vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle>
-            {t('uploadReceipts')} - {shiftDate}
+            {t('uploadReceipts')}
           </DialogTitle>
         </DialogHeader>
 
