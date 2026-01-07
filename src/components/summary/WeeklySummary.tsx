@@ -118,13 +118,13 @@ export function WeeklySummary() {
         <Card>
           <CardContent className="py-4">
             <div className="text-sm text-muted-foreground">{t('totalHours')}</div>
-            <div className="text-2xl font-semibold font-mono">{totals.hours.toFixed(1)}</div>
+            <div className="text-2xl font-semibold">{totals.hours.toFixed(1)}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="py-4">
             <div className="text-sm text-muted-foreground">{t('totalPayment')}</div>
-            <div className="text-2xl font-semibold font-mono">₪{totals.payment.toFixed(0)}</div>
+            <div className="text-2xl font-semibold">₪{totals.payment.toFixed(0)}</div>
           </CardContent>
         </Card>
       </div>
@@ -159,12 +159,12 @@ export function WeeklySummary() {
                       </TableCell>
                       <TableCell>{shift.startTime}</TableCell>
                       <TableCell>{shift.endTime}</TableCell>
-                      <TableCell className="text-center font-mono">
+                      <TableCell className="text-center">
                         {shift.totalHours.toFixed(2)}
                       </TableCell>
                       <TableCell>{shift.caregiverName}</TableCell>
                       <TableCell>{shift.locationName}</TableCell>
-                      <TableCell className="text-center font-mono">
+                      <TableCell className="text-center">
                         {shift.caregiverType === 'family_member' ? '-' : `₪${shift.paymentAmount}`}
                       </TableCell>
                     </TableRow>
