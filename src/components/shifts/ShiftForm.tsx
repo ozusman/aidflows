@@ -7,6 +7,7 @@ import { ShiftFormData, CaregiverType, LocationType, PaymentMethod, ShiftPurpose
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { TimeInput } from '@/components/ui/time-input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
@@ -126,23 +127,21 @@ export function ShiftForm() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="startTime">{t('startTime')} *</Label>
-            <Input
+            <TimeInput
               id="startTime"
-              type="time"
               dir="ltr"
               value={formData.startTime}
-              onChange={(e) => updateField('startTime', e.target.value)}
+              onChange={(value) => updateField('startTime', value)}
               required
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="endTime">{t('endTime')} *</Label>
-            <Input
+            <TimeInput
               id="endTime"
-              type="time"
               dir="ltr"
               value={formData.endTime}
-              onChange={(e) => updateField('endTime', e.target.value)}
+              onChange={(value) => updateField('endTime', value)}
               required
             />
           </div>
