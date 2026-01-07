@@ -145,12 +145,7 @@ export function ShiftsList() {
                       <TableCell>{shift.startTime}</TableCell>
                       <TableCell>{shift.endTime}</TableCell>
                       <TableCell>
-                        <div>
-                          <div className="font-medium">{shift.caregiverName}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {getCaregiverTypeLabel(shift.caregiverType, t)}
-                          </div>
-                        </div>
+                        <div className="font-medium">{shift.caregiverName}</div>
                       </TableCell>
                       <TableCell>
                         <div>
