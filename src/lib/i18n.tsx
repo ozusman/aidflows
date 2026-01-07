@@ -1,0 +1,260 @@
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+
+export type Language = 'he' | 'en';
+
+type TranslationKey = keyof typeof translations.he;
+
+const translations = {
+  he: {
+    // App
+    appName: 'AidFlow',
+    
+    // Navigation
+    navShifts: 'משמרות',
+    navDailyCoverage: 'כיסוי יומי',
+    navWeeklySummary: 'סיכום שבועי',
+    navNewShift: 'משמרת חדשה',
+    
+    // Shift Entry
+    shiftEntry: 'רישום משמרת',
+    shiftDate: 'תאריך',
+    startTime: 'שעת התחלה',
+    endTime: 'שעת סיום',
+    totalHours: 'סה"כ שעות',
+    caregiverName: 'שם המטפל',
+    caregiverType: 'סוג מטפל',
+    typePrivatePaid: 'מטפל פרטי בתשלום',
+    typeFamilyMember: 'בן משפחה',
+    typeForeignCaregiver: 'מטפל זר',
+    typeOther: 'אחר',
+    
+    // Location
+    location: 'מיקום',
+    locationType: 'סוג מיקום',
+    locationName: 'שם המקום',
+    locationHospital: 'בית חולים',
+    locationHome: 'בית',
+    locationInstitution: 'מוסד',
+    
+    // Payment
+    payment: 'תשלום',
+    paymentAmount: 'סכום',
+    paymentMethod: 'אמצעי תשלום',
+    paymentDate: 'תאריך תשלום',
+    paymentStatus: 'סטטוס',
+    statusPaid: 'שולם',
+    statusUnpaid: 'לא שולם',
+    methodBankTransfer: 'העברה בנקאית',
+    methodPayBox: 'PayBox',
+    methodBit: 'ביט',
+    methodCash: 'מזומן',
+    
+    // Purpose
+    shiftPurpose: 'מטרת המשמרת',
+    purposeGuarding: 'שמירה',
+    purposeSupervision: 'השגחה',
+    
+    // Medical Event
+    medicalEvent: 'אירוע רפואי',
+    eventHospitalization: 'אשפוז',
+    eventDeterioration: 'הידרדרות',
+    eventRehabilitation: 'שיקום',
+    
+    // Data Entry
+    dataEnteredBy: 'נרשם ע"י',
+    shiftPerformed: 'המשמרת בוצעה בפועל',
+    notes: 'הערות',
+    
+    // Actions
+    save: 'שמירה',
+    cancel: 'ביטול',
+    edit: 'עריכה',
+    delete: 'מחיקה',
+    export: 'ייצוא',
+    
+    // Daily Coverage
+    dailyCoverage: 'כיסוי יומי',
+    selectDate: 'בחירת תאריך',
+    covered: 'מכוסה',
+    uncovered: 'לא מכוסה',
+    paidCaregiver: 'מטפל בתשלום',
+    familyCaregiver: 'בן משפחה',
+    
+    // Weekly Summary
+    weeklySummary: 'סיכום שבועי',
+    selectWeek: 'בחירת שבוע',
+    selectCaregiver: 'בחירת מטפל',
+    allCaregivers: 'כל המטפלים',
+    totalExpenses: 'סה"כ הוצאות',
+    totalPayment: 'סה"כ תשלום',
+    
+    // Table Headers
+    date: 'תאריך',
+    time: 'שעה',
+    caregiver: 'מטפל',
+    hours: 'שעות',
+    expenses: 'הוצאות',
+    
+    // Status
+    noShifts: 'אין משמרות',
+    loading: 'טוען...',
+    error: 'שגיאה',
+    success: 'הצלחה',
+    shiftSaved: 'המשמרת נשמרה בהצלחה',
+    
+    // Language
+    language: 'שפה',
+    hebrew: 'עברית',
+    english: 'English',
+  },
+  en: {
+    // App
+    appName: 'AidFlow',
+    
+    // Navigation
+    navShifts: 'Shifts',
+    navDailyCoverage: 'Daily Coverage',
+    navWeeklySummary: 'Weekly Summary',
+    navNewShift: 'New Shift',
+    
+    // Shift Entry
+    shiftEntry: 'Shift Entry',
+    shiftDate: 'Date',
+    startTime: 'Start Time',
+    endTime: 'End Time',
+    totalHours: 'Total Hours',
+    caregiverName: 'Caregiver Name',
+    caregiverType: 'Caregiver Type',
+    typePrivatePaid: 'Paid Private Caregiver',
+    typeFamilyMember: 'Family Member',
+    typeForeignCaregiver: 'Foreign Caregiver',
+    typeOther: 'Other',
+    
+    // Location
+    location: 'Location',
+    locationType: 'Location Type',
+    locationName: 'Location Name',
+    locationHospital: 'Hospital',
+    locationHome: 'Home',
+    locationInstitution: 'Institution',
+    
+    // Payment
+    payment: 'Payment',
+    paymentAmount: 'Amount',
+    paymentMethod: 'Payment Method',
+    paymentDate: 'Payment Date',
+    paymentStatus: 'Status',
+    statusPaid: 'Paid',
+    statusUnpaid: 'Unpaid',
+    methodBankTransfer: 'Bank Transfer',
+    methodPayBox: 'PayBox',
+    methodBit: 'Bit',
+    methodCash: 'Cash',
+    
+    // Purpose
+    shiftPurpose: 'Shift Purpose',
+    purposeGuarding: 'Guarding',
+    purposeSupervision: 'Supervision',
+    
+    // Medical Event
+    medicalEvent: 'Medical Event',
+    eventHospitalization: 'Hospitalization',
+    eventDeterioration: 'Deterioration',
+    eventRehabilitation: 'Rehabilitation',
+    
+    // Data Entry
+    dataEnteredBy: 'Entered By',
+    shiftPerformed: 'Shift performed in practice',
+    notes: 'Notes',
+    
+    // Actions
+    save: 'Save',
+    cancel: 'Cancel',
+    edit: 'Edit',
+    delete: 'Delete',
+    export: 'Export',
+    
+    // Daily Coverage
+    dailyCoverage: 'Daily Coverage',
+    selectDate: 'Select Date',
+    covered: 'Covered',
+    uncovered: 'Uncovered',
+    paidCaregiver: 'Paid Caregiver',
+    familyCaregiver: 'Family Member',
+    
+    // Weekly Summary
+    weeklySummary: 'Weekly Summary',
+    selectWeek: 'Select Week',
+    selectCaregiver: 'Select Caregiver',
+    allCaregivers: 'All Caregivers',
+    totalExpenses: 'Total Expenses',
+    totalPayment: 'Total Payment',
+    
+    // Table Headers
+    date: 'Date',
+    time: 'Time',
+    caregiver: 'Caregiver',
+    hours: 'Hours',
+    expenses: 'Expenses',
+    
+    // Status
+    noShifts: 'No shifts',
+    loading: 'Loading...',
+    error: 'Error',
+    success: 'Success',
+    shiftSaved: 'Shift saved successfully',
+    
+    // Language
+    language: 'Language',
+    hebrew: 'עברית',
+    english: 'English',
+  },
+} as const;
+
+interface I18nContextType {
+  language: Language;
+  setLanguage: (lang: Language) => void;
+  t: (key: TranslationKey) => string;
+  isRTL: boolean;
+  dir: 'rtl' | 'ltr';
+}
+
+const I18nContext = createContext<I18nContextType | undefined>(undefined);
+
+export function I18nProvider({ children }: { children: ReactNode }) {
+  const [language, setLanguageState] = useState<Language>('he');
+
+  const setLanguage = useCallback((lang: Language) => {
+    setLanguageState(lang);
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+  }, []);
+
+  const t = useCallback((key: TranslationKey): string => {
+    return translations[language][key] || key;
+  }, [language]);
+
+  const isRTL = language === 'he';
+  const dir = isRTL ? 'rtl' : 'ltr';
+
+  // Set initial document attributes
+  React.useEffect(() => {
+    document.documentElement.lang = language;
+    document.documentElement.dir = dir;
+    document.body.className = isRTL ? 'font-hebrew' : 'font-sans';
+  }, [language, dir, isRTL]);
+
+  return (
+    <I18nContext.Provider value={{ language, setLanguage, t, isRTL, dir }}>
+      {children}
+    </I18nContext.Provider>
+  );
+}
+
+export function useI18n() {
+  const context = useContext(I18nContext);
+  if (context === undefined) {
+    throw new Error('useI18n must be used within an I18nProvider');
+  }
+  return context;
+}
