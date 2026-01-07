@@ -31,7 +31,7 @@ function getLocationTypeLabel(type: Shift['locationType'], t: (key: any) => stri
 
 export function ShiftsList() {
   const { t, isRTL } = useI18n();
-  const { shifts, isLoading, deleteShift } = useShifts();
+  const { shifts, isLoading, deleteShift, updateShift } = useShifts();
 
   const sortedShifts = [...shifts].sort((a, b) => {
     const dateCompare = b.date.localeCompare(a.date);
@@ -124,10 +124,14 @@ export function ShiftsList() {
                       <Badge 
                         variant={shift.paymentStatus === 'paid' ? 'default' : 'secondary'}
                         className={cn(
+                          "cursor-pointer transition-colors",
                           shift.paymentStatus === 'paid' 
-                            ? 'bg-success text-success-foreground' 
-                            : ''
+                            ? 'bg-success text-success-foreground hover:bg-success/80' 
+                            : 'hover:bg-muted'
                         )}
+                        onClick={() => updateShift(shift.id, { 
+                          paymentStatus: shift.paymentStatus === 'paid' ? 'unpaid' : 'paid' 
+                        })}
                       >
                         {shift.paymentStatus === 'paid' ? t('statusPaid') : t('statusUnpaid')}
                       </Badge>

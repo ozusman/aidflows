@@ -23,7 +23,7 @@
     --primary: 235 79% 59%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 191 64% 51%;
+    --secondary: 195 64% 71%;
     --secondary-foreground: 217 33% 17%;
 
     --muted: 213 23% 89%;
@@ -35,8 +35,8 @@
     --destructive: 0 76% 90%;
     --destructive-foreground: 0 63% 31%;
 
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
+    --success: 195 64% 71%;
+    --success-foreground: 217 33% 17%;
 
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
