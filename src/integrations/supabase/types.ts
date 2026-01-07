@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      caregivers: {
+        Row: {
+          caregiver_type: string
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          caregiver_type: string
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          caregiver_type?: string
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       payment_receipts: {
         Row: {
           created_at: string

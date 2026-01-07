@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
 import { useShifts } from '@/hooks/useShifts';
+import { useCaregivers } from '@/hooks/useCaregivers';
 import { ShiftFormData, CaregiverType, LocationType, PaymentMethod, ShiftPurpose, MedicalEvent, calculateShiftHours } from '@/types/shift';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,6 +19,7 @@ export default function EditShift() {
   const { t } = useI18n();
   const { id } = useParams<{ id: string }>();
   const { getShiftById, updateShift } = useShifts();
+  const { saveCaregiver } = useCaregivers();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -62,7 +64,7 @@ export default function EditShift() {
     ? calculateShiftHours(formData.startTime, formData.endTime)
     : 0;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!id || !formData.startTime || !formData.endTime || !formData.caregiverName) {
@@ -73,6 +75,9 @@ export default function EditShift() {
       });
       return;
     }
+
+    // Save caregiver to database
+    await saveCaregiver(formData.caregiverName, formData.caregiverType);
 
     updateShift(id, formData);
     toast({
