@@ -155,5 +155,11 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Heebo', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  /* Ensure numbers also use Heebo */
+  body, input, button, select, textarea {
+    font-feature-settings: "tnum" on, "lnum" on;
   }
 }
