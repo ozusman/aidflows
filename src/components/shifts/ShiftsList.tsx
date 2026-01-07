@@ -69,13 +69,14 @@ export function ShiftsList() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('date')}</TableHead>
-                <TableHead>{t('time')}</TableHead>
-                <TableHead>{t('caregiver')}</TableHead>
-                <TableHead>{t('location')}</TableHead>
-                <TableHead className="text-center">{t('hours')}</TableHead>
-                <TableHead className="text-center">{t('paymentAmount')}</TableHead>
-                <TableHead className="text-center">{t('paymentStatus')}</TableHead>
+                <TableHead className="text-start">{t('date')}</TableHead>
+                <TableHead className="text-start">{t('startTime')}</TableHead>
+                <TableHead className="text-start">{t('endTime')}</TableHead>
+                <TableHead className="text-start">{t('caregiver')}</TableHead>
+                <TableHead className="text-start">{t('location')}</TableHead>
+                <TableHead className="text-start">{t('hours')}</TableHead>
+                <TableHead className="text-start">{t('paymentAmount')}</TableHead>
+                <TableHead className="text-start">{t('paymentStatus')}</TableHead>
                 <TableHead className="w-[80px]"></TableHead>
               </TableRow>
             </TableHeader>
@@ -85,9 +86,8 @@ export function ShiftsList() {
                   <TableCell className="font-medium">
                     {format(new Date(shift.date), 'dd/MM/yyyy')}
                   </TableCell>
-                  <TableCell>
-                    {shift.startTime} - {shift.endTime}
-                  </TableCell>
+                  <TableCell>{shift.startTime}</TableCell>
+                  <TableCell>{shift.endTime}</TableCell>
                   <TableCell>
                     <div>
                       <div className="font-medium">{shift.caregiverName}</div>
@@ -104,13 +104,13 @@ export function ShiftsList() {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-center font-mono">
+                  <TableCell className="font-mono">
                     {shift.totalHours.toFixed(2)}
                   </TableCell>
-                  <TableCell className="text-center font-mono">
+                  <TableCell className="font-mono">
                     ₪{shift.paymentAmount.toFixed(0)}
                   </TableCell>
-                  <TableCell className="text-center">
+                  <TableCell>
                     <Badge 
                       variant={shift.paymentStatus === 'paid' ? 'default' : 'secondary'}
                       className={cn(
