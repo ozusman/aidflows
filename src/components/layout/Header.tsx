@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { CalendarDays, ClipboardList, PlusCircle, BarChart3, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import aidflowLogo from '@/assets/aidflow-logo.svg';
 
 const navigation = [
   { key: 'navShifts', href: '/', icon: ClipboardList },
@@ -22,11 +23,8 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-semibold text-sm">AF</span>
-            </div>
-            <span className="font-semibold text-lg text-foreground">{t('appName')}</span>
+          <Link to="/" className="flex items-center">
+            <img src={aidflowLogo} alt={t('appName')} className="h-8" />
           </Link>
 
           {/* Desktop Navigation */}
