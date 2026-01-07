@@ -93,6 +93,7 @@ export function ShiftForm() {
             <Input
               id="date"
               type="date"
+              dir="ltr"
               value={formData.date}
               onChange={(e) => updateField('date', e.target.value)}
               required
@@ -103,6 +104,7 @@ export function ShiftForm() {
             <Input
               id="startTime"
               type="time"
+              dir="ltr"
               value={formData.startTime}
               onChange={(e) => updateField('startTime', e.target.value)}
               required
@@ -113,6 +115,7 @@ export function ShiftForm() {
             <Input
               id="endTime"
               type="time"
+              dir="ltr"
               value={formData.endTime}
               onChange={(e) => updateField('endTime', e.target.value)}
               required
@@ -120,7 +123,7 @@ export function ShiftForm() {
           </div>
           <div className="space-y-2">
             <Label>{t('totalHours')}</Label>
-            <div className="h-10 px-3 py-2 rounded-md border border-input bg-muted text-foreground flex items-center">
+            <div dir="ltr" className="h-10 px-3 py-2 rounded-md border border-input bg-hover-light text-foreground flex items-center">
               {calculatedHours.toFixed(2)}
             </div>
           </div>
@@ -206,7 +209,7 @@ export function ShiftForm() {
         <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="paymentAmount">{t('paymentAmount')}</Label>
-            <div className="h-10 px-3 py-2 rounded-md border border-input bg-muted text-foreground flex items-center">
+            <div dir="ltr" className="h-10 px-3 py-2 rounded-md border border-input bg-hover-light text-foreground flex items-center">
               ₪{formData.paymentAmount.toFixed(2)}
             </div>
           </div>
@@ -247,6 +250,7 @@ export function ShiftForm() {
             <Input
               id="travelCost"
               type="number"
+              dir="ltr"
               min="0"
               step="0.01"
               value={formData.travelCost}
@@ -258,6 +262,7 @@ export function ShiftForm() {
             <Input
               id="parkingCost"
               type="number"
+              dir="ltr"
               min="0"
               step="0.01"
               value={formData.parkingCost}
