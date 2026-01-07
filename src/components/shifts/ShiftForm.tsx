@@ -185,40 +185,42 @@ export function ShiftForm() {
         </CardContent>
       </Card>
 
-      {/* Location */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base font-medium">{t('location')}</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>{t('locationType')} *</Label>
-            <Select
-              value={formData.locationType}
-              onValueChange={(value: LocationType) => updateField('locationType', value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="hospital">{t('locationHospital')}</SelectItem>
-                <SelectItem value="home">{t('locationHome')}</SelectItem>
-                <SelectItem value="institution">{t('locationInstitution')}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="locationName">{t('locationName')} *</Label>
-            <Input
-              id="locationName"
-              type="text"
-              value={formData.locationName}
-              onChange={(e) => updateField('locationName', e.target.value)}
-              required
-            />
-          </div>
-        </CardContent>
-      </Card>
+      {/* Location - hide for family members */}
+      {!isFamilyMember && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base font-medium">{t('location')}</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>{t('locationType')} *</Label>
+              <Select
+                value={formData.locationType}
+                onValueChange={(value: LocationType) => updateField('locationType', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="hospital">{t('locationHospital')}</SelectItem>
+                  <SelectItem value="home">{t('locationHome')}</SelectItem>
+                  <SelectItem value="institution">{t('locationInstitution')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="locationName">{t('locationName')} *</Label>
+              <Input
+                id="locationName"
+                type="text"
+                value={formData.locationName}
+                onChange={(e) => updateField('locationName', e.target.value)}
+                required
+              />
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Payment - only show for non-family members */}
       {!isFamilyMember && (
@@ -293,62 +295,64 @@ export function ShiftForm() {
         </Card>
       )}
 
-      {/* Optional: Purpose & Medical Event */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base font-medium">{t('shiftPurpose')}</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>{t('shiftPurpose')}</Label>
-            <Select
-              value={formData.purpose || ''}
-              onValueChange={(value: ShiftPurpose) => updateField('purpose', value || undefined)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="-" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="guarding">{t('purposeGuarding')}</SelectItem>
-                <SelectItem value="supervision">{t('purposeSupervision')}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label>{t('medicalEvent')}</Label>
-            <Select
-              value={formData.medicalEvent || ''}
-              onValueChange={(value: MedicalEvent) => updateField('medicalEvent', value || undefined)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="-" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="hospitalization">{t('eventHospitalization')}</SelectItem>
-                <SelectItem value="deterioration">{t('eventDeterioration')}</SelectItem>
-                <SelectItem value="rehabilitation">{t('eventRehabilitation')}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="enteredBy">{t('dataEnteredBy')}</Label>
-            <Input
-              id="enteredBy"
-              type="text"
-              value={formData.enteredBy || ''}
-              onChange={(e) => updateField('enteredBy', e.target.value)}
-            />
-          </div>
-          <div className="flex items-center gap-3 pt-6">
-            <Checkbox
-              id="shiftPerformed"
-              checked={formData.shiftPerformed}
-              onCheckedChange={(checked) => updateField('shiftPerformed', checked === true)}
-            />
-            <Label htmlFor="shiftPerformed" className="cursor-pointer">{t('shiftPerformed')}</Label>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Optional: Purpose & Medical Event - hide for family members */}
+      {!isFamilyMember && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base font-medium">{t('shiftPurpose')}</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>{t('shiftPurpose')}</Label>
+              <Select
+                value={formData.purpose || ''}
+                onValueChange={(value: ShiftPurpose) => updateField('purpose', value || undefined)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="-" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="guarding">{t('purposeGuarding')}</SelectItem>
+                  <SelectItem value="supervision">{t('purposeSupervision')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>{t('medicalEvent')}</Label>
+              <Select
+                value={formData.medicalEvent || ''}
+                onValueChange={(value: MedicalEvent) => updateField('medicalEvent', value || undefined)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="-" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="hospitalization">{t('eventHospitalization')}</SelectItem>
+                  <SelectItem value="deterioration">{t('eventDeterioration')}</SelectItem>
+                  <SelectItem value="rehabilitation">{t('eventRehabilitation')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="enteredBy">{t('dataEnteredBy')}</Label>
+              <Input
+                id="enteredBy"
+                type="text"
+                value={formData.enteredBy || ''}
+                onChange={(e) => updateField('enteredBy', e.target.value)}
+              />
+            </div>
+            <div className="flex items-center gap-3 pt-6">
+              <Checkbox
+                id="shiftPerformed"
+                checked={formData.shiftPerformed}
+                onCheckedChange={(checked) => updateField('shiftPerformed', checked === true)}
+              />
+              <Label htmlFor="shiftPerformed" className="cursor-pointer">{t('shiftPerformed')}</Label>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Notes */}
       <Card>
