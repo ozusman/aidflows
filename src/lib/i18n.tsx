@@ -104,6 +104,14 @@ const translations = {
     success: 'הצלחה',
     shiftSaved: 'המשמרת נשמרה בהצלחה',
     
+    // Receipts
+    uploadReceipts: 'העלאת קבלות',
+    dragFilesHere: 'גרור קבצים לכאן או לחץ להעלאה',
+    noReceiptsUploaded: 'לא הועלו קבלות',
+    uploading: 'מעלה...',
+    download: 'הורדה',
+    receiptsCount: 'קבלות',
+    
     // Language
     language: 'שפה',
     hebrew: 'עברית',
@@ -207,6 +215,14 @@ const translations = {
     error: 'Error',
     success: 'Success',
     shiftSaved: 'Shift saved successfully',
+    
+    // Receipts
+    uploadReceipts: 'Upload Receipts',
+    dragFilesHere: 'Drag files here or click to upload',
+    noReceiptsUploaded: 'No receipts uploaded',
+    uploading: 'Uploading...',
+    download: 'Download',
+    receiptsCount: 'receipts',
     
     // Language
     language: 'Language',
