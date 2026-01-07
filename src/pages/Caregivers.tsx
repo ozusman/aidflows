@@ -1,10 +1,16 @@
+import { useState } from 'react';
 import { useI18n } from '@/lib/i18n';
-import { useCaregivers, Caregiver } from '@/hooks/useCaregivers';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useCaregivers } from '@/hooks/useCaregivers';
+import { CaregiverType } from '@/types/shift';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Plus } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,7 +35,37 @@ function getCaregiverTypeLabel(type: string, t: (key: any) => string): string {
 
 export default function Caregivers() {
   const { t } = useI18n();
-  const { caregivers, isLoading, deleteCaregiver } = useCaregivers();
+  const { caregivers, isLoading, saveCaregiver, deleteCaregiver } = useCaregivers();
+  const { toast } = useToast();
+
+  const [newName, setNewName] = useState('');
+  const [newType, setNewType] = useState<CaregiverType>('private_paid');
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddCaregiver = async () => {
+    const trimmedName = newName.trim();
+    if (!trimmedName) {
+      toast({
+        title: t('error'),
+        description: 'Please enter a name',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsAdding(true);
+    try {
+      await saveCaregiver(trimmedName, newType);
+      setNewName('');
+      setNewType('private_paid');
+      toast({
+        title: t('success'),
+        description: t('shiftSaved'),
+      });
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -45,6 +81,42 @@ export default function Caregivers() {
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold">{t('caregiversTitle')}</h1>
 
+      {/* Add Caregiver Form */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-4 items-end">
+            <div className="space-y-2">
+              <Label>{t('caregiverName')}</Label>
+              <Input
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                placeholder={t('caregiverName')}
+                maxLength={100}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>{t('caregiverType')}</Label>
+              <Select value={newType} onValueChange={(v: CaregiverType) => setNewType(v)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="private_paid">{t('typePrivatePaid')}</SelectItem>
+                  <SelectItem value="family_member">{t('typeFamilyMember')}</SelectItem>
+                  <SelectItem value="foreign_caregiver">{t('typeForeignCaregiver')}</SelectItem>
+                  <SelectItem value="other">{t('typeOther')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Button onClick={handleAddCaregiver} disabled={isAdding}>
+              <Plus className="w-4 h-4 me-2" />
+              {t('addNewCaregiver')}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Caregivers Table */}
       <Card>
         <CardContent className="p-0">
           {caregivers.length === 0 ? (
