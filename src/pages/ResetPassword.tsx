@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { z } from 'zod';
 
 const passwordSchema = z.object({
@@ -21,8 +21,11 @@ export default function ResetPassword() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(true);
   const [invalidLink, setInvalidLink] = useState(false);
+  const [isPreparingSession, setIsPreparingSession] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -49,32 +52,34 @@ export default function ResetPassword() {
       }
 
       if (code) {
+        setIsPreparingSession(true);
         const { error } = await supabase.auth.exchangeCodeForSession(code);
         if (!cancelled) {
           if (error) {
             setError(error.message);
             setInvalidLink(true);
           }
-          setReady(true);
+          setIsPreparingSession(false);
         }
+        return;
+      }
+
+      if (hash.includes('access_token') || hash.includes('type=recovery')) {
+        setIsPreparingSession(true);
+        setTimeout(() => {
+          if (cancelled) return;
+          supabase.auth.getSession().then(({ data: { session: s } }) => {
+            if (cancelled) return;
+            setIsPreparingSession(false);
+            if (!s) setInvalidLink(true);
+          });
+        }, 300);
         return;
       }
 
       const { data: { session } } = await supabase.auth.getSession();
       if (!cancelled) {
-        if (session) {
-          setReady(true);
-        } else {
-          // Give the hash-token flow a brief moment to fire PASSWORD_RECOVERY
-          setTimeout(() => {
-            if (cancelled) return;
-            supabase.auth.getSession().then(({ data: { session: s } }) => {
-              if (cancelled) return;
-              setReady(true);
-              if (!s) setInvalidLink(true);
-            });
-          }, 1200);
-        }
+        if (!session) setInvalidLink(true);
       }
     };
 
@@ -101,6 +106,8 @@ export default function ResetPassword() {
       setError(t('passwordsDoNotMatch'));
       return;
     }
+
+    if (isPreparingSession) return;
 
     setIsLoading(true);
     const { error } = await supabase.auth.updateUser({ password });
