@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2 } from 'lucide-react';
 import { LanguageToggle } from '@/components/LanguageToggle';
+import { lovable } from '@/integrations/lovable';
 import aidflowLogo from '@/assets/aidflow-logo.svg';
 import { z } from 'zod';
 
