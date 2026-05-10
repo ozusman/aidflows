@@ -36,7 +36,7 @@ function getCaregiverTypeLabel(type: string, t: (key: any) => string): string {
 
 export default function Caregivers() {
   const { t } = useI18n();
-  const { caregivers, isLoading, saveCaregiver, deleteCaregiver } = useCaregivers();
+  const { caregivers, isLoading, saveCaregiver, updateCaregiver, deleteCaregiver } = useCaregivers();
   const { toast } = useToast();
 
   const [newName, setNewName] = useState('');
