@@ -209,10 +209,15 @@ export default function Auth() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background p-4">
+    <div className="flex items-center justify-center min-h-screen bg-background p-4 relative">
+      <div className="absolute top-4 end-4">
+        <LanguageToggle />
+      </div>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">{t('appName')}</CardTitle>
+          <div className="flex justify-center mb-2">
+            <img src={aidflowLogo} alt={t('appName')} className="h-10" />
+          </div>
           <CardDescription>{t('welcomeMessage')}</CardDescription>
         </CardHeader>
         <CardContent>
