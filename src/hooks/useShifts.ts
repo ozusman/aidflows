@@ -2,6 +2,7 @@ import { logger } from '@/lib/logger';
 import { useState, useCallback, useEffect } from 'react';
 import { Shift, ShiftFormData, calculateShiftHours, generateShiftId } from '@/types/shift';
 import { supabase } from '@/integrations/supabase/client';
+import { shiftSchema } from '@/lib/shiftValidation';
 import { useAuth } from './useAuth';
 
 const HOURLY_RATE = 70;
@@ -66,7 +67,17 @@ export function useShifts() {
   const addShift = useCallback(async (formData: ShiftFormData): Promise<Shift | null> => {
     if (!user) return null;
 
+    const parsed = shiftSchema.safeParse(formData);
+    if (!parsed.success) {
+      logger.error('Shift validation failed:', parsed.error);
+      return null;
+    }
+
     const totalHours = calculateShiftHours(formData.startTime, formData.endTime);
+    if (totalHours < 0 || totalHours > 24) {
+      logger.error('Invalid shift duration');
+      return null;
+    }
     const shiftId = generateShiftId();
 
     const dbRow = {
@@ -114,6 +125,12 @@ export function useShifts() {
 
   const updateShift = useCallback(async (id: string, formData: Partial<ShiftFormData>): Promise<Shift | null> => {
     if (!user) return null;
+
+    const parsed = shiftSchema.partial().safeParse(formData);
+    if (!parsed.success) {
+      logger.error('Shift validation failed:', parsed.error);
+      return null;
+    }
 
     const totalHours = formData.startTime && formData.endTime
       ? calculateShiftHours(formData.startTime, formData.endTime)
