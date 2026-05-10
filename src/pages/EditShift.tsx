@@ -241,7 +241,7 @@ export default function EditShift() {
             <div className="space-y-2">
               <Label htmlFor="paymentAmount">{t('paymentAmount')}</Label>
               <div dir="ltr" className="h-10 px-3 py-2 rounded-md border border-input bg-hover-light text-foreground flex items-center">
-                ₪{formData.paymentAmount.toFixed(2)}
+                {t('currencySymbol')}{formData.paymentAmount.toFixed(2)}
               </div>
             </div>
             <div className="space-y-2">
