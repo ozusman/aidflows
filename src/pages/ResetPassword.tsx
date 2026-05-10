@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { z } from 'zod';
 
 const passwordSchema = z.object({
@@ -14,15 +14,18 @@ const passwordSchema = z.object({
 });
 
 export default function ResetPassword() {
-  const { t } = useI18n();
+  const { t, isRTL } = useI18n();
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(true);
   const [invalidLink, setInvalidLink] = useState(false);
+  const [isPreparingSession, setIsPreparingSession] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -30,6 +33,7 @@ export default function ResetPassword() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
         setReady(true);
+        setIsPreparingSession(false);
       }
     });
 
@@ -49,32 +53,34 @@ export default function ResetPassword() {
       }
 
       if (code) {
+        setIsPreparingSession(true);
         const { error } = await supabase.auth.exchangeCodeForSession(code);
         if (!cancelled) {
           if (error) {
             setError(error.message);
             setInvalidLink(true);
           }
-          setReady(true);
+          setIsPreparingSession(false);
         }
+        return;
+      }
+
+      if (hash.includes('access_token') || hash.includes('type=recovery')) {
+        setIsPreparingSession(true);
+        setTimeout(() => {
+          if (cancelled) return;
+          supabase.auth.getSession().then(({ data: { session: s } }) => {
+            if (cancelled) return;
+            setIsPreparingSession(false);
+            if (!s) setInvalidLink(true);
+          });
+        }, 300);
         return;
       }
 
       const { data: { session } } = await supabase.auth.getSession();
       if (!cancelled) {
-        if (session) {
-          setReady(true);
-        } else {
-          // Give the hash-token flow a brief moment to fire PASSWORD_RECOVERY
-          setTimeout(() => {
-            if (cancelled) return;
-            supabase.auth.getSession().then(({ data: { session: s } }) => {
-              if (cancelled) return;
-              setReady(true);
-              if (!s) setInvalidLink(true);
-            });
-          }, 1200);
-        }
+        if (session) setReady(true);
       }
     };
 
@@ -101,6 +107,8 @@ export default function ResetPassword() {
       setError(t('passwordsDoNotMatch'));
       return;
     }
+
+    if (isPreparingSession) return;
 
     setIsLoading(true);
     const { error } = await supabase.auth.updateUser({ password });
@@ -137,32 +145,62 @@ export default function ResetPassword() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="new-password">{t('newPassword')}</Label>
-                <Input
-                  id="new-password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={isLoading}
-                />
+                <div className="relative">
+                  <Input
+                    id="new-password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    disabled={isLoading || isPreparingSession}
+                    className={isRTL ? 'pl-10' : 'pr-10'}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className={`absolute top-1/2 h-8 w-8 -translate-y-1/2 ${isRTL ? 'left-1' : 'right-1'}`}
+                    onClick={() => setShowPassword((value) => !value)}
+                    aria-label={showPassword ? t('hidePassword') : t('showPassword')}
+                    aria-pressed={showPassword}
+                    disabled={isLoading || isPreparingSession}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="confirm-password">{t('confirmPassword')}</Label>
-                <Input
-                  id="confirm-password"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  disabled={isLoading}
-                />
+                <div className="relative">
+                  <Input
+                    id="confirm-password"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    disabled={isLoading || isPreparingSession}
+                    className={isRTL ? 'pl-10' : 'pr-10'}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className={`absolute top-1/2 h-8 w-8 -translate-y-1/2 ${isRTL ? 'left-1' : 'right-1'}`}
+                    onClick={() => setShowConfirmPassword((value) => !value)}
+                    aria-label={showConfirmPassword ? t('hidePassword') : t('showPassword')}
+                    aria-pressed={showConfirmPassword}
+                    disabled={isLoading || isPreparingSession}
+                  >
+                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
               </div>
 
               {error && <p className="text-sm text-destructive">{error}</p>}
               {success && <p className="text-sm text-green-600">{success}</p>}
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : t('updatePassword')}
+              <Button type="submit" className="w-full" disabled={isLoading || isPreparingSession}>
+                {isLoading || isPreparingSession ? <Loader2 className="w-4 h-4 animate-spin" /> : t('updatePassword')}
               </Button>
 
               <Button
