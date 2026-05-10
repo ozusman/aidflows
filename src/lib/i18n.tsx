@@ -127,6 +127,13 @@ const translations = {
     resetPasswordInstructions: 'הזינו את כתובת הדוא"ל שלכם ונשלח לכם קישור לאיפוס הסיסמה',
     resetEmailSent: 'נשלח אליכם מייל עם קישור לאיפוס הסיסמה',
     backToSignIn: 'חזרה להתחברות',
+    setNewPassword: 'הגדרת סיסמה חדשה',
+    setNewPasswordInstructions: 'בחרו סיסמה חדשה לחשבון שלכם',
+    newPassword: 'סיסמה חדשה',
+    confirmPassword: 'אישור סיסמה',
+    updatePassword: 'עדכון סיסמה',
+    passwordsDoNotMatch: 'הסיסמאות אינן תואמות',
+    passwordUpdated: 'הסיסמה עודכנה בהצלחה',
     
     // Language
     language: 'שפה',
