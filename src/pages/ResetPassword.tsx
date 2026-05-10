@@ -80,7 +80,7 @@ export default function ResetPassword() {
 
       const { data: { session } } = await supabase.auth.getSession();
       if (!cancelled) {
-        if (!session) setInvalidLink(true);
+        if (session) setReady(true);
       }
     };
 
