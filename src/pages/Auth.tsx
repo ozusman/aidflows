@@ -8,6 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2 } from 'lucide-react';
+import { LanguageToggle } from '@/components/LanguageToggle';
+import aidflowLogo from '@/assets/aidflow-logo.svg';
 import { z } from 'zod';
 
 const authSchema = z.object({
