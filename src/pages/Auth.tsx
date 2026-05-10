@@ -30,6 +30,7 @@ export default function Auth() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmailSentTo, setResetEmailSentTo] = useState<string | null>(null);
 
   // Redirect if already logged in
   useEffect(() => {
@@ -106,7 +107,7 @@ export default function Auth() {
     if (error) {
       setError(error.message);
     } else {
-      setSuccess(t('resetEmailSent'));
+      setResetEmailSentTo(email);
     }
   };
 
@@ -114,6 +115,35 @@ export default function Auth() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (resetEmailSentTo) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">{t('resetEmailSent')}</CardTitle>
+            <CardDescription>
+              {t('resetEmailSentTo')} <span dir="ltr" className="font-medium">{resetEmailSentTo}</span>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button
+              type="button"
+              className="w-full"
+              onClick={() => {
+                setResetEmailSentTo(null);
+                setShowForgotPassword(false);
+                setError(null);
+                setSuccess(null);
+              }}
+            >
+              {t('backToSignIn')}
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }

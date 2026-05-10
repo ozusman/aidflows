@@ -22,21 +22,68 @@ export default function ResetPassword() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
+  const [invalidLink, setInvalidLink] = useState(false);
 
   useEffect(() => {
-    // Supabase parses the recovery tokens from the URL hash and emits PASSWORD_RECOVERY
+    let cancelled = false;
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
         setReady(true);
       }
     });
 
-    // Also check existing session in case event already fired
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) setReady(true);
-    });
+    const init = async () => {
+      const url = new URL(window.location.href);
+      const code = url.searchParams.get('code');
+      const hash = window.location.hash;
+      const errorDesc = url.searchParams.get('error_description') || new URLSearchParams(hash.slice(1)).get('error_description');
 
-    return () => subscription.unsubscribe();
+      if (errorDesc) {
+        if (!cancelled) {
+          setError(decodeURIComponent(errorDesc.replace(/\+/g, ' ')));
+          setInvalidLink(true);
+          setReady(true);
+        }
+        return;
+      }
+
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (!cancelled) {
+          if (error) {
+            setError(error.message);
+            setInvalidLink(true);
+          }
+          setReady(true);
+        }
+        return;
+      }
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!cancelled) {
+        if (session) {
+          setReady(true);
+        } else {
+          // Give the hash-token flow a brief moment to fire PASSWORD_RECOVERY
+          setTimeout(() => {
+            if (cancelled) return;
+            supabase.auth.getSession().then(({ data: { session: s } }) => {
+              if (cancelled) return;
+              setReady(true);
+              if (!s) setInvalidLink(true);
+            });
+          }, 1200);
+        }
+      }
+    };
+
+    init();
+
+    return () => {
+      cancelled = true;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -78,6 +125,13 @@ export default function ResetPassword() {
           {!ready ? (
             <div className="flex justify-center py-8">
               <Loader2 className="w-6 h-6 animate-spin text-primary" />
+            </div>
+          ) : invalidLink ? (
+            <div className="space-y-4">
+              {error && <p className="text-sm text-destructive">{error}</p>}
+              <Button type="button" className="w-full" onClick={() => navigate('/auth')}>
+                {t('backToSignIn')}
+              </Button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
