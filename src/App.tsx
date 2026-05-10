@@ -14,6 +14,7 @@ import Coverage from "./pages/Coverage";
 import Summary from "./pages/Summary";
 import Caregivers from "./pages/Caregivers";
 import Auth from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
