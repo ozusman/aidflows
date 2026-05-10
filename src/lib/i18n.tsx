@@ -222,6 +222,7 @@ const translations = {
     save: 'Save',
     cancel: 'Cancel',
     edit: 'Edit',
+    approve: 'Approve',
     delete: 'Delete',
     export: 'Export',
     
