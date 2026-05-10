@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { useCallback, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
@@ -31,7 +32,7 @@ export function useCaregivers() {
       .order('name');
 
     if (error) {
-      console.error('Error fetching caregivers:', error);
+      logger.error('Error fetching caregivers:', error);
       setCaregivers([]);
     } else {
       setCaregivers((data || []) as Caregiver[]);
@@ -60,7 +61,7 @@ export function useCaregivers() {
       );
 
     if (error) {
-      console.error('Error saving caregiver:', error);
+      logger.error('Error saving caregiver:', error);
     } else {
       // Refresh the list
       fetchCaregivers();
@@ -77,7 +78,7 @@ export function useCaregivers() {
       .eq('user_id', user.id);
 
     if (error) {
-      console.error('Error deleting caregiver:', error);
+      logger.error('Error deleting caregiver:', error);
     } else {
       // Refresh the list
       fetchCaregivers();
