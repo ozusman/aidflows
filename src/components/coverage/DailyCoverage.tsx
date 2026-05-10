@@ -211,7 +211,7 @@ export function DailyCoverage() {
                     </div>
                   </div>
                   <div className="text-end">
-                    <div className="font-mono text-sm">₪{shift.paymentAmount}</div>
+                    <div className="font-mono text-sm">{t('currencySymbol')}{shift.paymentAmount}</div>
                     <div className="text-xs text-muted-foreground">{shift.locationName}</div>
                   </div>
                 </div>

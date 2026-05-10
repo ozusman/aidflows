@@ -8,6 +8,7 @@ const translations = {
   he: {
     // App
     appName: 'AidFlow',
+    currencySymbol: '₪',
     
     // Navigation
     navShifts: 'משמרות',
@@ -154,6 +155,7 @@ const translations = {
   en: {
     // App
     appName: 'AidFlow',
+    currencySymbol: '€',
     
     // Navigation
     navShifts: 'Shifts',
@@ -310,7 +312,7 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('he');
+  const [language, setLanguageState] = useState<Language>('en');
 
   const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);

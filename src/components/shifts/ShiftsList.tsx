@@ -154,13 +154,13 @@ export function ShiftsList() {
                         {shift.totalHours.toFixed(2)}
                       </TableCell>
                       <TableCell>
-                        ₪{(shift.travelCost || 0).toFixed(0)}
+                        {t('currencySymbol')}{(shift.travelCost || 0).toFixed(0)}
                       </TableCell>
                       <TableCell>
-                        ₪{(shift.parkingCost || 0).toFixed(0)}
+                        {t('currencySymbol')}{(shift.parkingCost || 0).toFixed(0)}
                       </TableCell>
                       <TableCell>
-                        ₪{totalAmount.toFixed(0)}
+                        {t('currencySymbol')}{totalAmount.toFixed(0)}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">

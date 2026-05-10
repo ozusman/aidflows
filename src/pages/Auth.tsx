@@ -8,6 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2 } from 'lucide-react';
+import { LanguageToggle } from '@/components/LanguageToggle';
+import aidflowLogo from '@/assets/aidflow-logo.svg';
 import { z } from 'zod';
 
 const authSchema = z.object({
@@ -207,10 +209,15 @@ export default function Auth() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background p-4">
+    <div className="flex items-center justify-center min-h-screen bg-background p-4 relative">
+      <div className="absolute top-4 end-4">
+        <LanguageToggle />
+      </div>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">{t('appName')}</CardTitle>
+          <div className="flex justify-center mb-2">
+            <img src={aidflowLogo} alt={t('appName')} className="h-10" />
+          </div>
           <CardDescription>{t('welcomeMessage')}</CardDescription>
         </CardHeader>
         <CardContent>
