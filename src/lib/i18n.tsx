@@ -155,6 +155,7 @@ const translations = {
   en: {
     // App
     appName: 'AidFlow',
+    currencySymbol: '€',
     
     // Navigation
     navShifts: 'Shifts',
