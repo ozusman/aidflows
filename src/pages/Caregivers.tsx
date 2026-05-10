@@ -42,7 +42,37 @@ export default function Caregivers() {
   const [newName, setNewName] = useState('');
   const [newType, setNewType] = useState<CaregiverType>('private_paid');
   const [isAdding, setIsAdding] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState('');
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
 
+  const startEdit = (id: string, name: string) => {
+    setEditingId(id);
+    setEditingName(name);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditingName('');
+  };
+
+  const approveEdit = async () => {
+    if (!editingId) return;
+    const trimmed = editingName.trim();
+    if (!trimmed) {
+      toast({ title: t('error'), description: 'Please enter a name', variant: 'destructive' });
+      return;
+    }
+    setIsSavingEdit(true);
+    const { error } = await updateCaregiver(editingId, trimmed);
+    setIsSavingEdit(false);
+    if (error) {
+      toast({ title: t('error'), description: error.message, variant: 'destructive' });
+      return;
+    }
+    toast({ title: t('success'), description: t('shiftSaved') });
+    cancelEdit();
+  };
   const handleAddCaregiver = async () => {
     const trimmedName = newName.trim();
     if (!trimmedName) {
