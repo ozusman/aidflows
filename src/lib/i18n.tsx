@@ -8,6 +8,7 @@ const translations = {
   he: {
     // App
     appName: 'AidFlow',
+    currencySymbol: '₪',
     
     // Navigation
     navShifts: 'משמרות',
