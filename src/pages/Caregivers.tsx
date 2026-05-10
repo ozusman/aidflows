@@ -165,46 +165,104 @@ export default function Caregivers() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {caregivers.map((caregiver) => (
+                  {caregivers.map((caregiver) => {
+                    const isEditing = editingId === caregiver.id;
+                    return (
                     <TableRow key={caregiver.id}>
-                      <TableCell className="font-medium">{caregiver.name}</TableCell>
+                      <TableCell className="font-medium">
+                        {isEditing ? (
+                          <Input
+                            value={editingName}
+                            onChange={(e) => setEditingName(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                approveEdit();
+                              } else if (e.key === 'Escape') {
+                                e.preventDefault();
+                                cancelEdit();
+                              }
+                            }}
+                            maxLength={100}
+                            autoFocus
+                            disabled={isSavingEdit}
+                          />
+                        ) : (
+                          caregiver.name
+                        )}
+                      </TableCell>
                       <TableCell>
                         <Badge variant="secondary">
                           {getCaregiverTypeLabel(caregiver.caregiver_type, t)}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>{t('confirmDeleteCaregiver')}</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                {caregiver.name}
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => deleteCaregiver(caregiver.id)}
-                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        <TooltipProvider>
+                          <div className="flex items-center gap-1">
+                            {isEditing ? (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    type="button"
+                                    size="icon"
+                                    onClick={approveEdit}
+                                    disabled={isSavingEdit}
+                                    className="h-8 w-8"
+                                    aria-label={t('approve')}
+                                  >
+                                    <Check className="w-4 h-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>{t('approve')}</TooltipContent>
+                              </Tooltip>
+                            ) : (
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => startEdit(caregiver.id, caregiver.name)}
+                                className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                                aria-label={t('edit')}
                               >
-                                {t('delete')}
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                            )}
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  disabled={isEditing}
+                                  className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                                  aria-label={t('delete')}
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>{t('confirmDeleteCaregiver')}</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    {caregiver.name}
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => deleteCaregiver(caregiver.id)}
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                  >
+                                    {t('delete')}
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
+                        </TooltipProvider>
                       </TableCell>
                     </TableRow>
-                  ))}
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>
