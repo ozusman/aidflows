@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { useState, useCallback, useEffect } from 'react';
 import { Shift, ShiftFormData, calculateShiftHours, generateShiftId } from '@/types/shift';
 import { supabase } from '@/integrations/supabase/client';
@@ -52,7 +53,7 @@ export function useShifts() {
 
       setShifts(mappedShifts);
     } catch (error) {
-      console.error('Error fetching shifts:', error);
+      logger.error('Error fetching shifts:', error);
     } finally {
       setIsLoading(false);
     }
@@ -106,7 +107,7 @@ export function useShifts() {
       setShifts(prev => [newShift, ...prev]);
       return newShift;
     } catch (error) {
-      console.error('Error adding shift:', error);
+      logger.error('Error adding shift:', error);
       return null;
     }
   }, [user]);
@@ -162,7 +163,7 @@ export function useShifts() {
 
       return updatedShift;
     } catch (error) {
-      console.error('Error updating shift:', error);
+      logger.error('Error updating shift:', error);
       return null;
     }
   }, [user]);
@@ -176,7 +177,7 @@ export function useShifts() {
 
       setShifts(prev => prev.filter(shift => shift.id !== id));
     } catch (error) {
-      console.error('Error deleting shift:', error);
+      logger.error('Error deleting shift:', error);
     }
   }, [user]);
 

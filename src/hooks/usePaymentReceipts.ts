@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Shift } from '@/types/shift';
@@ -53,7 +54,7 @@ async function ensureShiftInDatabase(shift: Shift, userId: string): Promise<bool
     });
 
   if (error) {
-    console.error('Error syncing shift to database:', error);
+    logger.error('Error syncing shift to database:', error);
     return false;
   }
 
@@ -71,14 +72,14 @@ export function usePaymentReceipts() {
       // Get current user
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        console.error('User not authenticated');
+        logger.error('User not authenticated');
         return [];
       }
 
       // Ensure shift exists in database first
       const synced = await ensureShiftInDatabase(shift, user.id);
       if (!synced) {
-        console.error('Failed to sync shift to database');
+        logger.error('Failed to sync shift to database');
         return [];
       }
 
@@ -93,7 +94,7 @@ export function usePaymentReceipts() {
           .upload(fileName, file);
 
         if (uploadError) {
-          console.error('Upload error:', uploadError);
+          logger.error('Upload error:', uploadError);
           continue;
         }
 
@@ -112,7 +113,7 @@ export function usePaymentReceipts() {
           .single();
 
         if (dbError) {
-          console.error('DB error:', dbError);
+          logger.error('DB error:', dbError);
           continue;
         }
 
@@ -141,7 +142,7 @@ export function usePaymentReceipts() {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching receipts:', error);
+      logger.error('Error fetching receipts:', error);
       return [];
     }
 
@@ -163,7 +164,7 @@ export function usePaymentReceipts() {
       .remove([receipt.filePath]);
 
     if (storageError) {
-      console.error('Storage delete error:', storageError);
+      logger.error('Storage delete error:', storageError);
       return false;
     }
 
@@ -174,7 +175,7 @@ export function usePaymentReceipts() {
       .eq('id', receipt.id);
 
     if (dbError) {
-      console.error('DB delete error:', dbError);
+      logger.error('DB delete error:', dbError);
       return false;
     }
 
@@ -188,7 +189,7 @@ export function usePaymentReceipts() {
       .createSignedUrl(filePath, 3600);
     
     if (error || !data) {
-      console.error('Error creating signed URL:', error);
+      logger.error('Error creating signed URL:', error);
       return '';
     }
     
@@ -202,7 +203,7 @@ export function usePaymentReceipts() {
       .eq('shift_id', shiftId);
 
     if (error) {
-      console.error('Error counting receipts:', error);
+      logger.error('Error counting receipts:', error);
       return 0;
     }
 
