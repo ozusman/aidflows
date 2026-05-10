@@ -161,7 +161,7 @@ export default function Caregivers() {
                   <TableRow>
                     <TableHead className="text-start">{t('caregiverName')}</TableHead>
                     <TableHead className="text-start">{t('caregiverType')}</TableHead>
-                    <TableHead className="w-[80px]"></TableHead>
+                    <TableHead className="w-[120px]"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
