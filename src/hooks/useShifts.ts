@@ -118,6 +118,7 @@ export function useShifts() {
       ? calculateShiftHours(formData.startTime, formData.endTime)
       : undefined;
 
+    type ShiftUpdate = Parameters<ReturnType<typeof supabase.from<'shifts', never>>['update']>[0];
     const updateData: Record<string, unknown> = {};
     if (formData.date !== undefined) updateData.date = formData.date;
     if (formData.startTime !== undefined) updateData.start_time = formData.startTime;
