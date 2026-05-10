@@ -68,6 +68,23 @@ export function useCaregivers() {
     }
   }, [user, fetchCaregivers]);
 
+  const updateCaregiver = useCallback(async (id: string, name: string) => {
+    if (!user) return { error: new Error('Not authenticated') };
+
+    const { error } = await supabase
+      .from('caregivers')
+      .update({ name: name.trim(), updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .eq('user_id', user.id);
+
+    if (error) {
+      logger.error('Error updating caregiver:', error);
+      return { error };
+    }
+    await fetchCaregivers();
+    return { error: null };
+  }, [user, fetchCaregivers]);
+
   const deleteCaregiver = useCallback(async (id: string) => {
     if (!user) return;
 
@@ -89,6 +106,7 @@ export function useCaregivers() {
     caregivers,
     isLoading,
     saveCaregiver,
+    updateCaregiver,
     deleteCaregiver,
     refetch: fetchCaregivers,
   };

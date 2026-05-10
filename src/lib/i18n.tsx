@@ -72,6 +72,7 @@ const translations = {
     save: 'שמירה',
     cancel: 'ביטול',
     edit: 'עריכה',
+    approve: 'אישור',
     delete: 'מחיקה',
     export: 'ייצוא',
     
@@ -221,6 +222,7 @@ const translations = {
     save: 'Save',
     cancel: 'Cancel',
     edit: 'Edit',
+    approve: 'Approve',
     delete: 'Delete',
     export: 'Export',
     
