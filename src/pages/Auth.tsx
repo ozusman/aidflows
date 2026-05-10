@@ -30,6 +30,7 @@ export default function Auth() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmailSentTo, setResetEmailSentTo] = useState<string | null>(null);
 
   // Redirect if already logged in
   useEffect(() => {
