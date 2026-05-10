@@ -126,6 +126,13 @@ export default function ResetPassword() {
             <div className="flex justify-center py-8">
               <Loader2 className="w-6 h-6 animate-spin text-primary" />
             </div>
+          ) : invalidLink ? (
+            <div className="space-y-4">
+              {error && <p className="text-sm text-destructive">{error}</p>}
+              <Button type="button" className="w-full" onClick={() => navigate('/auth')}>
+                {t('backToSignIn')}
+              </Button>
+            </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
