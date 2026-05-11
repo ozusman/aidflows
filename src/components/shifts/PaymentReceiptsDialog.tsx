@@ -9,7 +9,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Upload, Download, Trash2, FileText, FileSpreadsheet, Image, Loader2 } from 'lucide-react';
+import { Upload, Download, FileText, FileSpreadsheet, Image, Loader2 } from 'lucide-react';
+import { RowActionButton } from '@/components/ui/row-actions';
 import { cn } from '@/lib/utils';
 
 interface PaymentReceiptsDialogProps {
@@ -238,14 +239,11 @@ export function PaymentReceiptsDialog({
                   >
                     <Download className="w-4 h-4" />
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-destructive hover:text-destructive"
+                  <RowActionButton
+                    action="delete"
+                    label={t('delete')}
                     onClick={() => handleDelete(receipt)}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                  />
                 </div>
               </div>
             ))

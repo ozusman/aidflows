@@ -8,7 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { format } from 'date-fns';
-import { Trash2, Edit, Paperclip } from 'lucide-react';
+import { Paperclip } from 'lucide-react';
+import { RowActionButton, RowActions } from '@/components/ui/row-actions';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { PaymentReceiptsDialog } from './PaymentReceiptsDialog';
@@ -185,25 +186,16 @@ export function ShiftsList() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex gap-1">
+                        <RowActions>
                           <Link to={`/edit-shift/${shift.id}`}>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-muted-foreground hover:text-primary"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </Button>
+                            <RowActionButton action="edit" label={t('edit')} />
                           </Link>
-                          <Button
-                            variant="ghost"
-                            size="icon"
+                          <RowActionButton
+                            action="delete"
+                            label={t('delete')}
                             onClick={() => deleteShift(shift.id)}
-                            className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
+                          />
+                        </RowActions>
                       </TableCell>
                     </TableRow>
                   );
