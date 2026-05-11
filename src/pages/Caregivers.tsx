@@ -9,8 +9,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Trash2, Plus, Pencil, Check } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Plus } from 'lucide-react';
+import { RowActionButton, RowActions } from '@/components/ui/row-actions';
 import { useToast } from '@/hooks/use-toast';
 import {
   AlertDialog,
