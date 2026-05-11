@@ -186,25 +186,16 @@ export function ShiftsList() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex gap-1">
+                        <RowActions>
                           <Link to={`/edit-shift/${shift.id}`}>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-muted-foreground hover:text-primary"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </Button>
+                            <RowActionButton action="edit" label={t('edit')} />
                           </Link>
-                          <Button
-                            variant="ghost"
-                            size="icon"
+                          <RowActionButton
+                            action="delete"
+                            label={t('delete')}
                             onClick={() => deleteShift(shift.id)}
-                            className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
+                          />
+                        </RowActions>
                       </TableCell>
                     </TableRow>
                   );
