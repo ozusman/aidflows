@@ -234,8 +234,9 @@ export function PaymentReceiptsDialog({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8"
+                    className="h-8 w-8 text-foreground/80 hover:bg-hover-light hover:text-foreground"
                     onClick={() => handleDownload(receipt)}
+                    aria-label={t('download') || 'Download'}
                   >
                     <Download className="w-4 h-4" />
                   </Button>
