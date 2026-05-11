@@ -9,7 +9,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Upload, Download, Trash2, FileText, FileSpreadsheet, Image, Loader2 } from 'lucide-react';
+import { Upload, Download, FileText, FileSpreadsheet, Image, Loader2 } from 'lucide-react';
+import { RowActionButton } from '@/components/ui/row-actions';
 import { cn } from '@/lib/utils';
 
 interface PaymentReceiptsDialogProps {
