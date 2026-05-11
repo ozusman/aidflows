@@ -197,68 +197,48 @@ export default function Caregivers() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <TooltipProvider>
-                          <div className="flex items-center gap-1">
-                            {isEditing ? (
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    type="button"
-                                    size="icon"
-                                    onClick={approveEdit}
-                                    disabled={isSavingEdit}
-                                    className="h-8 w-8"
-                                    aria-label={t('approve')}
-                                  >
-                                    <Check className="w-4 h-4" />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>{t('approve')}</TooltipContent>
-                              </Tooltip>
-                            ) : (
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => startEdit(caregiver.id, caregiver.name)}
-                                className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                                aria-label={t('edit')}
-                              >
-                                <Pencil className="w-4 h-4" />
-                              </Button>
-                            )}
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  disabled={isEditing}
-                                  className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                                  aria-label={t('delete')}
+                        <RowActions>
+                          {isEditing ? (
+                            <RowActionButton
+                              action="confirm"
+                              label={t('approve')}
+                              onClick={approveEdit}
+                              disabled={isSavingEdit}
+                            />
+                          ) : (
+                            <RowActionButton
+                              action="edit"
+                              label={t('edit')}
+                              onClick={() => startEdit(caregiver.id, caregiver.name)}
+                            />
+                          )}
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <RowActionButton
+                                action="delete"
+                                label={t('delete')}
+                                disabled={isEditing}
+                              />
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>{t('confirmDeleteCaregiver')}</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  {caregiver.name}
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => deleteCaregiver(caregiver.id)}
+                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                 >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>{t('confirmDeleteCaregiver')}</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    {caregiver.name}
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => deleteCaregiver(caregiver.id)}
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                  >
-                                    {t('delete')}
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </div>
-                        </TooltipProvider>
+                                  {t('delete')}
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </RowActions>
                       </TableCell>
                     </TableRow>
                     );
