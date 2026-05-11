@@ -239,14 +239,11 @@ export function PaymentReceiptsDialog({
                   >
                     <Download className="w-4 h-4" />
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-destructive hover:text-destructive"
+                  <RowActionButton
+                    action="delete"
+                    label={t('delete')}
                     onClick={() => handleDelete(receipt)}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                  />
                 </div>
               </div>
             ))
