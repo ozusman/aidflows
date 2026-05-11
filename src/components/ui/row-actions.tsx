@@ -12,10 +12,14 @@ const ICONS: Record<ActionKind, React.ComponentType<{ className?: string }>> = {
   confirm: Check,
 };
 
+// Accessibility: icons must meet WCAG AA contrast on light backgrounds.
+// - destructive token in this theme is a pale red bg; destructive-foreground is the
+//   accessible dark red used for text/icons. Always use it for delete icons.
+// - hover tints stay subtle but keep the icon color identical, preserving contrast.
 const STYLES: Record<ActionKind, string> = {
-  edit: 'text-muted-foreground hover:bg-hover-light hover:text-foreground',
-  delete: 'text-destructive hover:bg-destructive/10 hover:text-destructive',
-  confirm: 'bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary',
+  edit: 'text-foreground/80 hover:bg-hover-light hover:text-foreground',
+  delete: 'text-destructive-foreground hover:bg-destructive hover:text-destructive-foreground focus-visible:ring-destructive-foreground',
+  confirm: 'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground',
 };
 
 export interface RowActionButtonProps
