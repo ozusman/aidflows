@@ -34,6 +34,21 @@ function getCaregiverTypeLabel(type: string, t: (key: any) => string): string {
   return labels[type] || type;
 }
 
+const TYPE_BADGE_CLASSES: Record<string, string> = {
+  private_paid: 'bg-caregiver-private text-caregiver-private-foreground hover:bg-caregiver-private/90',
+  family_member: 'bg-caregiver-family text-caregiver-family-foreground hover:bg-caregiver-family/90',
+  foreign_caregiver: 'bg-caregiver-foreign text-caregiver-foreign-foreground hover:bg-caregiver-foreign/90',
+  other: 'bg-caregiver-other text-caregiver-other-foreground hover:bg-caregiver-other/90',
+};
+
+function CaregiverTypeBadge({ type, label }: { type: string; label: string }) {
+  return (
+    <Badge className={`border-transparent ${TYPE_BADGE_CLASSES[type] || TYPE_BADGE_CLASSES.other}`}>
+      {label}
+    </Badge>
+  );
+}
+
 export default function Caregivers() {
   const { t } = useI18n();
   const { caregivers, isLoading, saveCaregiver, updateCaregiver, deleteCaregiver } = useCaregivers();
@@ -44,11 +59,13 @@ export default function Caregivers() {
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
+  const [editingType, setEditingType] = useState<CaregiverType>('private_paid');
   const [isSavingEdit, setIsSavingEdit] = useState(false);
 
-  const startEdit = (id: string, name: string) => {
+  const startEdit = (id: string, name: string, type: CaregiverType) => {
     setEditingId(id);
     setEditingName(name);
+    setEditingType(type);
   };
 
   const cancelEdit = () => {
@@ -64,7 +81,7 @@ export default function Caregivers() {
       return;
     }
     setIsSavingEdit(true);
-    const { error } = await updateCaregiver(editingId, trimmed);
+    const { error } = await updateCaregiver(editingId, trimmed, editingType);
     setIsSavingEdit(false);
     if (error) {
       toast({ title: t('error'), description: error.message, variant: 'destructive' });
@@ -192,9 +209,28 @@ export default function Caregivers() {
                         )}
                       </TableCell>
                       <TableCell>
-                        <Badge variant="secondary">
-                          {getCaregiverTypeLabel(caregiver.caregiver_type, t)}
-                        </Badge>
+                        {isEditing ? (
+                          <Select
+                            value={editingType}
+                            onValueChange={(v: CaregiverType) => setEditingType(v)}
+                            disabled={isSavingEdit}
+                          >
+                            <SelectTrigger aria-label={t('caregiverType')} className="h-9 w-[180px]">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="private_paid">{t('typePrivatePaid')}</SelectItem>
+                              <SelectItem value="family_member">{t('typeFamilyMember')}</SelectItem>
+                              <SelectItem value="foreign_caregiver">{t('typeForeignCaregiver')}</SelectItem>
+                              <SelectItem value="other">{t('typeOther')}</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        ) : (
+                          <CaregiverTypeBadge
+                            type={caregiver.caregiver_type}
+                            label={getCaregiverTypeLabel(caregiver.caregiver_type, t)}
+                          />
+                        )}
                       </TableCell>
                       <TableCell>
                         <RowActions>
@@ -209,7 +245,7 @@ export default function Caregivers() {
                             <RowActionButton
                               action="edit"
                               label={t('edit')}
-                              onClick={() => startEdit(caregiver.id, caregiver.name)}
+                              onClick={() => startEdit(caregiver.id, caregiver.name, caregiver.caregiver_type)}
                             />
                           )}
                           <AlertDialog>
