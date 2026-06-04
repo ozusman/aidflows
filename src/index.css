@@ -69,6 +69,16 @@
     --shift-family: 220 9% 46%;
     --shift-gap: 0 0% 92%;
 
+    /* Caregiver type badge tokens (AA on light bg) */
+    --caregiver-private-bg: 234 80% 94%;
+    --caregiver-private-fg: 234 70% 28%;
+    --caregiver-family-bg: 142 70% 88%;
+    --caregiver-family-fg: 142 65% 22%;
+    --caregiver-foreign-bg: 38 92% 88%;
+    --caregiver-foreign-fg: 28 75% 26%;
+    --caregiver-other-bg: 220 14% 92%;
+    --caregiver-other-fg: 220 15% 25%;
+
     --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     --font-hebrew: 'Heebo', 'Inter', ui-sans-serif, system-ui, sans-serif;
 
@@ -145,6 +155,16 @@
     --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
     --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
     --radius: 0.75rem;
+
+    /* Caregiver type badge tokens (dark mode) */
+    --caregiver-private-bg: 234 40% 22%;
+    --caregiver-private-fg: 234 90% 88%;
+    --caregiver-family-bg: 142 35% 20%;
+    --caregiver-family-fg: 142 70% 80%;
+    --caregiver-foreign-bg: 30 40% 22%;
+    --caregiver-foreign-fg: 38 90% 80%;
+    --caregiver-other-bg: 220 10% 22%;
+    --caregiver-other-fg: 220 15% 85%;
   }
 }
 

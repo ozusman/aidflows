@@ -68,12 +68,18 @@ export function useCaregivers() {
     }
   }, [user, fetchCaregivers]);
 
-  const updateCaregiver = useCallback(async (id: string, name: string) => {
+  const updateCaregiver = useCallback(async (id: string, name: string, caregiverType?: CaregiverType) => {
     if (!user) return { error: new Error('Not authenticated') };
+
+    const updates: { name: string; updated_at: string; caregiver_type?: CaregiverType } = {
+      name: name.trim(),
+      updated_at: new Date().toISOString(),
+    };
+    if (caregiverType) updates.caregiver_type = caregiverType;
 
     const { error } = await supabase
       .from('caregivers')
-      .update({ name: name.trim(), updated_at: new Date().toISOString() })
+      .update(updates)
       .eq('id', id)
       .eq('user_id', user.id);
 
