@@ -68,7 +68,23 @@ export default {
 			'shift-paid': 'hsl(var(--shift-paid))',
 			'shift-family': 'hsl(var(--shift-family))',
 			'shift-gap': 'hsl(var(--shift-gap))',
-			'hover-light': 'hsl(var(--hover-light))'
+			'hover-light': 'hsl(var(--hover-light))',
+			'caregiver-private': {
+				DEFAULT: 'hsl(var(--caregiver-private-bg))',
+				foreground: 'hsl(var(--caregiver-private-fg))'
+			},
+			'caregiver-family': {
+				DEFAULT: 'hsl(var(--caregiver-family-bg))',
+				foreground: 'hsl(var(--caregiver-family-fg))'
+			},
+			'caregiver-foreign': {
+				DEFAULT: 'hsl(var(--caregiver-foreign-bg))',
+				foreground: 'hsl(var(--caregiver-foreign-fg))'
+			},
+			'caregiver-other': {
+				DEFAULT: 'hsl(var(--caregiver-other-bg))',
+				foreground: 'hsl(var(--caregiver-other-fg))'
+			}
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

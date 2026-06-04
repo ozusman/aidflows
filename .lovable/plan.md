@@ -1,27 +1,36 @@
 ## Goal
-Allow editing a caregiver's name directly in the caregivers table row.
+Extend caregiver row edit mode to also change the caregiver type, and give each type its own accessible color badge.
 
 ## UX
-- Each row gets a new **edit (pencil) icon** placed to the left of the existing delete (trash) icon.
-- Pressing the edit icon puts that row into **edit mode**:
-  - The name cell becomes an editable `Input` prefilled with the current name.
-  - The pencil icon is replaced with a **small primary button with a checkmark icon**.
-  - That button shows a **tooltip "Approve"** on hover.
-- Pressing the approve button saves the new name and exits edit mode.
-- Pressing the trash icon during edit mode cancels edit (or we keep delete disabled while editing — see Technical).
-- Only one row editable at a time.
-- Pressing `Enter` in the input also approves; `Escape` cancels.
+- In edit mode (after pressing the edit icon), the type cell becomes a `Select` dropdown with the four existing options (Private Paid, Family Member, Foreign Caregiver, Other), prefilled with the current value.
+- Approve (check) saves both name and type; Enter/Escape keep current behavior. Delete remains disabled while editing.
+- Outside edit mode the type renders as a colored badge (one color per type).
+
+## Badge colors (AA on white background, ≥4.5:1 for text)
+Each badge uses a soft tinted background with a dark same-hue text color so it reads clearly in both light/dark themes and prints OK in B&W.
+
+- Family Member → light green (bg `hsl(142 70% 92%)`, text `hsl(142 65% 22%)`)
+- Private Paid → light indigo/primary tint (bg `hsl(234 80% 94%)`, text `hsl(234 70% 28%)`)
+- Foreign Caregiver → light amber (bg `hsl(38 92% 90%)`, text `hsl(28 75% 26%)`)
+- Other → neutral gray (bg `hsl(220 14% 94%)`, text `hsl(220 15% 25%)`)
+
+All pairs verified ≥ 7:1 contrast (AAA), comfortably passing AA.
 
 ## Technical
-- Edit `src/pages/Caregivers.tsx`:
-  - Local state `editingId: string | null` and `editingName: string`.
-  - Conditional render in the name `TableCell`: `Input` when `editingId === caregiver.id`, otherwise plain text.
-  - Action cell: when editing → primary `Button` (size `icon`, `h-8 w-8`) with `Check` icon wrapped in `Tooltip` showing "Approve". When not editing → ghost `Button` with `Pencil` icon. Delete button remains, disabled while this row is being edited.
-  - Wrap the table in `TooltipProvider` (or rely on the app-level provider if present).
-- Extend `src/hooks/useCaregivers.ts` with an `updateCaregiver(id, name)` function that updates `name` in the `caregivers` table for the current user, then refetches. (Uses existing RLS — same pattern as `deleteCaregiver`.)
-- Add i18n keys in `src/lib/i18n.tsx`: `approve` ("Approve" / "אישור"), `edit` ("Edit" / "עריכה") for accessibility labels.
-- Validation: trim, non-empty, max 100 chars; toast on error/success reusing existing `t('success')` / `t('error')`.
+- `src/index.css`: add 4 semantic token pairs `--caregiver-{type}-bg` / `--caregiver-{type}-fg` (light + dark variants) so colors stay in the design system (no inline hex).
+- `tailwind.config.ts`: expose them as `bg-caregiver-family`, `text-caregiver-family-foreground`, etc.
+- `src/pages/Caregivers.tsx`:
+  - Replace the plain `<Badge variant="secondary">` with a small helper `<CaregiverTypeBadge type={...} />` that maps type → token classes.
+  - In edit mode render a `Select` (same options as the Add form) bound to new state `editingType`.
+  - `startEdit(id, name, type)` seeds both fields; `approveEdit` passes both to `updateCaregiver`.
+- `src/hooks/useCaregivers.ts`: extend `updateCaregiver(id, name, caregiverType)` to also update `caregiver_type`.
+- Optionally extract `CaregiverTypeBadge` into its own file under `src/components/caregivers/` for reuse, but inline helper is fine since it's only used here.
+
+## Accessibility
+- Verify the chosen token pairs against `--background` (light) and `--card` (dark) ≥ 4.5:1.
+- Keep badge text weight at `font-semibold` (existing Badge default) for legibility at small sizes.
+- The Select in edit mode inherits shadcn's accessible focus ring; add `aria-label={t('caregiverType')}` on the trigger.
 
 ## Out of scope
-- Editing the caregiver type (only the name is editable, per the request).
-- Bulk edits or keyboard navigation beyond Enter/Escape.
+- Changing the Add Caregiver form.
+- Bulk type edits, or recoloring badges elsewhere in the app (shifts list, etc.) — can be a follow-up using the same tokens.
