@@ -14,6 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { CaregiverAutocomplete } from './CaregiverAutocomplete';
+import { CaregiverTypeBadge } from '@/components/caregivers/CaregiverTypeBadge';
 
 export function ShiftForm() {
   const { t } = useI18n();
@@ -174,21 +175,14 @@ export function ShiftForm() {
             />
           </div>
           <div className="space-y-2">
-            <Label>{t('caregiverType')} *</Label>
-            <Select
-              value={formData.caregiverType}
-              onValueChange={(value: CaregiverType) => updateField('caregiverType', value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="private_paid">{t('typePrivatePaid')}</SelectItem>
-                <SelectItem value="family_member">{t('typeFamilyMember')}</SelectItem>
-                <SelectItem value="foreign_caregiver">{t('typeForeignCaregiver')}</SelectItem>
-                <SelectItem value="other">{t('typeOther')}</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label>{t('caregiverType')}</Label>
+            <div className="h-10 flex items-center">
+              {formData.caregiverName ? (
+                <CaregiverTypeBadge type={formData.caregiverType} />
+              ) : (
+                <span className="text-sm text-muted-foreground">—</span>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>
