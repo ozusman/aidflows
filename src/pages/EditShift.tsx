@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { CaregiverAutocomplete } from '@/components/shifts/CaregiverAutocomplete';
+import { CaregiverTypeBadge } from '@/components/caregivers/CaregiverTypeBadge';
 
 const HOURLY_RATE = 70;
 
