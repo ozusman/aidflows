@@ -83,7 +83,12 @@ export function usePaymentReceipts() {
         return [];
       }
 
+      const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
       for (const file of files) {
+        if (file.size > MAX_FILE_BYTES) {
+          logger.warn('Skipping oversized file:', file.name, file.size);
+          continue;
+        }
         const fileExt = file.name.split('.').pop();
         // Use user_id as the folder prefix for storage RLS
         const fileName = `${user.id}/${shift.id}/${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
