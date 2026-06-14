@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useI18n } from '@/lib/i18n';
+import { useToast } from '@/hooks/use-toast';
 import { usePaymentReceipts, PaymentReceipt } from '@/hooks/usePaymentReceipts';
 import { Shift } from '@/types/shift';
 import {
