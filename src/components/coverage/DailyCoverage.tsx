@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useI18n } from '@/lib/i18n';
 import { useShifts } from '@/hooks/useShifts';
 import { Shift } from '@/types/shift';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -131,6 +132,11 @@ export function DailyCoverage() {
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-medium flex items-center justify-between">
             <span>{t('dailyCoverage')}</span>
+            {coveragePercent === 100 ? (
+              <Badge className="bg-green-100 text-green-800 border-green-200">✓ Full Coverage</Badge>
+            ) : (
+              <Badge className="bg-warning/20 text-warning-foreground border-warning">⚠ Gap Detected</Badge>
+            )}
             <span className="text-lg font-semibold">{coveragePercent}%</span>
           </CardTitle>
         </CardHeader>
@@ -157,13 +163,16 @@ export function DailyCoverage() {
                       "h-full flex items-center justify-center text-xs font-medium transition-colors",
                       block.type === 'paid' && "bg-primary text-primary-foreground",
                       block.type === 'family' && "bg-muted-foreground/30 text-foreground",
-                      block.type === 'gap' && "bg-muted"
+                      block.type === 'gap' && "bg-warning/20 border border-warning text-warning"
                     )}
                     style={{ width: `${widthPercent}%` }}
                     title={block.shift?.caregiverName || t('uncovered')}
                   >
                     {widthPercent > 8 && block.shift && (
                       <span className="truncate px-1">{block.shift.caregiverName}</span>
+                    )}
+                    {widthPercent > 5 && block.type === 'gap' && (
+                      <span className="truncate px-1">Gap</span>
                     )}
                   </div>
                 );
