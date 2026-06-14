@@ -82,6 +82,7 @@ export function PaymentReceiptsDialog({
   shift 
 }: PaymentReceiptsDialogProps) {
   const { t } = useI18n();
+  const { toast } = useToast();
   const { 
     isUploading, 
     uploadReceipts, 
