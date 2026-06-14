@@ -273,6 +273,7 @@ const translations = {
     password: 'Password',
     welcomeMessage: 'Welcome, please sign in to continue',
     invalidCredentials: 'Invalid credentials',
+    unknownError: 'Something went wrong. Please try again.',
     emailAlreadyRegistered: 'Email is already registered',
     accountCreated: 'Account created successfully! You can now sign in',
     forgotPassword: 'Forgot password?',
