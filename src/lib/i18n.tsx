@@ -122,6 +122,7 @@ const translations = {
     password: 'סיסמה',
     welcomeMessage: 'ברוכים הבאים, אנא התחברו להמשיך',
     invalidCredentials: 'פרטי התחברות שגויים',
+    unknownError: 'משהו השתבש. נסו שוב מאוחר יותר.',
     emailAlreadyRegistered: 'כתובת הדוא"ל כבר רשומה',
     accountCreated: 'החשבון נוצר בהצלחה! תוכלו להתחבר כעת',
     forgotPassword: 'שכחת סיסמה?',
