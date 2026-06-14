@@ -116,7 +116,8 @@ export default function ResetPassword() {
     setIsLoading(false);
 
     if (error) {
-      setError(error.message);
+      logger.error('Update password error:', error);
+      setError(t('unknownError'));
     } else {
       setSuccess(t('passwordUpdated'));
       setTimeout(() => navigate('/'), 1500);
