@@ -110,6 +110,7 @@ const translations = {
     uploadReceipts: 'העלאת קבלות',
     dragFilesHere: 'גרור קבצים לכאן או לחץ להעלאה',
     noReceiptsUploaded: 'לא הועלו קבלות',
+    fileTooLarge: 'הקובץ גדול מדי (מקסימום 10MB)',
     uploading: 'מעלה...',
     download: 'הורדה',
     receiptsCount: 'קבלות',
