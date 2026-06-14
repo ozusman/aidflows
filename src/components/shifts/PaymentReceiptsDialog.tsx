@@ -109,9 +109,19 @@ export function PaymentReceiptsDialog({
   const handleFileSelect = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
 
-    const validFiles = Array.from(files).filter(file => 
-      ACCEPTED_TYPES.includes(file.type)
+    const all = Array.from(files);
+    const oversized = all.filter(file => file.size > MAX_FILE_BYTES);
+    const validFiles = all.filter(file =>
+      ACCEPTED_TYPES.includes(file.type) && file.size <= MAX_FILE_BYTES
     );
+
+    if (oversized.length > 0) {
+      toast({
+        title: t('fileTooLarge'),
+        description: oversized.map(f => f.name).join(', '),
+        variant: 'destructive',
+      });
+    }
 
     if (validFiles.length === 0) return;
 
