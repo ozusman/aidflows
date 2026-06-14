@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useI18n } from '@/lib/i18n';
+import { useToast } from '@/hooks/use-toast';
 import { usePaymentReceipts, PaymentReceipt } from '@/hooks/usePaymentReceipts';
 import { Shift } from '@/types/shift';
 import {
@@ -28,6 +29,7 @@ const ACCEPTED_TYPES = [
 ];
 
 const ACCEPTED_EXTENSIONS = '.jpg,.jpeg,.png,.pdf,.xlsx,.xls';
+const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
 
 function getFileIcon(fileType: string) {
   if (fileType.startsWith('image/')) {
@@ -80,6 +82,7 @@ export function PaymentReceiptsDialog({
   shift 
 }: PaymentReceiptsDialogProps) {
   const { t } = useI18n();
+  const { toast } = useToast();
   const { 
     isUploading, 
     uploadReceipts, 
@@ -108,9 +111,19 @@ export function PaymentReceiptsDialog({
   const handleFileSelect = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
 
-    const validFiles = Array.from(files).filter(file => 
-      ACCEPTED_TYPES.includes(file.type)
+    const all = Array.from(files);
+    const oversized = all.filter(file => file.size > MAX_FILE_BYTES);
+    const validFiles = all.filter(file =>
+      ACCEPTED_TYPES.includes(file.type) && file.size <= MAX_FILE_BYTES
     );
+
+    if (oversized.length > 0) {
+      toast({
+        title: t('fileTooLarge'),
+        description: oversized.map(f => f.name).join(', '),
+        variant: 'destructive',
+      });
+    }
 
     if (validFiles.length === 0) return;
 

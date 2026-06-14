@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -115,7 +116,8 @@ export default function ResetPassword() {
     setIsLoading(false);
 
     if (error) {
-      setError(error.message);
+      logger.error('Update password error:', error);
+      setError(t('unknownError'));
     } else {
       setSuccess(t('passwordUpdated'));
       setTimeout(() => navigate('/'), 1500);

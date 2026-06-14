@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -65,7 +66,8 @@ export default function Auth() {
       if (error.message.includes('Invalid login credentials')) {
         setError(t('invalidCredentials'));
       } else {
-        setError(error.message);
+        logger.error('Sign in error:', error);
+        setError(t('unknownError'));
       }
     }
   };
@@ -85,7 +87,8 @@ export default function Auth() {
       if (error.message.includes('already registered')) {
         setError(t('emailAlreadyRegistered'));
       } else {
-        setError(error.message);
+        logger.error('Sign up error:', error);
+        setError(t('unknownError'));
       }
     } else {
       setSuccess(t('accountCreated'));
@@ -108,7 +111,8 @@ export default function Auth() {
     setIsLoading(false);
     
     if (error) {
-      setError(error.message);
+      logger.error('Reset password error:', error);
+      setError(t('unknownError'));
     } else {
       setResetEmailSentTo(email);
     }
@@ -121,7 +125,8 @@ export default function Auth() {
       redirect_uri: window.location.origin,
     });
     if (result.error) {
-      setError(result.error.message);
+      logger.error('Google sign in error:', result.error);
+      setError(t('unknownError'));
       setIsLoading(false);
       return;
     }
