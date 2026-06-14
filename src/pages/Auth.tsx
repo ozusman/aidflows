@@ -66,7 +66,8 @@ export default function Auth() {
       if (error.message.includes('Invalid login credentials')) {
         setError(t('invalidCredentials'));
       } else {
-        setError(error.message);
+        logger.error('Sign in error:', error);
+        setError(t('unknownError'));
       }
     }
   };
