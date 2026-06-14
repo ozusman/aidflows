@@ -262,6 +262,7 @@ const translations = {
     uploadReceipts: 'Upload Receipts',
     dragFilesHere: 'Drag files here or click to upload',
     noReceiptsUploaded: 'No receipts uploaded',
+    fileTooLarge: 'File too large (max 10MB)',
     uploading: 'Uploading...',
     download: 'Download',
     receiptsCount: 'receipts',
