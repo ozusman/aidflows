@@ -28,6 +28,7 @@ const ACCEPTED_TYPES = [
 ];
 
 const ACCEPTED_EXTENSIONS = '.jpg,.jpeg,.png,.pdf,.xlsx,.xls';
+const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
 
 function getFileIcon(fileType: string) {
   if (fileType.startsWith('image/')) {
