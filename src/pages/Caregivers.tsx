@@ -84,7 +84,7 @@ export default function Caregivers() {
       return;
     }
     setIsSavingEdit(true);
-    const { error } = await updateCaregiver(editingId, trimmed, editingType);
+    const { error } = await updateCaregiver(editingId, trimmed, editingType, editingRate);
     setIsSavingEdit(false);
     if (error) {
       toast({ title: t('error'), description: error.message, variant: 'destructive' });
