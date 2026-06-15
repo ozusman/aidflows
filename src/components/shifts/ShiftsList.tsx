@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useShifts } from "@/hooks/useShifts";
 import { usePaymentReceipts } from "@/hooks/usePaymentReceipts";
+import { useCaregivers } from "@/hooks/useCaregivers";
+
 
 import { Shift } from "@/types/shift";
 import { Card, CardContent } from "@/components/ui/card";
@@ -38,6 +40,9 @@ export function ShiftsList() {
   const { t, isRTL } = useI18n();
   const { shifts, isLoading, deleteShift, updateShift } = useShifts();
   const { getReceiptCountByShift } = usePaymentReceipts();
+  const { caregivers } = useCaregivers();
+  const caregiverRates = new Map(caregivers.map((c) => [c.name, c.hourly_rate || 0]));
+
   
 
 
@@ -155,7 +160,7 @@ export function ShiftsList() {
                       </TableCell>
                       <TableCell>
                         {t("currencySymbol")}
-                        {((shift.paymentAmount || 0) + (shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}
+                        {(shift.caregiverType === "family_member" ? 0 : shift.totalHours * (caregiverRates.get(shift.caregiverName) ?? 0) + (shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
