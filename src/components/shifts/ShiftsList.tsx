@@ -135,7 +135,6 @@ export function ShiftsList() {
               </TableHeader>
               <TableBody>
                 {sortedShifts.map((shift) => {
-                  const totalAmount = shift.paymentAmount + (shift.travelCost || 0) + (shift.parkingCost || 0);
                   const receiptCount = receiptCounts[shift.id] || 0;
                   
                   return (
@@ -161,7 +160,7 @@ export function ShiftsList() {
                         {t('currencySymbol')}{(shift.parkingCost || 0).toFixed(0)}
                       </TableCell>
                       <TableCell>
-                        {t('currencySymbol')}{totalAmount.toFixed(0)}
+                        {t('currencySymbol')}{shift.paymentAmount.toFixed(0)}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
