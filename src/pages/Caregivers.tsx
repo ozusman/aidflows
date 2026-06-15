@@ -56,16 +56,19 @@ export default function Caregivers() {
 
   const [newName, setNewName] = useState('');
   const [newType, setNewType] = useState<CaregiverType>('private_paid');
+  const [newRate, setNewRate] = useState<number>(0);
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
   const [editingType, setEditingType] = useState<CaregiverType>('private_paid');
+  const [editingRate, setEditingRate] = useState<number>(0);
   const [isSavingEdit, setIsSavingEdit] = useState(false);
 
-  const startEdit = (id: string, name: string, type: CaregiverType) => {
+  const startEdit = (id: string, name: string, type: CaregiverType, rate: number) => {
     setEditingId(id);
     setEditingName(name);
     setEditingType(type);
+    setEditingRate(rate);
   };
 
   const cancelEdit = () => {
@@ -81,7 +84,7 @@ export default function Caregivers() {
       return;
     }
     setIsSavingEdit(true);
-    const { error } = await updateCaregiver(editingId, trimmed, editingType);
+    const { error } = await updateCaregiver(editingId, trimmed, editingType, editingRate);
     setIsSavingEdit(false);
     if (error) {
       toast({ title: t('error'), description: error.message, variant: 'destructive' });
@@ -103,9 +106,10 @@ export default function Caregivers() {
 
     setIsAdding(true);
     try {
-      await saveCaregiver(trimmedName, newType);
+      await saveCaregiver(trimmedName, newType, newRate);
       setNewName('');
       setNewType('private_paid');
+      setNewRate(0);
       toast({
         title: t('success'),
         description: t('shiftSaved'),
@@ -132,7 +136,7 @@ export default function Caregivers() {
       {/* Add Caregiver Form */}
       <Card>
         <CardContent className="pt-6">
-          <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-4 items-end">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
             <div className="space-y-2">
               <Label>{t('caregiverName')}</Label>
               <Input
@@ -156,10 +160,22 @@ export default function Caregivers() {
                 </SelectContent>
               </Select>
             </div>
-            <Button onClick={handleAddCaregiver} disabled={isAdding}>
-              <Plus className="w-4 h-4 me-2" />
-              {t('addNewCaregiver')}
-            </Button>
+            <div className="space-y-2">
+              <Label>Hourly rate (€/hr)</Label>
+              <Input
+                type="number"
+                min={0}
+                step="0.01"
+                value={newRate}
+                onChange={(e) => setNewRate(Number(e.target.value) || 0)}
+              />
+            </div>
+            <div className="flex sm:justify-end">
+              <Button onClick={handleAddCaregiver} disabled={isAdding}>
+                <Plus className="w-4 h-4 me-2" />
+                {t('addNewCaregiver')}
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -178,6 +194,7 @@ export default function Caregivers() {
                   <TableRow>
                     <TableHead className="text-start">{t('caregiverName')}</TableHead>
                     <TableHead className="text-start">{t('caregiverType')}</TableHead>
+                    <TableHead className="text-start">Hourly rate (€/hr)</TableHead>
                     <TableHead className="w-[120px]"></TableHead>
                   </TableRow>
                 </TableHeader>
@@ -233,6 +250,23 @@ export default function Caregivers() {
                         )}
                       </TableCell>
                       <TableCell>
+                        {isEditing ? (
+                          <Input
+                            type="number"
+                            min={0}
+                            step="0.01"
+                            value={editingRate}
+                            onChange={(e) => setEditingRate(Number(e.target.value) || 0)}
+                            className="h-9 w-[120px]"
+                            disabled={isSavingEdit}
+                          />
+                        ) : caregiver.caregiver_type === 'family_member' && Number(caregiver.hourly_rate) === 0 ? (
+                          <span className="text-muted-foreground">—</span>
+                        ) : (
+                          `€${Number(caregiver.hourly_rate)}/hr`
+                        )}
+                      </TableCell>
+                      <TableCell>
                         <RowActions>
                           {isEditing ? (
                             <RowActionButton
@@ -245,7 +279,7 @@ export default function Caregivers() {
                             <RowActionButton
                               action="edit"
                               label={t('edit')}
-                              onClick={() => startEdit(caregiver.id, caregiver.name, caregiver.caregiver_type)}
+                              onClick={() => startEdit(caregiver.id, caregiver.name, caregiver.caregiver_type, Number(caregiver.hourly_rate) || 0)}
                             />
                           )}
                           <AlertDialog>

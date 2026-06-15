@@ -1,36 +1,45 @@
-## Goal
-Extend caregiver row edit mode to also change the caregiver type, and give each type its own accessible color badge.
+## Add `hourly_rate` to Caregivers
 
-## UX
-- In edit mode (after pressing the edit icon), the type cell becomes a `Select` dropdown with the four existing options (Private Paid, Family Member, Foreign Caregiver, Other), prefilled with the current value.
-- Approve (check) saves both name and type; Enter/Escape keep current behavior. Delete remains disabled while editing.
-- Outside edit mode the type renders as a colored badge (one color per type).
+### 1. Database migration
+Add column to `caregivers`:
+```sql
+ALTER TABLE public.caregivers
+  ADD COLUMN hourly_rate NUMERIC NOT NULL DEFAULT 0;
+```
+No RLS/grant changes needed (table already configured).
 
-## Badge colors (AA on white background, ≥4.5:1 for text)
-Each badge uses a soft tinted background with a dark same-hue text color so it reads clearly in both light/dark themes and prints OK in B&W.
+Note: `src/integrations/supabase/types.ts` is auto-generated and regenerates after the migration runs — no manual edit required (and manual edits would be overwritten).
 
-- Family Member → light green (bg `hsl(142 70% 92%)`, text `hsl(142 65% 22%)`)
-- Private Paid → light indigo/primary tint (bg `hsl(234 80% 94%)`, text `hsl(234 70% 28%)`)
-- Foreign Caregiver → light amber (bg `hsl(38 92% 90%)`, text `hsl(28 75% 26%)`)
-- Other → neutral gray (bg `hsl(220 14% 94%)`, text `hsl(220 15% 25%)`)
+### 2. `src/hooks/useCaregivers.ts`
+- Extend `Caregiver` interface with `hourly_rate: number`.
+- `saveCaregiver(name, caregiverType, hourlyRate)` — include `hourly_rate` in upsert payload.
+- `updateCaregiver(id, name, caregiverType?, hourlyRate?)` — include `hourly_rate` in update payload when provided.
+- `fetchCaregivers` already does `select('*')`, so reads pick up the new column automatically.
 
-All pairs verified ≥ 7:1 contrast (AAA), comfortably passing AA.
+### 3. `src/pages/Caregivers.tsx` — Add form
+- New state: `newRate` (number, default 0).
+- Add an `Input type="number" min={0} step="0.01"` with `Label` "Hourly rate (€/hr)".
+- Place it in the add form grid, below the Caregiver Type select. Adjust grid template so the Add button stays aligned (switch the current `sm:grid-cols-[1fr_1fr_auto]` to a 2-row layout or `sm:grid-cols-2` with the button on its own row) — using only existing tailwind tokens.
+- Pass `newRate` to `saveCaregiver`; reset to 0 after save.
 
-## Technical
-- `src/index.css`: add 4 semantic token pairs `--caregiver-{type}-bg` / `--caregiver-{type}-fg` (light + dark variants) so colors stay in the design system (no inline hex).
-- `tailwind.config.ts`: expose them as `bg-caregiver-family`, `text-caregiver-family-foreground`, etc.
-- `src/pages/Caregivers.tsx`:
-  - Replace the plain `<Badge variant="secondary">` with a small helper `<CaregiverTypeBadge type={...} />` that maps type → token classes.
-  - In edit mode render a `Select` (same options as the Add form) bound to new state `editingType`.
-  - `startEdit(id, name, type)` seeds both fields; `approveEdit` passes both to `updateCaregiver`.
-- `src/hooks/useCaregivers.ts`: extend `updateCaregiver(id, name, caregiverType)` to also update `caregiver_type`.
-- Optionally extract `CaregiverTypeBadge` into its own file under `src/components/caregivers/` for reuse, but inline helper is fine since it's only used here.
+### 4. `src/pages/Caregivers.tsx` — Edit row
+- New state: `editingRate` (number).
+- `startEdit` accepts and sets the current rate.
+- In the editing row, render a number `Input` (min 0, step 0.01) in the rate cell.
+- `approveEdit` passes `editingRate` to `updateCaregiver`.
 
-## Accessibility
-- Verify the chosen token pairs against `--background` (light) and `--card` (dark) ≥ 4.5:1.
-- Keep badge text weight at `font-semibold` (existing Badge default) for legibility at small sizes.
-- The Select in edit mode inherits shadcn's accessible focus ring; add `aria-label={t('caregiverType')}` on the trigger.
+### 5. `src/pages/Caregivers.tsx` — Table column
+- Add `<TableHead>` "Hourly rate (€/hr)" between Type and the actions column.
+- Cell rendering:
+  - If `caregiver.caregiver_type === 'family_member'` and `hourly_rate === 0` → render `—` (muted text via existing `text-muted-foreground` token).
+  - Otherwise → `€{hourly_rate}/hr`.
 
-## Out of scope
-- Changing the Add Caregiver form.
-- Bulk type edits, or recoloring badges elsewhere in the app (shifts list, etc.) — can be a follow-up using the same tokens.
+### 6. i18n
+Reuse literal strings ("Hourly rate (€/hr)", "—") inline as specified by the request — no i18n key additions in this step to keep scope minimal. (Flag: if you'd prefer translation keys added to `src/lib/i18n.tsx`, say so and I'll include them.)
+
+### Files touched
+- New migration (via migration tool)
+- `src/hooks/useCaregivers.ts`
+- `src/pages/Caregivers.tsx`
+
+No other pages, components, or types files are modified.

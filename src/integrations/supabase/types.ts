@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           caregiver_type: string
           created_at: string
+          hourly_rate: number
           id: string
           name: string
           updated_at: string
@@ -26,6 +27,7 @@ export type Database = {
         Insert: {
           caregiver_type: string
           created_at?: string
+          hourly_rate?: number
           id?: string
           name: string
           updated_at?: string
@@ -34,6 +36,7 @@ export type Database = {
         Update: {
           caregiver_type?: string
           created_at?: string
+          hourly_rate?: number
           id?: string
           name?: string
           updated_at?: string
