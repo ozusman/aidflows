@@ -75,6 +75,7 @@ export function Header() {
               size="icon"
               onClick={handleSignOut}
               title={t('signOut')}
+              aria-label={t('signOut')}
               className="hidden sm:flex"
             >
               <LogOut className="w-4 h-4" />
@@ -86,6 +87,8 @@ export function Header() {
               size="icon"
               className="md:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? t('close') : t('menu')}
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </Button>
