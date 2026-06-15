@@ -148,6 +148,10 @@ const translations = {
     language: 'שפה',
     hebrew: 'עברית',
     english: 'English',
+    menu: 'תפריט',
+    close: 'סגור',
+    previous: 'הקודם',
+    next: 'הבא',
 
     // Caregivers
     navCaregivers: 'מטפלים',
@@ -300,6 +304,10 @@ const translations = {
     language: 'Language',
     hebrew: 'עברית',
     english: 'English',
+    menu: 'Menu',
+    close: 'Close',
+    previous: 'Previous',
+    next: 'Next',
 
     // Caregivers
     navCaregivers: 'Caregivers',

@@ -80,13 +80,13 @@ export function WeeklySummary() {
           <div className="flex flex-col sm:flex-row items-center gap-4">
             {/* Week navigation */}
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="icon" onClick={() => navigateWeek('prev')}>
+              <Button variant="outline" size="icon" onClick={() => navigateWeek('prev')} aria-label={t('previous')}>
                 {isRTL ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
               </Button>
               <div className="text-sm font-medium min-w-[180px] text-center">
                 {format(new Date(weekRange.start), 'dd/MM')} - {format(new Date(weekRange.end), 'dd/MM/yyyy')}
               </div>
-              <Button variant="outline" size="icon" onClick={() => navigateWeek('next')}>
+              <Button variant="outline" size="icon" onClick={() => navigateWeek('next')} aria-label={t('next')}>
                 {isRTL ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
               </Button>
             </div>
