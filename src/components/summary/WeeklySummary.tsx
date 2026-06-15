@@ -114,7 +114,7 @@ export function WeeklySummary() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t('allCaregivers')}</SelectItem>
-                {caregivers.map(name => (
+                {caregiverNames.map(name => (
                   <SelectItem key={name} value={name}>{name}</SelectItem>
                 ))}
               </SelectContent>
