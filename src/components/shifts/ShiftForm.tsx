@@ -286,27 +286,19 @@ export function ShiftForm() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="travelCost">{t('travelCost')}</Label>
+              <Label htmlFor="expenses">{t('expenses')}</Label>
               <Input
-                id="travelCost"
+                id="expenses"
                 type="number"
                 dir="ltr"
                 min="0"
                 step="0.01"
                 value={formData.travelCost}
-                onChange={(e) => updateField('travelCost', parseFloat(e.target.value) || 0)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="parkingCost">{t('parkingCost')}</Label>
-              <Input
-                id="parkingCost"
-                type="number"
-                dir="ltr"
-                min="0"
-                step="0.01"
-                value={formData.parkingCost}
-                onChange={(e) => updateField('parkingCost', parseFloat(e.target.value) || 0)}
+                onChange={(e) => {
+                  const val = parseFloat(e.target.value) || 0;
+                  updateField('travelCost', val);
+                  updateField('parkingCost', 0);
+                }}
               />
             </div>
           </CardContent>
