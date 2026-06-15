@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 import { Paperclip } from 'lucide-react';
 import { RowActionButton, RowActions } from '@/components/ui/row-actions';
 import { Link } from 'react-router-dom';
-import { cn } from '@/lib/utils';
+import { cn, formatHoursToHHMM } from '@/lib/utils';
 import { PaymentReceiptsDialog } from './PaymentReceiptsDialog';
 
 function getCaregiverTypeLabel(type: Shift['caregiverType'], t: (key: any) => string): string {
@@ -151,7 +151,7 @@ export function ShiftsList() {
                         <div>{shift.locationName}</div>
                       </TableCell>
                       <TableCell>
-                        {shift.totalHours.toFixed(2)}
+                        {formatHoursToHHMM(shift.totalHours)}
                       </TableCell>
                       <TableCell>
                         {t('currencySymbol')}{(shift.travelCost || 0).toFixed(0)}

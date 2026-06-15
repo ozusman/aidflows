@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useI18n } from '@/lib/i18n';
 import { useShifts } from '@/hooks/useShifts';
+import { formatHoursToHHMM } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -118,7 +119,7 @@ export function WeeklySummary() {
         <Card>
           <CardContent className="py-4">
             <div className="text-sm text-muted-foreground">{t('totalHours')}</div>
-            <div className="text-2xl font-semibold">{totals.hours.toFixed(1)}</div>
+            <div className="text-2xl font-semibold">{formatHoursToHHMM(totals.hours)}</div>
           </CardContent>
         </Card>
         <Card>
@@ -160,7 +161,7 @@ export function WeeklySummary() {
                       <TableCell>{shift.startTime}</TableCell>
                       <TableCell>{shift.endTime}</TableCell>
                       <TableCell className="text-center">
-                        {shift.totalHours.toFixed(2)}
+                        {formatHoursToHHMM(shift.totalHours)}
                       </TableCell>
                       <TableCell>{shift.caregiverName}</TableCell>
                       <TableCell>{shift.locationName}</TableCell>

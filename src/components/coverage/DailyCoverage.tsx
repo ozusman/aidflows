@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { format, addDays, subDays } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn, formatHoursToHHMM } from "@/lib/utils";
 
 interface TimeBlock {
   startMinute: number;
@@ -209,7 +209,7 @@ export function DailyCoverage() {
                   <div>
                     <div className="font-medium">{shift.caregiverName}</div>
                     <div className="text-sm text-muted-foreground">
-                      {shift.startTime} - {shift.endTime} ({shift.totalHours.toFixed(1)}h)
+                      {shift.startTime} - {shift.endTime} ({formatHoursToHHMM(shift.totalHours)}h)
                     </div>
                   </div>
                   <div className="text-end">

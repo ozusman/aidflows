@@ -13,6 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { formatHoursToHHMM } from '@/lib/utils';
 import { CaregiverAutocomplete } from './CaregiverAutocomplete';
 import { CaregiverTypeBadge } from '@/components/caregivers/CaregiverTypeBadge';
 
@@ -149,7 +150,7 @@ export function ShiftForm() {
           <div className="space-y-2">
             <Label>{t('totalHours')}</Label>
             <div dir="ltr" className="h-10 px-3 py-2 rounded-md border border-input bg-hover-light text-foreground flex items-center">
-              {calculatedHours.toFixed(2)}
+              {formatHoursToHHMM(calculatedHours)}
             </div>
           </div>
         </CardContent>
