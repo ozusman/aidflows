@@ -75,7 +75,7 @@ export function WeeklySummary() {
       s.caregiverName,
       s.caregiverType,
       s.locationName,
-      s.paymentAmount.toFixed(0),
+      computeAmount(s).toFixed(2),
     ]);
     
     const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
