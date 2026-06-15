@@ -136,7 +136,7 @@ export default function Caregivers() {
       {/* Add Caregiver Form */}
       <Card>
         <CardContent className="pt-6">
-          <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-4 items-end">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
             <div className="space-y-2">
               <Label>{t('caregiverName')}</Label>
               <Input
@@ -160,10 +160,22 @@ export default function Caregivers() {
                 </SelectContent>
               </Select>
             </div>
-            <Button onClick={handleAddCaregiver} disabled={isAdding}>
-              <Plus className="w-4 h-4 me-2" />
-              {t('addNewCaregiver')}
-            </Button>
+            <div className="space-y-2">
+              <Label>Hourly rate (€/hr)</Label>
+              <Input
+                type="number"
+                min={0}
+                step="0.01"
+                value={newRate}
+                onChange={(e) => setNewRate(Number(e.target.value) || 0)}
+              />
+            </div>
+            <div className="flex sm:justify-end">
+              <Button onClick={handleAddCaregiver} disabled={isAdding}>
+                <Plus className="w-4 h-4 me-2" />
+                {t('addNewCaregiver')}
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
