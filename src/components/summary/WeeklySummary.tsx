@@ -168,7 +168,7 @@ export function WeeklySummary() {
                     <TableHead className="text-center">{t('hours')}</TableHead>
                     <TableHead>{t('caregiver')}</TableHead>
                     <TableHead>{t('location')}</TableHead>
-                    <TableHead className="text-center">Travel</TableHead>
+                    <TableHead className="text-center">{t('expenses')}</TableHead>
                     <TableHead className="text-center">{t('paymentAmount')}</TableHead>
                   </TableRow>
                 </TableHeader>
