@@ -1,0 +1,1 @@
+ALTER TABLE public.caregivers ADD COLUMN IF NOT EXISTS hourly_rate NUMERIC NOT NULL DEFAULT 0;
