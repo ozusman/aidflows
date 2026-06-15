@@ -250,6 +250,23 @@ export default function Caregivers() {
                         )}
                       </TableCell>
                       <TableCell>
+                        {isEditing ? (
+                          <Input
+                            type="number"
+                            min={0}
+                            step="0.01"
+                            value={editingRate}
+                            onChange={(e) => setEditingRate(Number(e.target.value) || 0)}
+                            className="h-9 w-[120px]"
+                            disabled={isSavingEdit}
+                          />
+                        ) : caregiver.caregiver_type === 'family_member' && Number(caregiver.hourly_rate) === 0 ? (
+                          <span className="text-muted-foreground">—</span>
+                        ) : (
+                          `€${Number(caregiver.hourly_rate)}/hr`
+                        )}
+                      </TableCell>
+                      <TableCell>
                         <RowActions>
                           {isEditing ? (
                             <RowActionButton
