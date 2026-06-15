@@ -40,7 +40,6 @@ export function ShiftsList() {
   const { getReceiptCountByShift } = usePaymentReceipts();
   const { caregivers } = useCaregivers();
 
-  const caregiverRates = new Map(caregivers.map((c) => [c.name, c.hourly_rate || 0]));
 
   const [receiptCounts, setReceiptCounts] = useState<Record<string, number>>({});
   const [selectedShift, setSelectedShift] = useState<Shift | null>(null);
