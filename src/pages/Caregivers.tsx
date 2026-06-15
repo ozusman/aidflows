@@ -106,9 +106,10 @@ export default function Caregivers() {
 
     setIsAdding(true);
     try {
-      await saveCaregiver(trimmedName, newType);
+      await saveCaregiver(trimmedName, newType, newRate);
       setNewName('');
       setNewType('private_paid');
+      setNewRate(0);
       toast({
         title: t('success'),
         description: t('shiftSaved'),
