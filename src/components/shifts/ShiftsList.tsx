@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useShifts } from "@/hooks/useShifts";
 import { usePaymentReceipts } from "@/hooks/usePaymentReceipts";
+import { useCaregivers } from "@/hooks/useCaregivers";
 import { Shift } from "@/types/shift";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
