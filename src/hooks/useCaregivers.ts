@@ -45,7 +45,7 @@ export function useCaregivers() {
     fetchCaregivers();
   }, [fetchCaregivers]);
 
-  const saveCaregiver = useCallback(async (name: string, caregiverType: CaregiverType) => {
+  const saveCaregiver = useCallback(async (name: string, caregiverType: CaregiverType, hourlyRate: number = 0) => {
     if (!user) return;
 
     const { error } = await supabase
@@ -55,6 +55,7 @@ export function useCaregivers() {
           user_id: user.id,
           name: name.trim(),
           caregiver_type: caregiverType,
+          hourly_rate: hourlyRate,
         },
         {
           onConflict: 'user_id,name',
@@ -69,14 +70,15 @@ export function useCaregivers() {
     }
   }, [user, fetchCaregivers]);
 
-  const updateCaregiver = useCallback(async (id: string, name: string, caregiverType?: CaregiverType) => {
+  const updateCaregiver = useCallback(async (id: string, name: string, caregiverType?: CaregiverType, hourlyRate?: number) => {
     if (!user) return { error: new Error('Not authenticated') };
 
-    const updates: { name: string; updated_at: string; caregiver_type?: CaregiverType } = {
+    const updates: { name: string; updated_at: string; caregiver_type?: CaregiverType; hourly_rate?: number } = {
       name: name.trim(),
       updated_at: new Date().toISOString(),
     };
     if (caregiverType) updates.caregiver_type = caregiverType;
+    if (hourlyRate !== undefined) updates.hourly_rate = hourlyRate;
 
     const { error } = await supabase
       .from('caregivers')
