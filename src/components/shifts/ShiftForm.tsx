@@ -150,7 +150,7 @@ export function ShiftForm() {
           <div className="space-y-2">
             <Label>{t('totalHours')}</Label>
             <div dir="ltr" className="h-10 px-3 py-2 rounded-md border border-input bg-hover-light text-foreground flex items-center">
-              {calculatedHours.toFixed(2)}
+              {formatHoursToHHMM(calculatedHours)}
             </div>
           </div>
         </CardContent>

@@ -209,7 +209,7 @@ export function DailyCoverage() {
                   <div>
                     <div className="font-medium">{shift.caregiverName}</div>
                     <div className="text-sm text-muted-foreground">
-                      {shift.startTime} - {shift.endTime} ({shift.totalHours.toFixed(1)}h)
+                      {shift.startTime} - {shift.endTime} ({formatHoursToHHMM(shift.totalHours)}h)
                     </div>
                   </div>
                   <div className="text-end">

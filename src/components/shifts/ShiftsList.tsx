@@ -151,7 +151,7 @@ export function ShiftsList() {
                         <div>{shift.locationName}</div>
                       </TableCell>
                       <TableCell>
-                        {shift.totalHours.toFixed(2)}
+                        {formatHoursToHHMM(shift.totalHours)}
                       </TableCell>
                       <TableCell>
                         {t('currencySymbol')}{(shift.travelCost || 0).toFixed(0)}
