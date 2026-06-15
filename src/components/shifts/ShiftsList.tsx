@@ -160,7 +160,7 @@ export function ShiftsList() {
                         {t('currencySymbol')}{(shift.parkingCost || 0).toFixed(0)}
                       </TableCell>
                       <TableCell>
-                        {t('currencySymbol')}{shift.paymentAmount.toFixed(0)}
+                        {t('currencySymbol')}{shift.paymentAmount.toFixed(2)}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
