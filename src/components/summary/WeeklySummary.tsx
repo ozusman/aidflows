@@ -37,9 +37,7 @@ export function WeeklySummary() {
   );
 
   const computeAmount = (shift: typeof shifts[number]) => {
-    if (shift.caregiverType === 'family_member') return 0;
-    const rate = caregiverRates.get(shift.caregiverName) ?? 0;
-    return shift.totalHours * rate + (shift.travelCost || 0) + (shift.parkingCost || 0);
+    return (shift.paymentAmount || 0) + (shift.travelCost || 0) + (shift.parkingCost || 0);
   };
 
   const weekShifts = useMemo(() => {
@@ -58,7 +56,7 @@ export function WeeklySummary() {
       }),
       { hours: 0, payment: 0, expenses: 0 }
     );
-  }, [weekShifts, caregiverRates]);
+  }, [weekShifts]);
 
 
   const navigateWeek = (direction: 'prev' | 'next') => {
