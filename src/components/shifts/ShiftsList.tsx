@@ -127,8 +127,7 @@ export function ShiftsList() {
                   <TableHead className="text-start">{t("caregiver")}</TableHead>
                   <TableHead className="text-start">{t("location")}</TableHead>
                   <TableHead className="text-start">{t("hours")}</TableHead>
-                  <TableHead className="text-start">{t("travelCost")}</TableHead>
-                  <TableHead className="text-start">{t("parkingCost")}</TableHead>
+                  <TableHead className="text-start">{t("expenses")}</TableHead>
                   <TableHead className="text-start">{t("paymentAmount")}</TableHead>
                   <TableHead className="text-start">{t("paymentStatus")}</TableHead>
                   <TableHead className="w-[80px]"></TableHead>
