@@ -151,15 +151,11 @@ export function ShiftsList() {
                       <TableCell>{formatHoursToHHMM(shift.totalHours)}</TableCell>
                       <TableCell>
                         {t("currencySymbol")}
-                        {(shift.travelCost || 0).toFixed(2)}
+                        {((shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}
                       </TableCell>
                       <TableCell>
                         {t("currencySymbol")}
-                        {(shift.parkingCost || 0).toFixed(2)}
-                      </TableCell>
-                      <TableCell>
-                        {t("currencySymbol")}
-                        {(shift.totalHours * (caregiverRates.get(shift.caregiverName) ?? 0) + (shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}
+                        {((shift.paymentAmount || 0) + (shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
