@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
 import { useShifts } from '@/hooks/useShifts';
@@ -20,7 +20,7 @@ import { CaregiverTypeBadge } from '@/components/caregivers/CaregiverTypeBadge';
 export function ShiftForm() {
   const { t } = useI18n();
   const { addShift } = useShifts();
-  const { saveCaregiver } = useCaregivers();
+  const { caregivers, saveCaregiver } = useCaregivers();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -44,13 +44,22 @@ export function ShiftForm() {
     notes: '',
   });
 
-  const HOURLY_RATE = 70; // shekels per hour
-  
-  const calculatedHours = formData.startTime && formData.endTime 
+  const [selectedRate, setSelectedRate] = useState(0);
+
+  useEffect(() => {
+    if (formData.caregiverName) {
+      const caregiver = caregivers.find((c) => c.name === formData.caregiverName);
+      setSelectedRate(caregiver ? caregiver.hourly_rate : 0);
+    } else {
+      setSelectedRate(0);
+    }
+  }, [formData.caregiverName, caregivers]);
+
+  const calculatedHours = formData.startTime && formData.endTime
     ? calculateShiftHours(formData.startTime, formData.endTime)
     : 0;
 
-  const calculatedAmount = calculatedHours * HOURLY_RATE;
+  const calculatedAmount = calculatedHours * selectedRate;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,7 +111,7 @@ export function ShiftForm() {
         const hours = updated.startTime && updated.endTime 
           ? calculateShiftHours(updated.startTime, updated.endTime)
           : 0;
-        updated.paymentAmount = hours * HOURLY_RATE;
+        updated.paymentAmount = hours * selectedRate;
       }
       return updated;
     });
@@ -161,7 +170,7 @@ export function ShiftForm() {
         <CardHeader>
           <CardTitle className="text-base font-medium">{t('caregiver')}</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="space-y-2">
             <Label>{t('caregiverName')} *</Label>
             <CaregiverAutocomplete
@@ -183,6 +192,12 @@ export function ShiftForm() {
               ) : (
                 <span className="text-sm text-muted-foreground">—</span>
               )}
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>Rate</Label>
+            <div dir="ltr" className="h-10 px-3 py-2 rounded-md border border-input bg-hover-light text-foreground flex items-center">
+              {isFamilyMember ? '—' : `${t('currencySymbol')}${selectedRate}/hr`}
             </div>
           </div>
         </CardContent>
