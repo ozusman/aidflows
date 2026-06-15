@@ -38,6 +38,9 @@ export function ShiftsList() {
   const { t, isRTL } = useI18n();
   const { shifts, isLoading, deleteShift, updateShift } = useShifts();
   const { getReceiptCountByShift } = usePaymentReceipts();
+  const { caregivers } = useCaregivers();
+
+  const caregiverRates = new Map(caregivers.map((c) => [c.name, c.hourly_rate || 0]));
 
   const [receiptCounts, setReceiptCounts] = useState<Record<string, number>>({});
   const [selectedShift, setSelectedShift] = useState<Shift | null>(null);
