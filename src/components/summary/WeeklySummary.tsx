@@ -41,8 +41,9 @@ export function WeeklySummary() {
       (acc, shift) => ({
         hours: acc.hours + shift.totalHours,
         payment: acc.payment + (shift.caregiverType !== 'family_member' ? shift.paymentAmount : 0),
+        expenses: acc.expenses + (shift.travelCost || 0) + (shift.parkingCost || 0),
       }),
-      { hours: 0, payment: 0 }
+      { hours: 0, payment: 0, expenses: 0 }
     );
   }, [weekShifts]);
 
@@ -115,7 +116,7 @@ export function WeeklySummary() {
       </Card>
 
       {/* Summary totals */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <Card>
           <CardContent className="py-4">
             <div className="text-sm text-muted-foreground">{t('totalHours')}</div>
@@ -126,6 +127,12 @@ export function WeeklySummary() {
           <CardContent className="py-4">
             <div className="text-sm text-muted-foreground">{t('totalPayment')}</div>
             <div className="text-2xl font-semibold">{t('currencySymbol')}{totals.payment.toFixed(2)}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="py-4">
+            <div className="text-sm text-muted-foreground">Total Expenses</div>
+            <div className="text-2xl font-semibold">{t('currencySymbol')}{totals.expenses.toFixed(2)}</div>
           </CardContent>
         </Card>
       </div>
@@ -149,6 +156,7 @@ export function WeeklySummary() {
                     <TableHead className="text-center">{t('hours')}</TableHead>
                     <TableHead>{t('caregiver')}</TableHead>
                     <TableHead>{t('location')}</TableHead>
+                    <TableHead className="text-center">Travel</TableHead>
                     <TableHead className="text-center">{t('paymentAmount')}</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -165,6 +173,9 @@ export function WeeklySummary() {
                       </TableCell>
                       <TableCell>{shift.caregiverName}</TableCell>
                       <TableCell>{shift.locationName}</TableCell>
+                      <TableCell className="text-center">
+                        {(shift.travelCost || 0) + (shift.parkingCost || 0) === 0 ? '—' : `${t('currencySymbol')}${((shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}`}
+                      </TableCell>
                       <TableCell className="text-center">
                         {shift.caregiverType === 'family_member' ? '-' : `${t('currencySymbol')}${shift.paymentAmount.toFixed(2)}`}
                       </TableCell>
