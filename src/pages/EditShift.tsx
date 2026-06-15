@@ -4,6 +4,7 @@ import { useI18n } from '@/lib/i18n';
 import { useShifts } from '@/hooks/useShifts';
 import { useCaregivers } from '@/hooks/useCaregivers';
 import { ShiftFormData, CaregiverType, LocationType, PaymentMethod, ShiftPurpose, MedicalEvent, calculateShiftHours } from '@/types/shift';
+import { formatHoursToHHMM } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

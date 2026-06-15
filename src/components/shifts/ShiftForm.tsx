@@ -13,6 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { formatHoursToHHMM } from '@/lib/utils';
 import { CaregiverAutocomplete } from './CaregiverAutocomplete';
 import { CaregiverTypeBadge } from '@/components/caregivers/CaregiverTypeBadge';
 
