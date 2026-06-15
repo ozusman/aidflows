@@ -40,6 +40,9 @@ export function ShiftsList() {
   const { t, isRTL } = useI18n();
   const { shifts, isLoading, deleteShift, updateShift } = useShifts();
   const { getReceiptCountByShift } = usePaymentReceipts();
+  const { caregivers } = useCaregivers();
+  const caregiverRates = new Map(caregivers.map((c) => [c.name, c.hourly_rate || 0]));
+
   
 
 
