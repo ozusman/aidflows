@@ -109,7 +109,7 @@ export function DailyCoverage() {
       <Card>
         <CardContent className="py-4">
           <div className="flex items-center justify-between gap-4">
-            <Button variant="outline" size="icon" onClick={() => navigateDate('prev')}>
+            <Button variant="outline" size="icon" onClick={() => navigateDate('prev')} aria-label={t('previous')}>
               {isRTL ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
             </Button>
             <div className="flex-1 max-w-[200px]">
@@ -120,7 +120,7 @@ export function DailyCoverage() {
                 className="text-center"
               />
             </div>
-            <Button variant="outline" size="icon" onClick={() => navigateDate('next')}>
+            <Button variant="outline" size="icon" onClick={() => navigateDate('next')} aria-label={t('next')}>
               {isRTL ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
             </Button>
           </div>

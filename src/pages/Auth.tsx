@@ -135,7 +135,7 @@ export default function Auth() {
 
   if (authLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-dvh">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
@@ -143,7 +143,7 @@ export default function Auth() {
 
   if (resetEmailSentTo) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background p-4">
+      <div className="flex items-center justify-center min-h-dvh bg-background p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">{t('resetEmailSent')}</CardTitle>
@@ -172,7 +172,7 @@ export default function Auth() {
 
   if (showForgotPassword) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background p-4">
+      <div className="flex items-center justify-center min-h-dvh bg-background p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">{t('resetPassword')}</CardTitle>
@@ -229,7 +229,7 @@ export default function Auth() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background p-4 relative">
+    <div className="flex items-center justify-center min-h-dvh bg-background p-4 relative">
       <div className="absolute top-4 end-4">
         <LanguageToggle />
       </div>
