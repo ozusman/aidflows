@@ -266,7 +266,7 @@ export function ShiftForm() {
                 className="h-10 px-3 py-2 rounded-md border border-input bg-hover-light text-foreground flex items-center"
               >
                 {t("currencySymbol")}
-                {shift.paymentAmount.toFixed(2)}
+                {(shift.paymentAmount + (shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}
               </div>
             </div>
             <div className="space-y-2">
