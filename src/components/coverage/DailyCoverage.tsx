@@ -135,7 +135,7 @@ export function DailyCoverage() {
             {coveragePercent === 100 ? (
               <Badge className="bg-green-100 text-green-800 border-green-200">✓ Full Coverage</Badge>
             ) : (
-              <Badge className="bg-warning/20 text-warning-foreground border-warning">⚠ Gap Detected</Badge>
+              <Badge className="bg-orange-100 text-orange-700 border border-orange-500">⚠ Gap Detected</Badge>
             )}
             <span className="text-lg font-semibold">{coveragePercent}%</span>
           </CardTitle>
@@ -163,7 +163,7 @@ export function DailyCoverage() {
                       "h-full flex items-center justify-center text-xs font-medium transition-colors",
                       block.type === 'paid' && "bg-primary text-primary-foreground",
                       block.type === 'family' && "bg-muted-foreground/30 text-foreground",
-                      block.type === 'gap' && "bg-warning/20 border border-warning text-warning"
+                      block.type === 'gap' && "bg-orange-100 border-2 border-orange-500 text-orange-700"
                     )}
                     style={{ width: `${widthPercent}%` }}
                     title={block.shift?.caregiverName || t('uncovered')}
@@ -190,7 +190,7 @@ export function DailyCoverage() {
                 <span>{t('familyCaregiver')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-muted border border-border"></div>
+                <div className="w-4 h-4 rounded bg-orange-100 border-2 border-orange-500"></div>
                 <span>{t('uncovered')}</span>
               </div>
             </div>
