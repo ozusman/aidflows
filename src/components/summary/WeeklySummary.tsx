@@ -191,7 +191,7 @@ export function WeeklySummary() {
                         {(shift.travelCost || 0) + (shift.parkingCost || 0) === 0 ? '—' : `${t('currencySymbol')}${((shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}`}
                       </TableCell>
                       <TableCell className="text-center">
-                        {shift.caregiverType === 'family_member' ? '-' : `${t('currencySymbol')}${shift.paymentAmount.toFixed(2)}`}
+                        {shift.caregiverType === 'family_member' ? '-' : `${t('currencySymbol')}${computeAmount(shift).toFixed(2)}`}
                       </TableCell>
                     </TableRow>
                   ))}
