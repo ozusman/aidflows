@@ -279,7 +279,7 @@ export default function Caregivers() {
                             <RowActionButton
                               action="edit"
                               label={t('edit')}
-                              onClick={() => startEdit(caregiver.id, caregiver.name, caregiver.caregiver_type)}
+                              onClick={() => startEdit(caregiver.id, caregiver.name, caregiver.caregiver_type, Number(caregiver.hourly_rate) || 0)}
                             />
                           )}
                           <AlertDialog>
