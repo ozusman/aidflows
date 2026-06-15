@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useI18n } from '@/lib/i18n';
 import { useShifts } from '@/hooks/useShifts';
+import { useCaregivers } from '@/hooks/useCaregivers';
 import { formatHoursToHHMM } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,12 +23,24 @@ function getWeekRange(date: Date): { start: string; end: string } {
 export function WeeklySummary() {
   const { t, isRTL } = useI18n();
   const { shifts, getUniqueCaregivers } = useShifts();
-  
+  const { caregivers } = useCaregivers();
+
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const [selectedCaregiver, setSelectedCaregiver] = useState<string>('all');
 
-  const caregivers = getUniqueCaregivers();
+  const caregiverNames = getUniqueCaregivers();
   const weekRange = getWeekRange(currentWeek);
+
+  const caregiverRates = useMemo(
+    () => new Map(caregivers.map((c) => [c.name, c.hourly_rate || 0])),
+    [caregivers]
+  );
+
+  const computeAmount = (shift: typeof shifts[number]) => {
+    if (shift.caregiverType === 'family_member') return 0;
+    const rate = caregiverRates.get(shift.caregiverName) ?? 0;
+    return shift.totalHours * rate + (shift.travelCost || 0) + (shift.parkingCost || 0);
+  };
 
   const weekShifts = useMemo(() => {
     return shifts
@@ -40,12 +53,13 @@ export function WeeklySummary() {
     return weekShifts.reduce(
       (acc, shift) => ({
         hours: acc.hours + shift.totalHours,
-        payment: acc.payment + (shift.caregiverType !== 'family_member' ? shift.paymentAmount : 0),
+        payment: acc.payment + computeAmount(shift),
         expenses: acc.expenses + (shift.travelCost || 0) + (shift.parkingCost || 0),
       }),
       { hours: 0, payment: 0, expenses: 0 }
     );
-  }, [weekShifts]);
+  }, [weekShifts, caregiverRates]);
+
 
   const navigateWeek = (direction: 'prev' | 'next') => {
     setCurrentWeek(prev => direction === 'prev' ? subWeeks(prev, 1) : addWeeks(prev, 1));
@@ -61,7 +75,7 @@ export function WeeklySummary() {
       s.caregiverName,
       s.caregiverType,
       s.locationName,
-      s.paymentAmount.toFixed(0),
+      computeAmount(s).toFixed(2),
     ]);
     
     const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
@@ -100,7 +114,7 @@ export function WeeklySummary() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t('allCaregivers')}</SelectItem>
-                {caregivers.map(name => (
+                {caregiverNames.map(name => (
                   <SelectItem key={name} value={name}>{name}</SelectItem>
                 ))}
               </SelectContent>
@@ -177,7 +191,7 @@ export function WeeklySummary() {
                         {(shift.travelCost || 0) + (shift.parkingCost || 0) === 0 ? '—' : `${t('currencySymbol')}${((shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}`}
                       </TableCell>
                       <TableCell className="text-center">
-                        {shift.caregiverType === 'family_member' ? '-' : `${t('currencySymbol')}${shift.paymentAmount.toFixed(2)}`}
+                        {shift.caregiverType === 'family_member' ? '-' : `${t('currencySymbol')}${computeAmount(shift).toFixed(2)}`}
                       </TableCell>
                     </TableRow>
                   ))}
