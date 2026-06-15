@@ -166,7 +166,7 @@ export function WeeklySummary() {
                       <TableCell>{shift.caregiverName}</TableCell>
                       <TableCell>{shift.locationName}</TableCell>
                       <TableCell className="text-center">
-                        {shift.caregiverType === 'family_member' ? '-' : `${t('currencySymbol')}${shift.paymentAmount}`}
+                        {shift.caregiverType === 'family_member' ? '-' : `${t('currencySymbol')}${shift.paymentAmount.toFixed(2)}`}
                       </TableCell>
                     </TableRow>
                   ))}
