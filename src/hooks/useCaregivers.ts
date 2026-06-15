@@ -8,6 +8,7 @@ export interface Caregiver {
   id: string;
   name: string;
   caregiver_type: CaregiverType;
+  hourly_rate: number;
   created_at: string;
   updated_at: string;
 }
