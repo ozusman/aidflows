@@ -1,417 +1,206 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useI18n } from "@/lib/i18n";
 import { useShifts } from "@/hooks/useShifts";
-import { useCaregivers } from "@/hooks/useCaregivers";
-import {
-  ShiftFormData,
-  CaregiverType,
-  LocationType,
-  PaymentMethod,
-  ShiftPurpose,
-  MedicalEvent,
-  calculateShiftHours,
-} from "@/types/shift";
+import { usePaymentReceipts } from "@/hooks/usePaymentReceipts";
+import { Shift } from "@/types/shift";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { TimeInput } from "@/components/ui/time-input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
-import { formatHoursToHHMM } from "@/lib/utils";
-import { CaregiverAutocomplete } from "./CaregiverAutocomplete";
-import { CaregiverTypeBadge } from "@/components/caregivers/CaregiverTypeBadge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { format } from "date-fns";
+import { Paperclip } from "lucide-react";
+import { RowActionButton, RowActions } from "@/components/ui/row-actions";
+import { Link } from "react-router-dom";
+import { cn, formatHoursToHHMM } from "@/lib/utils";
+import { PaymentReceiptsDialog } from "./PaymentReceiptsDialog";
 
-export function ShiftForm() {
-  const { t } = useI18n();
-  const { addShift } = useShifts();
-  const { caregivers, saveCaregiver } = useCaregivers();
-  const navigate = useNavigate();
-  const { toast } = useToast();
+function getCaregiverTypeLabel(type: Shift["caregiverType"], t: (key: any) => string): string {
+  const labels = {
+    private_paid: t("typePrivatePaid"),
+    family_member: t("typeFamilyMember"),
+    foreign_caregiver: t("typeForeignCaregiver"),
+    other: t("typeOther"),
+  };
+  return labels[type];
+}
 
-  const [formData, setFormData] = useState<ShiftFormData>({
-    date: new Date().toISOString().split("T")[0],
-    startTime: "",
-    endTime: "",
-    caregiverName: "",
-    caregiverType: "private_paid",
-    locationType: "hospital",
-    locationName: "",
-    paymentAmount: 0,
-    paymentMethod: "bank_transfer",
-    paymentStatus: "unpaid",
-    travelCost: 0,
-    parkingCost: 0,
-    purpose: undefined,
-    medicalEvent: undefined,
-    enteredBy: "",
-    shiftPerformed: false,
-    notes: "",
+function getLocationTypeLabel(type: Shift["locationType"], t: (key: any) => string): string {
+  const labels = {
+    hospital: t("locationHospital"),
+    home: t("locationHome"),
+    institution: t("locationInstitution"),
+  };
+  return labels[type];
+}
+
+export function ShiftsList() {
+  const { t, isRTL } = useI18n();
+  const { shifts, isLoading, deleteShift, updateShift } = useShifts();
+  const { getReceiptCountByShift } = usePaymentReceipts();
+
+  const [receiptCounts, setReceiptCounts] = useState<Record<string, number>>({});
+  const [selectedShift, setSelectedShift] = useState<Shift | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  // Load receipt counts for all shifts
+  useEffect(() => {
+    const loadCounts = async () => {
+      const counts: Record<string, number> = {};
+      for (const shift of shifts) {
+        counts[shift.id] = await getReceiptCountByShift(shift.id);
+      }
+      setReceiptCounts(counts);
+    };
+
+    if (shifts.length > 0) {
+      loadCounts();
+    }
+  }, [shifts, getReceiptCountByShift]);
+
+  const sortedShifts = [...shifts].sort((a, b) => {
+    const dateCompare = b.date.localeCompare(a.date);
+    if (dateCompare !== 0) return dateCompare;
+    return b.startTime.localeCompare(a.startTime);
   });
 
-  const [selectedRate, setSelectedRate] = useState(0);
-
-  useEffect(() => {
-    if (formData.caregiverName) {
-      const caregiver = caregivers.find((c) => c.name === formData.caregiverName);
-      setSelectedRate(caregiver ? caregiver.hourly_rate : 0);
+  const handleBadgeClick = (shift: Shift) => {
+    if (shift.paymentStatus === "unpaid") {
+      // Toggle to paid and open dialog
+      updateShift(shift.id, { paymentStatus: "paid" });
+      setSelectedShift({ ...shift, paymentStatus: "paid" });
+      setDialogOpen(true);
     } else {
-      setSelectedRate(0);
-    }
-  }, [formData.caregiverName, caregivers]);
-
-  const calculatedHours =
-    formData.startTime && formData.endTime ? calculateShiftHours(formData.startTime, formData.endTime) : 0;
-
-  const calculatedAmount = calculatedHours * selectedRate;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!formData.startTime || !formData.endTime || !formData.caregiverName) {
-      toast({
-        title: t("error"),
-        description: "Please fill in all required fields",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Save caregiver to database
-    await saveCaregiver(formData.caregiverName, formData.caregiverType);
-
-    const result = await addShift(formData);
-
-    if (result) {
-      toast({
-        title: t("success"),
-        description: t("shiftSaved"),
-      });
-      navigate("/");
-    } else {
-      toast({
-        title: t("error"),
-        description: "Failed to save shift",
-        variant: "destructive",
-      });
+      // Already paid - open dialog to view/manage receipts
+      setSelectedShift(shift);
+      setDialogOpen(true);
     }
   };
 
-  const isFamilyMember = formData.caregiverType === "family_member";
-
-  const updateField = <K extends keyof ShiftFormData>(field: K, value: ShiftFormData[K]) => {
-    setFormData((prev) => {
-      const updated = { ...prev, [field]: value };
-
-      // When caregiver type changes to family_member, clear all costs
-      if (field === "caregiverType" && value === "family_member") {
-        updated.paymentAmount = 0;
-        updated.travelCost = 0;
-        updated.parkingCost = 0;
+  const handleDialogClose = (open: boolean) => {
+    setDialogOpen(open);
+    if (!open) {
+      // Refresh receipt counts when dialog closes
+      if (selectedShift) {
+        getReceiptCountByShift(selectedShift.id).then((count) => {
+          setReceiptCounts((prev) => ({ ...prev, [selectedShift.id]: count }));
+        });
       }
-
-      // Auto-calculate payment amount when times change (only for non-family members)
-      if ((field === "startTime" || field === "endTime") && updated.caregiverType !== "family_member") {
-        const hours =
-          updated.startTime && updated.endTime ? calculateShiftHours(updated.startTime, updated.endTime) : 0;
-        updated.paymentAmount = hours * selectedRate;
-      }
-      return updated;
-    });
+      setSelectedShift(null);
+    }
   };
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardContent className="py-12 text-center text-muted-foreground">{t("loading")}</CardContent>
+      </Card>
+    );
+  }
+
+  if (shifts.length === 0) {
+    return (
+      <Card>
+        <CardContent className="py-12 text-center">
+          <p className="text-muted-foreground mb-4">{t("noShifts")}</p>
+          <Link to="/new-shift">
+            <Button>{t("navNewShift")}</Button>
+          </Link>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
-      {/* Time & Date */}
+    <>
       <Card>
-        <CardHeader>
-          <CardTitle className="text-base font-medium">{t("shiftEntry")}</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="date">{t("shiftDate")} *</Label>
-            <Input
-              id="date"
-              type="date"
-              dir="ltr"
-              value={formData.date}
-              onChange={(e) => updateField("date", e.target.value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="startTime">{t("startTime")} *</Label>
-            <TimeInput
-              id="startTime"
-              dir="ltr"
-              value={formData.startTime}
-              onChange={(value) => updateField("startTime", value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="endTime">{t("endTime")} *</Label>
-            <TimeInput
-              id="endTime"
-              dir="ltr"
-              value={formData.endTime}
-              onChange={(value) => updateField("endTime", value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>{t("totalHours")}</Label>
-            <div
-              dir="ltr"
-              className="h-10 px-3 py-2 rounded-md border border-input bg-hover-light text-foreground flex items-center"
-            >
-              {formatHoursToHHMM(calculatedHours)}
-            </div>
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-start">{t("date")}</TableHead>
+                  <TableHead className="text-start">{t("startTime")}</TableHead>
+                  <TableHead className="text-start">{t("endTime")}</TableHead>
+                  <TableHead className="text-start">{t("caregiver")}</TableHead>
+                  <TableHead className="text-start">{t("location")}</TableHead>
+                  <TableHead className="text-start">{t("hours")}</TableHead>
+                  <TableHead className="text-start">{t("travelCost")}</TableHead>
+                  <TableHead className="text-start">{t("parkingCost")}</TableHead>
+                  <TableHead className="text-start">{t("paymentAmount")}</TableHead>
+                  <TableHead className="text-start">{t("paymentStatus")}</TableHead>
+                  <TableHead className="w-[80px]"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {sortedShifts.map((shift) => {
+                  const receiptCount = receiptCounts[shift.id] || 0;
+
+                  return (
+                    <TableRow key={shift.id}>
+                      <TableCell className="font-medium">{format(new Date(shift.date), "dd/MM/yyyy")}</TableCell>
+                      <TableCell>{shift.startTime}</TableCell>
+                      <TableCell>{shift.endTime}</TableCell>
+                      <TableCell>
+                        <div className="font-medium">{shift.caregiverName}</div>
+                      </TableCell>
+                      <TableCell>
+                        <div>{shift.locationName}</div>
+                      </TableCell>
+                      <TableCell>{formatHoursToHHMM(shift.totalHours)}</TableCell>
+                      <TableCell>
+                        {t("currencySymbol")}
+                        {(shift.travelCost || 0).toFixed(2)}
+                      </TableCell>
+                      <TableCell>
+                        {t("currencySymbol")}
+                        {(shift.parkingCost || 0).toFixed(2)}
+                      </TableCell>
+                      <TableCell>
+                        {t("currencySymbol")}
+                        {(shift.paymentAmount + (shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Badge
+                            variant={shift.paymentStatus === "paid" ? "default" : "secondary"}
+                            className={cn(
+                              "cursor-pointer transition-colors",
+                              shift.paymentStatus === "paid"
+                                ? "bg-success text-success-foreground hover:bg-success/80"
+                                : "bg-hover-light text-foreground hover:bg-hover-light/80",
+                            )}
+                            onClick={() => handleBadgeClick(shift)}
+                          >
+                            {shift.paymentStatus === "paid" ? t("statusPaid") : t("statusUnpaid")}
+                          </Badge>
+                          {receiptCount > 0 && (
+                            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                              <Paperclip className="w-3 h-3" />
+                              {receiptCount}
+                            </span>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <RowActions>
+                          <Link to={`/edit-shift/${shift.id}`}>
+                            <RowActionButton action="edit" label={t("edit")} />
+                          </Link>
+                          <RowActionButton action="delete" label={t("delete")} onClick={() => deleteShift(shift.id)} />
+                        </RowActions>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
           </div>
         </CardContent>
       </Card>
 
-      {/* Caregiver Identity */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base font-medium">{t("caregiver")}</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="space-y-2">
-            <Label>{t("caregiverName")} *</Label>
-            <CaregiverAutocomplete
-              value={formData.caregiverName}
-              onChange={(name, caregiverType) => {
-                updateField("caregiverName", name);
-                if (caregiverType) {
-                  updateField("caregiverType", caregiverType as CaregiverType);
-                }
-              }}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>{t("caregiverType")}</Label>
-            <div className="h-10 flex items-center">
-              {formData.caregiverName ? (
-                <CaregiverTypeBadge type={formData.caregiverType} />
-              ) : (
-                <span className="text-sm text-muted-foreground">—</span>
-              )}
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label>Rate</Label>
-            <div
-              dir="ltr"
-              className="h-10 px-3 py-2 rounded-md border border-input bg-hover-light text-foreground flex items-center"
-            >
-              {isFamilyMember ? "—" : `${t("currencySymbol")}${selectedRate}/hr`}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Location - hide for family members */}
-      {!isFamilyMember && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base font-medium">{t("location")}</CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>{t("locationType")} *</Label>
-              <Select
-                value={formData.locationType}
-                onValueChange={(value: LocationType) => updateField("locationType", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="hospital">{t("locationHospital")}</SelectItem>
-                  <SelectItem value="home">{t("locationHome")}</SelectItem>
-                  <SelectItem value="institution">{t("locationInstitution")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="locationName">{t("locationName")} *</Label>
-              <Input
-                id="locationName"
-                type="text"
-                value={formData.locationName}
-                onChange={(e) => updateField("locationName", e.target.value)}
-                required
-              />
-            </div>
-          </CardContent>
-        </Card>
+      {selectedShift && (
+        <PaymentReceiptsDialog open={dialogOpen} onOpenChange={handleDialogClose} shift={selectedShift} />
       )}
-
-      {/* Payment - only show for non-family members */}
-      {!isFamilyMember && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base font-medium">{t("payment")}</CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="paymentAmount">{t("paymentAmount")}</Label>
-              <div
-                dir="ltr"
-                className="h-10 px-3 py-2 rounded-md border border-input bg-hover-light text-foreground flex items-center"
-              >
-                {t("currencySymbol")}
-                {(shift.paymentAmount + (shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label>{t("paymentMethod")}</Label>
-              <Select
-                value={formData.paymentMethod}
-                onValueChange={(value: PaymentMethod) => updateField("paymentMethod", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="bank_transfer">{t("methodBankTransfer")}</SelectItem>
-                  <SelectItem value="paybox">{t("methodPayBox")}</SelectItem>
-                  <SelectItem value="bit">{t("methodBit")}</SelectItem>
-                  <SelectItem value="cash">{t("methodCash")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>{t("paymentStatus")}</Label>
-              <Select
-                value={formData.paymentStatus}
-                onValueChange={(value: "paid" | "unpaid") => updateField("paymentStatus", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="paid">{t("statusPaid")}</SelectItem>
-                  <SelectItem value="unpaid">{t("statusUnpaid")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="travelCost">{t("travelCost")}</Label>
-              <Input
-                id="travelCost"
-                type="number"
-                dir="ltr"
-                min="0"
-                step="0.01"
-                value={formData.travelCost}
-                onChange={(e) => updateField("travelCost", parseFloat(e.target.value) || 0)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="parkingCost">{t("parkingCost")}</Label>
-              <Input
-                id="parkingCost"
-                type="number"
-                dir="ltr"
-                min="0"
-                step="0.01"
-                value={formData.parkingCost}
-                onChange={(e) => updateField("parkingCost", parseFloat(e.target.value) || 0)}
-              />
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Optional: Purpose & Medical Event - hide for family members */}
-      {!isFamilyMember && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base font-medium">{t("shiftPurpose")}</CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>{t("shiftPurpose")}</Label>
-              <Select
-                value={formData.purpose || ""}
-                onValueChange={(value: ShiftPurpose) => updateField("purpose", value || undefined)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="-" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="guarding">{t("purposeGuarding")}</SelectItem>
-                  <SelectItem value="supervision">{t("purposeSupervision")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>{t("medicalEvent")}</Label>
-              <Select
-                value={formData.medicalEvent || ""}
-                onValueChange={(value: MedicalEvent) => updateField("medicalEvent", value || undefined)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="-" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="hospitalization">{t("eventHospitalization")}</SelectItem>
-                  <SelectItem value="deterioration">{t("eventDeterioration")}</SelectItem>
-                  <SelectItem value="rehabilitation">{t("eventRehabilitation")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="enteredBy">{t("dataEnteredBy")}</Label>
-              <Input
-                id="enteredBy"
-                type="text"
-                value={formData.enteredBy || ""}
-                onChange={(e) => updateField("enteredBy", e.target.value)}
-              />
-            </div>
-            <div className="flex items-center gap-3 pt-6">
-              <Checkbox
-                id="shiftPerformed"
-                checked={formData.shiftPerformed}
-                onCheckedChange={(checked) => updateField("shiftPerformed", checked === true)}
-              />
-              <Label htmlFor="shiftPerformed" className="cursor-pointer">
-                {t("shiftPerformed")}
-              </Label>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Notes */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base font-medium">{t("notes")}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            value={formData.notes || ""}
-            onChange={(e) => updateField("notes", e.target.value)}
-            rows={3}
-            placeholder=""
-          />
-        </CardContent>
-      </Card>
-
-      {/* Actions */}
-      <div className="flex gap-3 justify-end">
-        <Button type="button" variant="outline" onClick={() => navigate("/")}>
-          {t("cancel")}
-        </Button>
-        <Button type="submit">{t("save")}</Button>
-      </div>
-    </form>
+    </>
   );
 }
