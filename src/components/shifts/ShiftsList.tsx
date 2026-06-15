@@ -135,7 +135,6 @@ export function ShiftsList() {
               </TableHeader>
               <TableBody>
                 {sortedShifts.map((shift) => {
-                  const totalAmount = shift.paymentAmount + (shift.travelCost || 0) + (shift.parkingCost || 0);
                   const receiptCount = receiptCounts[shift.id] || 0;
                   
                   return (
