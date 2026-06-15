@@ -23,12 +23,24 @@ function getWeekRange(date: Date): { start: string; end: string } {
 export function WeeklySummary() {
   const { t, isRTL } = useI18n();
   const { shifts, getUniqueCaregivers } = useShifts();
-  
+  const { caregivers } = useCaregivers();
+
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const [selectedCaregiver, setSelectedCaregiver] = useState<string>('all');
 
-  const caregivers = getUniqueCaregivers();
+  const caregiverNames = getUniqueCaregivers();
   const weekRange = getWeekRange(currentWeek);
+
+  const caregiverRates = useMemo(
+    () => new Map(caregivers.map((c) => [c.name, c.hourly_rate || 0])),
+    [caregivers]
+  );
+
+  const computeAmount = (shift: typeof shifts[number]) => {
+    if (shift.caregiverType === 'family_member') return 0;
+    const rate = caregiverRates.get(shift.caregiverName) ?? 0;
+    return shift.totalHours * rate + (shift.travelCost || 0) + (shift.parkingCost || 0);
+  };
 
   const weekShifts = useMemo(() => {
     return shifts
@@ -41,12 +53,13 @@ export function WeeklySummary() {
     return weekShifts.reduce(
       (acc, shift) => ({
         hours: acc.hours + shift.totalHours,
-        payment: acc.payment + (shift.caregiverType !== 'family_member' ? shift.paymentAmount : 0),
+        payment: acc.payment + computeAmount(shift),
         expenses: acc.expenses + (shift.travelCost || 0) + (shift.parkingCost || 0),
       }),
       { hours: 0, payment: 0, expenses: 0 }
     );
-  }, [weekShifts]);
+  }, [weekShifts, caregiverRates]);
+
 
   const navigateWeek = (direction: 'prev' | 'next') => {
     setCurrentWeek(prev => direction === 'prev' ? subWeeks(prev, 1) : addWeeks(prev, 1));
