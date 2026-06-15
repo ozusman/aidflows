@@ -56,16 +56,19 @@ export default function Caregivers() {
 
   const [newName, setNewName] = useState('');
   const [newType, setNewType] = useState<CaregiverType>('private_paid');
+  const [newRate, setNewRate] = useState<number>(0);
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
   const [editingType, setEditingType] = useState<CaregiverType>('private_paid');
+  const [editingRate, setEditingRate] = useState<number>(0);
   const [isSavingEdit, setIsSavingEdit] = useState(false);
 
-  const startEdit = (id: string, name: string, type: CaregiverType) => {
+  const startEdit = (id: string, name: string, type: CaregiverType, rate: number) => {
     setEditingId(id);
     setEditingName(name);
     setEditingType(type);
+    setEditingRate(rate);
   };
 
   const cancelEdit = () => {
