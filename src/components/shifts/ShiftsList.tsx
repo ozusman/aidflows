@@ -161,7 +161,7 @@ export function ShiftsList() {
                       </TableCell>
                       <TableCell>
                         {t("currencySymbol")}
-                        {(shift.paymentAmount + (shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}
+                        {(shift.totalHours * (caregiverRates.get(shift.caregiverName) ?? 0) + (shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
