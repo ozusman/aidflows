@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useI18n } from '@/lib/i18n';
 import { useShifts } from '@/hooks/useShifts';
-import { useCaregivers } from '@/hooks/useCaregivers';
+
 import { formatHoursToHHMM } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,6 @@ function getWeekRange(date: Date): { start: string; end: string } {
 export function WeeklySummary() {
   const { t, isRTL } = useI18n();
   const { shifts, getUniqueCaregivers } = useShifts();
-  const { caregivers } = useCaregivers();
 
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const [selectedCaregiver, setSelectedCaregiver] = useState<string>('all');
@@ -31,15 +30,9 @@ export function WeeklySummary() {
   const caregiverNames = getUniqueCaregivers();
   const weekRange = getWeekRange(currentWeek);
 
-  const caregiverRates = useMemo(
-    () => new Map(caregivers.map((c) => [c.name, c.hourly_rate || 0])),
-    [caregivers]
-  );
 
   const computeAmount = (shift: typeof shifts[number]) => {
-    if (shift.caregiverType === 'family_member') return 0;
-    const rate = caregiverRates.get(shift.caregiverName) ?? 0;
-    return shift.totalHours * rate + (shift.travelCost || 0) + (shift.parkingCost || 0);
+    return (shift.paymentAmount || 0) + (shift.travelCost || 0) + (shift.parkingCost || 0);
   };
 
   const weekShifts = useMemo(() => {
@@ -58,7 +51,7 @@ export function WeeklySummary() {
       }),
       { hours: 0, payment: 0, expenses: 0 }
     );
-  }, [weekShifts, caregiverRates]);
+  }, [weekShifts]);
 
 
   const navigateWeek = (direction: 'prev' | 'next') => {
@@ -170,7 +163,7 @@ export function WeeklySummary() {
                     <TableHead className="text-center">{t('hours')}</TableHead>
                     <TableHead>{t('caregiver')}</TableHead>
                     <TableHead>{t('location')}</TableHead>
-                    <TableHead className="text-center">Travel</TableHead>
+                    <TableHead className="text-center">{t('expenses')}</TableHead>
                     <TableHead className="text-center">{t('paymentAmount')}</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -191,7 +184,7 @@ export function WeeklySummary() {
                         {(shift.travelCost || 0) + (shift.parkingCost || 0) === 0 ? '—' : `${t('currencySymbol')}${((shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}`}
                       </TableCell>
                       <TableCell className="text-center">
-                        {shift.caregiverType === 'family_member' ? '-' : `${t('currencySymbol')}${computeAmount(shift).toFixed(2)}`}
+                        {t('currencySymbol')}{computeAmount(shift).toFixed(2)}
                       </TableCell>
                     </TableRow>
                   ))}
