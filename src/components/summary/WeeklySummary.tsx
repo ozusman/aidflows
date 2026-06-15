@@ -23,7 +23,6 @@ function getWeekRange(date: Date): { start: string; end: string } {
 export function WeeklySummary() {
   const { t, isRTL } = useI18n();
   const { shifts, getUniqueCaregivers } = useShifts();
-  const { caregivers } = useCaregivers();
 
   const [currentWeek, setCurrentWeek] = useState(new Date());
   const [selectedCaregiver, setSelectedCaregiver] = useState<string>('all');
@@ -31,10 +30,6 @@ export function WeeklySummary() {
   const caregiverNames = getUniqueCaregivers();
   const weekRange = getWeekRange(currentWeek);
 
-  const caregiverRates = useMemo(
-    () => new Map(caregivers.map((c) => [c.name, c.hourly_rate || 0])),
-    [caregivers]
-  );
 
   const computeAmount = (shift: typeof shifts[number]) => {
     return (shift.paymentAmount || 0) + (shift.travelCost || 0) + (shift.parkingCost || 0);
