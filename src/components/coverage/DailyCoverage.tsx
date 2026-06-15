@@ -161,7 +161,7 @@ export function DailyCoverage() {
                       "h-full flex items-center justify-center text-xs font-medium transition-colors",
                       block.type === "paid" && "bg-primary text-primary-foreground",
                       block.type === "family" && "bg-muted-foreground/30 text-foreground",
-                      block.type === "gap" && "bg-orange-100 border border-orange-500 text-orange-700",
+                      block.type === "gap" && "bg-orange-100 border border-orange-300 text-orange-700",
                     )}
                     style={{ width: `${widthPercent}%` }}
                     title={block.shift?.caregiverName || t("uncovered")}
