@@ -154,10 +154,10 @@ export function ShiftsList() {
                         {formatHoursToHHMM(shift.totalHours)}
                       </TableCell>
                       <TableCell>
-                        {t('currencySymbol')}{(shift.travelCost || 0).toFixed(0)}
+                        {t('currencySymbol')}{(shift.travelCost || 0).toFixed(2)}
                       </TableCell>
                       <TableCell>
-                        {t('currencySymbol')}{(shift.parkingCost || 0).toFixed(0)}
+                        {t('currencySymbol')}{(shift.parkingCost || 0).toFixed(2)}
                       </TableCell>
                       <TableCell>
                         {t('currencySymbol')}{shift.paymentAmount.toFixed(2)}
