@@ -45,22 +45,26 @@ export function useCaregivers() {
     fetchCaregivers();
   }, [fetchCaregivers]);
 
-  const saveCaregiver = useCallback(async (name: string, caregiverType: CaregiverType, hourlyRate: number = 0) => {
+  const saveCaregiver = useCallback(async (name: string, caregiverType: CaregiverType, hourlyRate?: number) => {
     if (!user) return;
+
+    const payload: {
+      user_id: string;
+      name: string;
+      caregiver_type: CaregiverType;
+      hourly_rate?: number;
+    } = {
+      user_id: user.id,
+      name: name.trim(),
+      caregiver_type: caregiverType,
+    };
+    if (hourlyRate !== undefined) {
+      payload.hourly_rate = hourlyRate;
+    }
 
     const { error } = await supabase
       .from('caregivers')
-      .upsert(
-        {
-          user_id: user.id,
-          name: name.trim(),
-          caregiver_type: caregiverType,
-          hourly_rate: hourlyRate,
-        },
-        {
-          onConflict: 'user_id,name',
-        }
-      );
+      .upsert(payload, { onConflict: 'user_id,name' });
 
     if (error) {
       logger.error('Error saving caregiver:', error);
