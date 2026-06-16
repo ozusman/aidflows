@@ -17,15 +17,8 @@ import { Link } from "react-router-dom";
 import { cn, formatHoursToHHMM } from "@/lib/utils";
 import { PaymentReceiptsDialog } from "./PaymentReceiptsDialog";
 
-function getCaregiverTypeLabel(type: Shift["caregiverType"], t: (key: any) => string): string {
-  const labels = {
-    private_paid: t("typePrivatePaid"),
-    family_member: t("typeFamilyMember"),
-    foreign_caregiver: t("typeForeignCaregiver"),
-    other: t("typeOther"),
-  };
-  return labels[type];
-}
+import { CaregiverTypeDot } from "@/components/caregivers/CaregiverTypeDot";
+import { CaregiverTypeLegend } from "@/components/caregivers/CaregiverTypeLegend";
 
 function getLocationTypeLabel(type: Shift["locationType"], t: (key: any) => string): string {
   const labels = {
@@ -120,6 +113,7 @@ export function ShiftsList() {
 
   return (
     <>
+      <CaregiverTypeLegend />
       <Card>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
@@ -148,7 +142,10 @@ export function ShiftsList() {
                       <TableCell>{shift.startTime}</TableCell>
                       <TableCell>{shift.endTime}</TableCell>
                       <TableCell>
-                        <div className="font-medium">{shift.caregiverName}</div>
+                        <div className="font-medium inline-flex items-center gap-2">
+                          <CaregiverTypeDot type={shift.caregiverType} />
+                          <span>{shift.caregiverName}</span>
+                        </div>
                       </TableCell>
                       <TableCell>
                         <div>{shift.locationName}</div>

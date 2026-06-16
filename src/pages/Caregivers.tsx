@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+
 import { Plus } from "lucide-react";
 import { RowActionButton, RowActions } from "@/components/ui/row-actions";
 import { useToast } from "@/hooks/use-toast";
@@ -24,28 +24,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-function getCaregiverTypeLabel(type: string, t: (key: any) => string): string {
-  const labels: Record<string, string> = {
-    private_paid: t("typePrivatePaid"),
-    family_member: t("typeFamilyMember"),
-    foreign_caregiver: t("typeForeignCaregiver"),
-    other: t("typeOther"),
-  };
-  return labels[type] || type;
-}
-
-const TYPE_BADGE_CLASSES: Record<string, string> = {
-  private_paid: "bg-caregiver-private text-caregiver-private-foreground hover:bg-caregiver-private/90",
-  family_member: "bg-caregiver-family text-caregiver-family-foreground hover:bg-caregiver-family/90",
-  foreign_caregiver: "bg-caregiver-foreign text-caregiver-foreign-foreground hover:bg-caregiver-foreign/90",
-  other: "bg-caregiver-other text-caregiver-other-foreground hover:bg-caregiver-other/90",
-};
-
-function CaregiverTypeBadge({ type, label }: { type: string; label: string }) {
-  return (
-    <Badge className={`border-transparent ${TYPE_BADGE_CLASSES[type] || TYPE_BADGE_CLASSES.other}`}>{label}</Badge>
-  );
-}
+import { CaregiverTypeBadge, getCaregiverTypeLabel } from "@/components/caregivers/CaregiverTypeBadge";
 
 export default function Caregivers() {
   const { t } = useI18n();
@@ -144,8 +123,7 @@ export default function Caregivers() {
                 <SelectContent>
                   <SelectItem value="private_paid">{t("typePrivatePaid")}</SelectItem>
                   <SelectItem value="family_member">{t("typeFamilyMember")}</SelectItem>
-                  <SelectItem value="foreign_caregiver">{t("typeForeignCaregiver")}</SelectItem>
-                  <SelectItem value="other">{t("typeOther")}</SelectItem>
+                  <SelectItem value="volunteer">{t("typeVolunteer")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -227,8 +205,7 @@ export default function Caregivers() {
                               <SelectContent>
                                 <SelectItem value="private_paid">{t("typePrivatePaid")}</SelectItem>
                                 <SelectItem value="family_member">{t("typeFamilyMember")}</SelectItem>
-                                <SelectItem value="foreign_caregiver">{t("typeForeignCaregiver")}</SelectItem>
-                                <SelectItem value="other">{t("typeOther")}</SelectItem>
+                                <SelectItem value="volunteer">{t("typeVolunteer")}</SelectItem>
                               </SelectContent>
                             </Select>
                           ) : (

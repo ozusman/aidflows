@@ -1,4 +1,4 @@
-export type CaregiverType = 'private_paid' | 'family_member' | 'foreign_caregiver' | 'other';
+export type CaregiverType = 'private_paid' | 'family_member' | 'volunteer';
 export type LocationType = 'hospital' | 'home' | 'institution';
 export type PaymentMethod = 'bank_transfer' | 'paybox' | 'bit' | 'cash';
 export type PaymentStatus = 'paid' | 'unpaid';
