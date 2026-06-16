@@ -24,89 +24,79 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <I18nProvider>
       <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <ShiftsProvider>
+        <ShiftsProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
                       <AppLayout>
                         <Index />
                       </AppLayout>
-                    </ShiftsProvider>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/new-shift"
-                element={
-                  <ProtectedRoute>
-                    <ShiftsProvider>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/new-shift"
+                  element={
+                    <ProtectedRoute>
                       <AppLayout>
                         <NewShift />
                       </AppLayout>
-                    </ShiftsProvider>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/edit-shift/:id"
-                element={
-                  <ProtectedRoute>
-                    <ShiftsProvider>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/edit-shift/:id"
+                  element={
+                    <ProtectedRoute>
                       <AppLayout>
                         <EditShift />
                       </AppLayout>
-                    </ShiftsProvider>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/coverage"
-                element={
-                  <ProtectedRoute>
-                    <ShiftsProvider>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/coverage"
+                  element={
+                    <ProtectedRoute>
                       <AppLayout>
                         <Coverage />
                       </AppLayout>
-                    </ShiftsProvider>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/summary"
-                element={
-                  <ProtectedRoute>
-                    <ShiftsProvider>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/summary"
+                  element={
+                    <ProtectedRoute>
                       <AppLayout>
                         <Summary />
                       </AppLayout>
-                    </ShiftsProvider>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/caregivers"
-                element={
-                  <ProtectedRoute>
-                    <ShiftsProvider>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/caregivers"
+                  element={
+                    <ProtectedRoute>
                       <AppLayout>
                         <Caregivers />
                       </AppLayout>
-                    </ShiftsProvider>
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </ShiftsProvider>
       </AuthProvider>
     </I18nProvider>
   </QueryClientProvider>
