@@ -71,19 +71,18 @@ export default {
 			'hover-light': 'hsl(var(--hover-light))',
 			'caregiver-private': {
 				DEFAULT: 'hsl(var(--caregiver-private-bg))',
-				foreground: 'hsl(var(--caregiver-private-fg))'
+				foreground: 'hsl(var(--caregiver-private-fg))',
+				dot: 'hsl(var(--caregiver-private-dot))'
 			},
 			'caregiver-family': {
 				DEFAULT: 'hsl(var(--caregiver-family-bg))',
-				foreground: 'hsl(var(--caregiver-family-fg))'
+				foreground: 'hsl(var(--caregiver-family-fg))',
+				dot: 'hsl(var(--caregiver-family-dot))'
 			},
-			'caregiver-foreign': {
-				DEFAULT: 'hsl(var(--caregiver-foreign-bg))',
-				foreground: 'hsl(var(--caregiver-foreign-fg))'
-			},
-			'caregiver-other': {
-				DEFAULT: 'hsl(var(--caregiver-other-bg))',
-				foreground: 'hsl(var(--caregiver-other-fg))'
+			'caregiver-volunteer': {
+				DEFAULT: 'hsl(var(--caregiver-volunteer-bg))',
+				foreground: 'hsl(var(--caregiver-volunteer-fg))',
+				dot: 'hsl(var(--caregiver-volunteer-dot))'
 			}
   		},
   		borderRadius: {

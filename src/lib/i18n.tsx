@@ -24,10 +24,9 @@ const translations = {
     totalHours: 'סה"כ שעות',
     caregiverName: 'שם המטפל',
     caregiverType: 'סוג מטפל',
-    typePrivatePaid: 'מטפל פרטי בתשלום',
+    typePrivatePaid: 'השגחה בתשלום',
     typeFamilyMember: 'בן משפחה',
-    typeForeignCaregiver: 'השגחה בתשלום',
-    typeOther: 'אחר',
+    typeVolunteer: 'מתנדב',
     
     // Location
     location: 'מיקום',
@@ -180,10 +179,9 @@ const translations = {
     totalHours: 'Total Hours',
     caregiverName: 'Caregiver Name',
     caregiverType: 'Caregiver Type',
-    typePrivatePaid: 'Paid Private Caregiver',
+    typePrivatePaid: 'Paid Supervision',
     typeFamilyMember: 'Family Member',
-    typeForeignCaregiver: 'Paid Supervision',
-    typeOther: 'Other',
+    typeVolunteer: 'Volunteer',
     
     // Location
     location: 'Location',
