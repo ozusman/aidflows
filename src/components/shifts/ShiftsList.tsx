@@ -113,7 +113,9 @@ export function ShiftsList() {
 
   return (
     <>
-      <CaregiverTypeLegend />
+      <div className="pl-4">
+        <CaregiverTypeLegend />
+      </div>
       <Card>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
