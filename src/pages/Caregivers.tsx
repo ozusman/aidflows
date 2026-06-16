@@ -24,28 +24,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-function getCaregiverTypeLabel(type: string, t: (key: any) => string): string {
-  const labels: Record<string, string> = {
-    private_paid: t("typePrivatePaid"),
-    family_member: t("typeFamilyMember"),
-    foreign_caregiver: t("typeForeignCaregiver"),
-    other: t("typeOther"),
-  };
-  return labels[type] || type;
-}
-
-const TYPE_BADGE_CLASSES: Record<string, string> = {
-  private_paid: "bg-caregiver-private text-caregiver-private-foreground hover:bg-caregiver-private/90",
-  family_member: "bg-caregiver-family text-caregiver-family-foreground hover:bg-caregiver-family/90",
-  foreign_caregiver: "bg-caregiver-foreign text-caregiver-foreign-foreground hover:bg-caregiver-foreign/90",
-  other: "bg-caregiver-other text-caregiver-other-foreground hover:bg-caregiver-other/90",
-};
-
-function CaregiverTypeBadge({ type, label }: { type: string; label: string }) {
-  return (
-    <Badge className={`border-transparent ${TYPE_BADGE_CLASSES[type] || TYPE_BADGE_CLASSES.other}`}>{label}</Badge>
-  );
-}
+import { CaregiverTypeBadge, getCaregiverTypeLabel } from "@/components/caregivers/CaregiverTypeBadge";
 
 export default function Caregivers() {
   const { t } = useI18n();
