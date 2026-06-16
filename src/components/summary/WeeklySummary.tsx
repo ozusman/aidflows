@@ -11,6 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { format, startOfWeek, endOfWeek, addWeeks, subWeeks } from 'date-fns';
+import { CaregiverTypeDot } from '@/components/caregivers/CaregiverTypeDot';
+import { CaregiverTypeLegend } from '@/components/caregivers/CaregiverTypeLegend';
 
 function getWeekRange(date: Date): { start: string; end: string } {
   const start = startOfWeek(date, { weekStartsOn: 0 });
@@ -156,6 +158,9 @@ export function WeeklySummary() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base font-medium">{t('navShifts')}</CardTitle>
+          <div className="pt-2">
+            <CaregiverTypeLegend />
+          </div>
         </CardHeader>
         <CardContent className="p-0">
           {weekShifts.length === 0 ? (
@@ -186,7 +191,12 @@ export function WeeklySummary() {
                       <TableCell className="text-center">
                         {formatHoursToHHMM(shift.totalHours)}
                       </TableCell>
-                      <TableCell>{shift.caregiverName}</TableCell>
+                      <TableCell>
+                        <span className="inline-flex items-center gap-2">
+                          <CaregiverTypeDot type={shift.caregiverType} />
+                          <span>{shift.caregiverName}</span>
+                        </span>
+                      </TableCell>
                       <TableCell>{shift.locationName}</TableCell>
                       <TableCell className="text-center">
                         {(shift.travelCost || 0) + (shift.parkingCost || 0) === 0 ? '—' : `${t('currencySymbol')}${((shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}`}

@@ -113,6 +113,7 @@ export function ShiftsList() {
 
   return (
     <>
+      <CaregiverTypeLegend />
       <Card>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
@@ -141,7 +142,10 @@ export function ShiftsList() {
                       <TableCell>{shift.startTime}</TableCell>
                       <TableCell>{shift.endTime}</TableCell>
                       <TableCell>
-                        <div className="font-medium">{shift.caregiverName}</div>
+                        <div className="font-medium inline-flex items-center gap-2">
+                          <CaregiverTypeDot type={shift.caregiverType} />
+                          <span>{shift.caregiverName}</span>
+                        </div>
                       </TableCell>
                       <TableCell>
                         <div>{shift.locationName}</div>
