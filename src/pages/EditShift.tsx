@@ -82,7 +82,7 @@ export default function EditShift() {
     // Save caregiver to database
     await saveCaregiver(formData.caregiverName, formData.caregiverType);
 
-    updateShift(id, formData);
+    await updateShift(id, formData);
     toast({
       title: t('success'),
       description: t('shiftSaved'),

@@ -35,9 +35,11 @@ const App = () => (
                 path="/"
                 element={
                   <ProtectedRoute>
-                    <AppLayout>
-                      <Index />
-                    </AppLayout>
+                    <ShiftsProvider>
+                      <AppLayout>
+                        <Index />
+                      </AppLayout>
+                    </ShiftsProvider>
                   </ProtectedRoute>
                 }
               />
@@ -45,9 +47,11 @@ const App = () => (
                 path="/new-shift"
                 element={
                   <ProtectedRoute>
-                    <AppLayout>
-                      <NewShift />
-                    </AppLayout>
+                    <ShiftsProvider>
+                      <AppLayout>
+                        <NewShift />
+                      </AppLayout>
+                    </ShiftsProvider>
                   </ProtectedRoute>
                 }
               />
@@ -55,9 +59,11 @@ const App = () => (
                 path="/edit-shift/:id"
                 element={
                   <ProtectedRoute>
-                    <AppLayout>
-                      <EditShift />
-                    </AppLayout>
+                    <ShiftsProvider>
+                      <AppLayout>
+                        <EditShift />
+                      </AppLayout>
+                    </ShiftsProvider>
                   </ProtectedRoute>
                 }
               />
@@ -65,9 +71,11 @@ const App = () => (
                 path="/coverage"
                 element={
                   <ProtectedRoute>
-                    <AppLayout>
-                      <Coverage />
-                    </AppLayout>
+                    <ShiftsProvider>
+                      <AppLayout>
+                        <Coverage />
+                      </AppLayout>
+                    </ShiftsProvider>
                   </ProtectedRoute>
                 }
               />
@@ -75,9 +83,11 @@ const App = () => (
                 path="/summary"
                 element={
                   <ProtectedRoute>
-                    <AppLayout>
-                      <Summary />
-                    </AppLayout>
+                    <ShiftsProvider>
+                      <AppLayout>
+                        <Summary />
+                      </AppLayout>
+                    </ShiftsProvider>
                   </ProtectedRoute>
                 }
               />
@@ -85,9 +95,11 @@ const App = () => (
                 path="/caregivers"
                 element={
                   <ProtectedRoute>
-                    <AppLayout>
-                      <Caregivers />
-                    </AppLayout>
+                    <ShiftsProvider>
+                      <AppLayout>
+                        <Caregivers />
+                      </AppLayout>
+                    </ShiftsProvider>
                   </ProtectedRoute>
                 }
               />
