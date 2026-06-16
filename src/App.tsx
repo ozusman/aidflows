@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { I18nProvider } from "@/lib/i18n";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { ShiftsProvider } from "@/hooks/ShiftsContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import Index from "./pages/Index";
 import NewShift from "./pages/NewShift";
@@ -23,77 +24,79 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <I18nProvider>
       <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <AppLayout>
-                      <Index />
-                    </AppLayout>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/new-shift"
-                element={
-                  <ProtectedRoute>
-                    <AppLayout>
-                      <NewShift />
-                    </AppLayout>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/edit-shift/:id"
-                element={
-                  <ProtectedRoute>
-                    <AppLayout>
-                      <EditShift />
-                    </AppLayout>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/coverage"
-                element={
-                  <ProtectedRoute>
-                    <AppLayout>
-                      <Coverage />
-                    </AppLayout>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/summary"
-                element={
-                  <ProtectedRoute>
-                    <AppLayout>
-                      <Summary />
-                    </AppLayout>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/caregivers"
-                element={
-                  <ProtectedRoute>
-                    <AppLayout>
-                      <Caregivers />
-                    </AppLayout>
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
+        <ShiftsProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <AppLayout>
+                        <Index />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/new-shift"
+                  element={
+                    <ProtectedRoute>
+                      <AppLayout>
+                        <NewShift />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/edit-shift/:id"
+                  element={
+                    <ProtectedRoute>
+                      <AppLayout>
+                        <EditShift />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/coverage"
+                  element={
+                    <ProtectedRoute>
+                      <AppLayout>
+                        <Coverage />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/summary"
+                  element={
+                    <ProtectedRoute>
+                      <AppLayout>
+                        <Summary />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/caregivers"
+                  element={
+                    <ProtectedRoute>
+                      <AppLayout>
+                        <Caregivers />
+                      </AppLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </ShiftsProvider>
       </AuthProvider>
     </I18nProvider>
   </QueryClientProvider>
