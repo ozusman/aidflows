@@ -162,26 +162,30 @@ export function ShiftsList() {
                         {(shift.caregiverType === "family_member" ? 0 : shift.totalHours * (caregiverRates.get(shift.caregiverName) ?? 0) + (shift.travelCost || 0) + (shift.parkingCost || 0)).toFixed(2)}
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Badge
-                            variant={shift.paymentStatus === "paid" ? "default" : "secondary"}
-                            className={cn(
-                              "cursor-pointer transition-colors",
-                              shift.paymentStatus === "paid"
-                                ? "bg-success text-success-foreground hover:bg-success/80"
-                                : "bg-hover-light text-foreground hover:bg-hover-light/80",
+                        {shift.caregiverType === "private_paid" ? (
+                          <div className="flex items-center gap-2">
+                            <Badge
+                              variant={shift.paymentStatus === "paid" ? "default" : "secondary"}
+                              className={cn(
+                                "cursor-pointer transition-colors",
+                                shift.paymentStatus === "paid"
+                                  ? "bg-success text-success-foreground hover:bg-success/80"
+                                  : "bg-hover-light text-foreground hover:bg-hover-light/80",
+                              )}
+                              onClick={() => handleBadgeClick(shift)}
+                            >
+                              {shift.paymentStatus === "paid" ? t("statusPaid") : t("statusUnpaid")}
+                            </Badge>
+                            {receiptCount > 0 && (
+                              <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                                <Paperclip className="w-3 h-3" />
+                                {receiptCount}
+                              </span>
                             )}
-                            onClick={() => handleBadgeClick(shift)}
-                          >
-                            {shift.paymentStatus === "paid" ? t("statusPaid") : t("statusUnpaid")}
-                          </Badge>
-                          {receiptCount > 0 && (
-                            <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                              <Paperclip className="w-3 h-3" />
-                              {receiptCount}
-                            </span>
-                          )}
-                        </div>
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
                       </TableCell>
                       <TableCell>
                         <RowActions>

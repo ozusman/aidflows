@@ -1,32 +1,37 @@
-## Fix edit-not-refreshing + confirm sort
+## Plan
 
-### Problem
-`useShifts()` stores `shifts` in local `useState`, so every component that calls it gets its **own copy**. When `EditShift` calls `updateShift`, only its local copy updates; `ShiftsList`, `WeeklySummary`, `DailyCoverage` keep showing stale data until a full page reload. Same issue affects add/delete from other pages.
+You're right: the Shifts table still renders the `Unpaid` badge for every row, including family members and volunteers. The Weekly Summary table currently has no Status column in code, but I’ll verify the rendered issue by making the same unpaid-caregiver rule reusable so both tables stay consistent if a status cell exists or is added.
 
-### Fix: share shifts state via a Context provider
+### 1. Define the unpaid-caregiver rule once
+- Treat these caregiver types as non-payment/non-status rows:
+  - `family_member`
+  - `volunteer`
+- Only `private_paid` rows should show a payment status badge or open receipt/payment actions.
 
-1. **New file `src/hooks/ShiftsContext.tsx`**
-   - Move the entire body of the existing `useShifts` hook into a `ShiftsProvider` component that holds the single source of truth (`shifts`, `isLoading`, all the CRUD callbacks, helpers).
-   - Export a `useShifts()` hook that just reads the context and throws if used outside the provider.
-   - Public API stays identical, so no consumer changes needed.
+### 2. Fix the Shifts table
+- In `src/components/shifts/ShiftsList.tsx`:
+  - Replace the unconditional status badge with `—` for family members and volunteers.
+  - Keep the receipt icon/count only for paid supervision rows.
+  - Prevent clicking/changing payment status for family members and volunteers.
 
-2. **`src/App.tsx`**
-   - Wrap the authenticated routes tree with `<ShiftsProvider>` (inside `<ProtectedRoute>` scope so it only mounts for logged-in users).
+### 3. Fix Weekly Summary consistency
+- In `src/components/summary/WeeklySummary.tsx`:
+  - Confirm there is no status column in the current code.
+  - If any payment/status display is present in the table, render `—` for family members and volunteers.
+  - Keep existing amount behavior: `0.00` for family members unless you want volunteers to also be forced to zero.
 
-3. **`src/hooks/useShifts.ts`**
-   - Replace contents with a thin re-export of `useShifts` from `ShiftsContext` to keep all existing imports (`@/hooks/useShifts`) working.
+### 4. Fix the provider error cleanly
+- The current `ShiftsProvider` wraps auth routes too high in `src/App.tsx`, outside `BrowserRouter` and outside the protected app route structure.
+- Move `ShiftsProvider` inside the authenticated app area so all pages using `useShifts()` are definitely under the provider, and auth/reset pages are not.
 
-4. **`src/pages/EditShift.tsx`** (~line 85)
-   - `await updateShift(id, formData)` before `navigate('/')`, so the shared state is committed before the list re-renders.
+### 5. Verify
+- Check the table render path after the change:
+  - Family member row status = `—`
+  - Volunteer row status = `—`
+  - Paid supervision row status still shows Paid/Unpaid badge
+  - New/edit shift pages remain usable without the provider error
 
-### Sort verification
-`ShiftsList.tsx` lines 61–65 already sort by `date` desc then `startTime` desc — keep as is. Once the shared-state fix lands, the edited row will appear in the correct sorted position automatically.
-
-### Out of scope
-No DB, no calculations, no WeeklySummary table changes (it has no status column), no UI/visual changes.
-
-### Files
-- create `src/hooks/ShiftsContext.tsx`
-- edit `src/hooks/useShifts.ts` (re-export)
-- edit `src/App.tsx` (wrap with provider)
-- edit `src/pages/EditShift.tsx` (await + navigate)
+### Files to edit
+- `src/components/shifts/ShiftsList.tsx`
+- `src/components/summary/WeeklySummary.tsx` only if needed for visible payment/status consistency
+- `src/App.tsx`
