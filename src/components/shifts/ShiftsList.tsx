@@ -17,15 +17,8 @@ import { Link } from "react-router-dom";
 import { cn, formatHoursToHHMM } from "@/lib/utils";
 import { PaymentReceiptsDialog } from "./PaymentReceiptsDialog";
 
-function getCaregiverTypeLabel(type: Shift["caregiverType"], t: (key: any) => string): string {
-  const labels = {
-    private_paid: t("typePrivatePaid"),
-    family_member: t("typeFamilyMember"),
-    foreign_caregiver: t("typeForeignCaregiver"),
-    other: t("typeOther"),
-  };
-  return labels[type];
-}
+import { CaregiverTypeDot } from "@/components/caregivers/CaregiverTypeDot";
+import { CaregiverTypeLegend } from "@/components/caregivers/CaregiverTypeLegend";
 
 function getLocationTypeLabel(type: Shift["locationType"], t: (key: any) => string): string {
   const labels = {

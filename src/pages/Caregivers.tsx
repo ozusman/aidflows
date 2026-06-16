@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+
 import { Plus } from "lucide-react";
 import { RowActionButton, RowActions } from "@/components/ui/row-actions";
 import { useToast } from "@/hooks/use-toast";
@@ -123,8 +123,7 @@ export default function Caregivers() {
                 <SelectContent>
                   <SelectItem value="private_paid">{t("typePrivatePaid")}</SelectItem>
                   <SelectItem value="family_member">{t("typeFamilyMember")}</SelectItem>
-                  <SelectItem value="foreign_caregiver">{t("typeForeignCaregiver")}</SelectItem>
-                  <SelectItem value="other">{t("typeOther")}</SelectItem>
+                  <SelectItem value="volunteer">{t("typeVolunteer")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -206,8 +205,7 @@ export default function Caregivers() {
                               <SelectContent>
                                 <SelectItem value="private_paid">{t("typePrivatePaid")}</SelectItem>
                                 <SelectItem value="family_member">{t("typeFamilyMember")}</SelectItem>
-                                <SelectItem value="foreign_caregiver">{t("typeForeignCaregiver")}</SelectItem>
-                                <SelectItem value="other">{t("typeOther")}</SelectItem>
+                                <SelectItem value="volunteer">{t("typeVolunteer")}</SelectItem>
                               </SelectContent>
                             </Select>
                           ) : (
