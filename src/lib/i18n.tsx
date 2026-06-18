@@ -74,6 +74,10 @@ const translations = {
     approve: 'אישור',
     delete: 'מחיקה',
     export: 'ייצוא',
+    discard: 'מחיקה',
+    keepEditing: 'המשך עריכה',
+    discardShiftTitle: 'למחוק את המשמרת?',
+    discardShiftMessage: 'השינויים שלך יאבדו.',
     
     // Daily Coverage
     dailyCoverage: 'כיסוי יומי',
@@ -229,6 +233,10 @@ const translations = {
     approve: 'Approve',
     delete: 'Delete',
     export: 'Export',
+    discard: 'Discard',
+    keepEditing: 'Keep editing',
+    discardShiftTitle: 'Discard this shift?',
+    discardShiftMessage: 'Your changes will be lost.',
     
     // Daily Coverage
     dailyCoverage: 'Daily Coverage',

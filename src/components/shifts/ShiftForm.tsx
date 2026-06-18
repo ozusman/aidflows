@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
 import { useShifts } from '@/hooks/useShifts';
@@ -16,6 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import { formatHoursToHHMM } from '@/lib/utils';
 import { CaregiverAutocomplete } from './CaregiverAutocomplete';
 import { CaregiverTypeBadge } from '@/components/caregivers/CaregiverTypeBadge';
+import { DiscardShiftDialog } from './DiscardShiftDialog';
 
 export function ShiftForm() {
   const { t } = useI18n();
@@ -45,6 +46,25 @@ export function ShiftForm() {
   });
 
   const [selectedRate, setSelectedRate] = useState(0);
+  const [dirty, setDirty] = useState(false);
+  const [showDiscard, setShowDiscard] = useState(false);
+
+  const attemptCancel = useCallback(() => {
+    if (dirty) setShowDiscard(true);
+    else navigate('/');
+  }, [dirty, navigate]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || e.defaultPrevented || showDiscard) return;
+      const open = document.querySelector('[data-state="open"][role="dialog"], [data-state="open"][role="listbox"]');
+      if (open) return;
+      e.preventDefault();
+      attemptCancel();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [attemptCancel, showDiscard]);
 
   useEffect(() => {
     if (formData.caregiverName) {
@@ -96,6 +116,7 @@ export function ShiftForm() {
   const isFamilyMember = formData.caregiverType === 'family_member';
 
   const updateField = <K extends keyof ShiftFormData>(field: K, value: ShiftFormData[K]) => {
+    setDirty(true);
     setFormData(prev => {
       const updated = { ...prev, [field]: value };
       
@@ -119,6 +140,11 @@ export function ShiftForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
+      <div className="flex justify-end">
+        <Button type="button" variant="outline" onClick={attemptCancel}>
+          {t('cancel')}
+        </Button>
+      </div>
       {/* Time & Date */}
       <Card>
         <CardHeader>
@@ -381,13 +407,18 @@ export function ShiftForm() {
 
       {/* Actions */}
       <div className="flex gap-3 justify-end">
-        <Button type="button" variant="outline" onClick={() => navigate('/')}>
+        <Button type="button" variant="outline" onClick={attemptCancel}>
           {t('cancel')}
         </Button>
         <Button type="submit">
           {t('save')}
         </Button>
       </div>
+      <DiscardShiftDialog
+        open={showDiscard}
+        onOpenChange={setShowDiscard}
+        onDiscard={() => navigate('/')}
+      />
     </form>
   );
 }

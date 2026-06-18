@@ -1,25 +1,24 @@
 import * as React from 'react';
-import { Pencil, Trash2, Check } from 'lucide-react';
+import { Pencil, Trash2, Check, X } from 'lucide-react';
 import { Button, type ButtonProps } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
-type ActionKind = 'edit' | 'delete' | 'confirm';
+type ActionKind = 'edit' | 'delete' | 'confirm' | 'cancel';
 
 const ICONS: Record<ActionKind, React.ComponentType<{ className?: string }>> = {
   edit: Pencil,
   delete: Trash2,
   confirm: Check,
+  cancel: X,
 };
 
 // Accessibility: icons must meet WCAG AA contrast on light backgrounds.
-// - destructive token in this theme is a pale red bg; destructive-foreground is the
-//   accessible dark red used for text/icons. Always use it for delete icons.
-// - hover tints stay subtle but keep the icon color identical, preserving contrast.
 const STYLES: Record<ActionKind, string> = {
   edit: 'text-foreground/80 hover:bg-hover-light hover:text-foreground',
   delete: 'text-destructive-foreground hover:bg-destructive hover:text-destructive-foreground focus-visible:ring-destructive-foreground',
   confirm: 'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground',
+  cancel: 'text-foreground/80 hover:bg-hover-light hover:text-foreground',
 };
 
 export interface RowActionButtonProps

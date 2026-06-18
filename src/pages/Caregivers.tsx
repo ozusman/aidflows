@@ -170,7 +170,15 @@ export default function Caregivers() {
                     const isEditing = editingId === caregiver.id;
                     const rate = Number(caregiver.hourly_rate) || 0;
                     return (
-                      <TableRow key={caregiver.id}>
+                      <TableRow
+                        key={caregiver.id}
+                        onKeyDown={isEditing ? (e) => {
+                          if (e.key === 'Escape') {
+                            e.preventDefault();
+                            cancelEdit();
+                          }
+                        } : undefined}
+                      >
                         <TableCell className="font-medium">
                           {isEditing ? (
                             <Input
@@ -237,12 +245,20 @@ export default function Caregivers() {
                         <TableCell>
                           <RowActions>
                             {isEditing ? (
-                              <RowActionButton
-                                action="confirm"
-                                label={t("approve")}
-                                onClick={approveEdit}
-                                disabled={isSavingEdit}
-                              />
+                              <>
+                                <RowActionButton
+                                  action="confirm"
+                                  label={t("approve")}
+                                  onClick={approveEdit}
+                                  disabled={isSavingEdit}
+                                />
+                                <RowActionButton
+                                  action="cancel"
+                                  label={t("cancel")}
+                                  onClick={cancelEdit}
+                                  disabled={isSavingEdit}
+                                />
+                              </>
                             ) : (
                               <RowActionButton
                                 action="edit"

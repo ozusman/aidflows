@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
 import { useShifts } from '@/hooks/useShifts';
@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { CaregiverAutocomplete } from '@/components/shifts/CaregiverAutocomplete';
 import { CaregiverTypeBadge } from '@/components/caregivers/CaregiverTypeBadge';
+import { DiscardShiftDialog } from '@/components/shifts/DiscardShiftDialog';
 
 const HOURLY_RATE = 70;
 
@@ -27,6 +28,25 @@ export default function EditShift() {
   const { toast } = useToast();
 
   const [formData, setFormData] = useState<ShiftFormData | null>(null);
+  const [dirty, setDirty] = useState(false);
+  const [showDiscard, setShowDiscard] = useState(false);
+
+  const attemptCancel = useCallback(() => {
+    if (dirty) setShowDiscard(true);
+    else navigate('/');
+  }, [dirty, navigate]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || e.defaultPrevented || showDiscard) return;
+      const open = document.querySelector('[data-state="open"][role="dialog"], [data-state="open"][role="listbox"]');
+      if (open) return;
+      e.preventDefault();
+      attemptCancel();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [attemptCancel, showDiscard]);
 
   useEffect(() => {
     if (id) {
@@ -93,6 +113,7 @@ export default function EditShift() {
   const isFamilyMember = formData.caregiverType === 'family_member';
 
   const updateField = <K extends keyof ShiftFormData>(field: K, value: ShiftFormData[K]) => {
+    setDirty(true);
     setFormData(prev => {
       if (!prev) return prev;
       const updated = { ...prev, [field]: value };
@@ -117,6 +138,11 @@ export default function EditShift() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
+      <div className="flex justify-end">
+        <Button type="button" variant="outline" onClick={attemptCancel}>
+          {t('cancel')}
+        </Button>
+      </div>
       <Card>
         <CardHeader>
           <CardTitle className="text-base font-medium">{t('edit')}</CardTitle>
@@ -369,13 +395,18 @@ export default function EditShift() {
       </Card>
 
       <div className="flex gap-3 justify-end">
-        <Button type="button" variant="outline" onClick={() => navigate('/')}>
+        <Button type="button" variant="outline" onClick={attemptCancel}>
           {t('cancel')}
         </Button>
         <Button type="submit">
           {t('save')}
         </Button>
       </div>
+      <DiscardShiftDialog
+        open={showDiscard}
+        onOpenChange={setShowDiscard}
+        onDiscard={() => navigate('/')}
+      />
     </form>
   );
 }
