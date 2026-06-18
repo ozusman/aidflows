@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
 import { useShifts } from '@/hooks/useShifts';
@@ -16,6 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import { formatHoursToHHMM } from '@/lib/utils';
 import { CaregiverAutocomplete } from './CaregiverAutocomplete';
 import { CaregiverTypeBadge } from '@/components/caregivers/CaregiverTypeBadge';
+import { DiscardShiftDialog } from './DiscardShiftDialog';
 
 export function ShiftForm() {
   const { t } = useI18n();
