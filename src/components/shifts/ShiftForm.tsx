@@ -46,6 +46,25 @@ export function ShiftForm() {
   });
 
   const [selectedRate, setSelectedRate] = useState(0);
+  const [dirty, setDirty] = useState(false);
+  const [showDiscard, setShowDiscard] = useState(false);
+
+  const attemptCancel = useCallback(() => {
+    if (dirty) setShowDiscard(true);
+    else navigate('/');
+  }, [dirty, navigate]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || e.defaultPrevented || showDiscard) return;
+      const open = document.querySelector('[data-state="open"][role="dialog"], [data-state="open"][role="listbox"]');
+      if (open) return;
+      e.preventDefault();
+      attemptCancel();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [attemptCancel, showDiscard]);
 
   useEffect(() => {
     if (formData.caregiverName) {
