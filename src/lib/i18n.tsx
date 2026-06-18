@@ -233,6 +233,10 @@ const translations = {
     approve: 'Approve',
     delete: 'Delete',
     export: 'Export',
+    discard: 'Discard',
+    keepEditing: 'Keep editing',
+    discardShiftTitle: 'Discard this shift?',
+    discardShiftMessage: 'Your changes will be lost.',
     
     // Daily Coverage
     dailyCoverage: 'Daily Coverage',
