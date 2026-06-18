@@ -116,6 +116,7 @@ export function ShiftForm() {
   const isFamilyMember = formData.caregiverType === 'family_member';
 
   const updateField = <K extends keyof ShiftFormData>(field: K, value: ShiftFormData[K]) => {
+    setDirty(true);
     setFormData(prev => {
       const updated = { ...prev, [field]: value };
       
@@ -139,8 +140,11 @@ export function ShiftForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
-      {/* Time & Date */}
-      <Card>
+      <div className="flex justify-end">
+        <Button type="button" variant="outline" onClick={attemptCancel}>
+          {t('cancel')}
+        </Button>
+      </div>
         <CardHeader>
           <CardTitle className="text-base font-medium">{t('shiftEntry')}</CardTitle>
         </CardHeader>
