@@ -113,6 +113,7 @@ export default function EditShift() {
   const isFamilyMember = formData.caregiverType === 'family_member';
 
   const updateField = <K extends keyof ShiftFormData>(field: K, value: ShiftFormData[K]) => {
+    setDirty(true);
     setFormData(prev => {
       if (!prev) return prev;
       const updated = { ...prev, [field]: value };
@@ -137,6 +138,11 @@ export default function EditShift() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
+      <div className="flex justify-end">
+        <Button type="button" variant="outline" onClick={attemptCancel}>
+          {t('cancel')}
+        </Button>
+      </div>
       <Card>
         <CardHeader>
           <CardTitle className="text-base font-medium">{t('edit')}</CardTitle>
