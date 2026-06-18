@@ -245,12 +245,20 @@ export default function Caregivers() {
                         <TableCell>
                           <RowActions>
                             {isEditing ? (
-                              <RowActionButton
-                                action="confirm"
-                                label={t("approve")}
-                                onClick={approveEdit}
-                                disabled={isSavingEdit}
-                              />
+                              <>
+                                <RowActionButton
+                                  action="confirm"
+                                  label={t("approve")}
+                                  onClick={approveEdit}
+                                  disabled={isSavingEdit}
+                                />
+                                <RowActionButton
+                                  action="cancel"
+                                  label={t("cancel")}
+                                  onClick={cancelEdit}
+                                  disabled={isSavingEdit}
+                                />
+                              </>
                             ) : (
                               <RowActionButton
                                 action="edit"
