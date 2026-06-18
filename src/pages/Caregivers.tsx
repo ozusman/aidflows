@@ -266,26 +266,28 @@ export default function Caregivers() {
                                 onClick={() => startEdit(caregiver.id, caregiver.name, caregiver.caregiver_type, rate)}
                               />
                             )}
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <RowActionButton action="delete" label={t("delete")} disabled={isEditing} />
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>{t("confirmDeleteCaregiver")}</AlertDialogTitle>
-                                  <AlertDialogDescription>{caregiver.name}</AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => deleteCaregiver(caregiver.id)}
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                  >
-                                    {t("delete")}
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
+                            {!isEditing && (
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <RowActionButton action="delete" label={t("delete")} />
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>{t("confirmDeleteCaregiver")}</AlertDialogTitle>
+                                    <AlertDialogDescription>{caregiver.name}</AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => deleteCaregiver(caregiver.id)}
+                                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    >
+                                      {t("delete")}
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            )}
                           </RowActions>
                         </TableCell>
                       </TableRow>
