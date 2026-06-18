@@ -407,13 +407,18 @@ export function ShiftForm() {
 
       {/* Actions */}
       <div className="flex gap-3 justify-end">
-        <Button type="button" variant="outline" onClick={() => navigate('/')}>
+        <Button type="button" variant="outline" onClick={attemptCancel}>
           {t('cancel')}
         </Button>
         <Button type="submit">
           {t('save')}
         </Button>
       </div>
+      <DiscardShiftDialog
+        open={showDiscard}
+        onOpenChange={setShowDiscard}
+        onDiscard={() => navigate('/')}
+      />
     </form>
   );
 }
