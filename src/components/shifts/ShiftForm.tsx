@@ -145,6 +145,8 @@ export function ShiftForm() {
           {t('cancel')}
         </Button>
       </div>
+      {/* Time & Date */}
+      <Card>
         <CardHeader>
           <CardTitle className="text-base font-medium">{t('shiftEntry')}</CardTitle>
         </CardHeader>
