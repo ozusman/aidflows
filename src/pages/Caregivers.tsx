@@ -133,9 +133,10 @@ export default function Caregivers() {
                 type="number"
                 min={0}
                 step={1}
-                value={newRate}
+                value={newType === "private_paid" ? newRate : 0}
                 onChange={(e) => setNewRate(Math.round(parseFloat(e.target.value) || 0))}
                 onKeyDown={(e) => [".", ","].includes(e.key) && e.preventDefault()}
+                disabled={newType !== "private_paid"}
               />
             </div>
             <div className="flex sm:justify-end">
@@ -221,13 +222,13 @@ export default function Caregivers() {
                               type="number"
                               min={0}
                               step={1}
-                              value={editingRate}
+                              value={editingType === "private_paid" ? editingRate : 0}
                               onChange={(e) => setEditingRate(Math.round(parseFloat(e.target.value) || 0))}
                               onKeyDown={(e) => [".", ","].includes(e.key) && e.preventDefault()}
                               className="h-9 w-[120px]"
-                              disabled={isSavingEdit}
+                              disabled={isSavingEdit || editingType !== "private_paid"}
                             />
-                          ) : caregiver.caregiver_type === "family_member" && rate === 0 ? (
+                          ) : (caregiver.caregiver_type === "family_member" || caregiver.caregiver_type === "volunteer") ? (
                             <span className="text-muted-foreground">—</span>
                           ) : (
                             `€${rate}/hr`
