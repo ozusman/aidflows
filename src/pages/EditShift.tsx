@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
 import { useShifts } from '@/hooks/useShifts';
@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { CaregiverAutocomplete } from '@/components/shifts/CaregiverAutocomplete';
 import { CaregiverTypeBadge } from '@/components/caregivers/CaregiverTypeBadge';
+import { DiscardShiftDialog } from '@/components/shifts/DiscardShiftDialog';
 
 const HOURLY_RATE = 70;
 
