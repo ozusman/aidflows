@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { addDays, subDays, format } from "date-fns";
-import { cn, formatHoursToHHMM } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 type SegType = "paid" | "family" | "gap";
 
@@ -342,37 +342,6 @@ export function DailyCoverage() {
         </CardContent>
       </Card>
 
-      {/* Shifts for this day */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base font-medium">{t("navShifts")}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {shifts.length === 0 ? (
-            <p className="text-muted-foreground text-center py-8">{t("noShifts")}</p>
-          ) : (
-            <div className="space-y-3">
-              {shifts.map((shift) => (
-                <div key={shift.id} className="flex items-center justify-between p-3 rounded-md border border-border">
-                  <div>
-                    <div className="font-medium">{shift.caregiverName}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {shift.startTime} - {shift.endTime} ({formatHoursToHHMM(shift.totalHours)}h)
-                    </div>
-                  </div>
-                  <div className="text-end">
-                    <div className="font-mono text-sm">
-                      {t("currencySymbol")}
-                      {shift.paymentAmount}
-                    </div>
-                    <div className="text-xs text-muted-foreground">{shift.locationName}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
     </div>
   );
 }
