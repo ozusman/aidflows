@@ -278,27 +278,31 @@ export function DailyCoverage() {
             </div>
 
             {/* Timeline bar */}
-            <div className="relative h-12 rounded-md bg-muted overflow-hidden" dir="ltr">
+            <div className="relative h-12 rounded-md bg-muted" dir="ltr">
               {/* Primary track */}
-              <div className="absolute inset-0 flex">
+              <div className="absolute inset-0 flex gap-0.5">
                 {layout.primary.map((block, index) => {
                   const widthPercent = ((block.endMinute - block.startMinute) / (24 * 60)) * 100;
+                  const hasOverlayHere = layout.overlay.some(
+                    (o) => o.startMinute < block.endMinute && o.endMinute > block.startMinute,
+                  );
+                  const label = block.rendered ? shiftLabel(block.rendered.shift) : "";
                   return (
                     <div
                       key={`p-${index}`}
                       className={cn(
-                        "relative h-full flex items-center justify-center text-xs font-medium transition-colors",
-                        block.type === "paid" && "bg-primary text-primary-foreground",
-                        block.type === "family" && "bg-muted-foreground/30 text-foreground",
-                        block.type === "gap" && "bg-orange-100 border border-orange-300 text-orange-700",
+                        "relative h-full flex text-xs font-medium transition-colors rounded-md overflow-hidden justify-center",
+                        hasOverlayHere ? "items-start pt-0.5" : "items-center",
+                        block.type === "caregiver" && block.rendered && caregiverClasses(block.rendered.shift),
+                        block.type === "gap" && "bg-orange-100 border border-orange-300 text-orange-700 items-center",
                       )}
                       style={{ width: `${widthPercent}%` }}
-                      title={block.rendered?.shift.caregiverName || t("uncovered")}
+                      title={label || t("uncovered")}
                     >
-                      {widthPercent > 8 && block.rendered && (
-                        <span className="truncate px-1">{block.rendered.shift.caregiverName}</span>
+                      {widthPercent > 2 && block.rendered && (
+                        <span className="truncate px-1">{label}</span>
                       )}
-                      {widthPercent > 5 && block.type === "gap" && <span className="truncate px-1">Gap</span>}
+                      {widthPercent > 2 && block.type === "gap" && <span className="truncate px-1">Gap</span>}
                     </div>
                   );
                 })}
@@ -306,21 +310,23 @@ export function DailyCoverage() {
 
               {/* Overlay track for concurrent shifts (stacked thin bar) */}
               {layout.overlay.length > 0 && (
-                <div className="absolute left-0 right-0 bottom-0 h-1/2 pointer-events-none">
+                <div className="absolute left-0 right-0 bottom-0 h-1/2">
                   {layout.overlay.map((block, index) => {
                     const leftPercent = (block.startMinute / (24 * 60)) * 100;
                     const widthPercent = ((block.endMinute - block.startMinute) / (24 * 60)) * 100;
+                    const label = shiftLabel(block.rendered.shift);
                     return (
                       <div
                         key={`o-${index}`}
                         className={cn(
-                          "absolute top-0 h-full border-t-2 border-background pointer-events-auto",
-                          block.type === "paid" && "bg-primary",
-                          block.type === "family" && "bg-muted-foreground/60",
+                          "absolute top-0 h-full rounded-md border-2 border-background flex items-center justify-center text-[10px] font-medium overflow-hidden",
+                          caregiverClasses(block.rendered.shift),
                         )}
                         style={{ left: `${leftPercent}%`, width: `${widthPercent}%` }}
-                        title={block.rendered.shift.caregiverName}
-                      />
+                        title={label}
+                      >
+                        {widthPercent > 2 && <span className="truncate px-1">{label}</span>}
+                      </div>
                     );
                   })}
                 </div>
@@ -328,14 +334,18 @@ export function DailyCoverage() {
             </div>
 
             {/* Legend */}
-            <div className="flex gap-6 text-sm">
+            <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-primary"></div>
+                <div className="w-4 h-4 rounded bg-caregiver-private"></div>
                 <span>{t("paidCaregiver")}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-muted-foreground/30"></div>
+                <div className="w-4 h-4 rounded bg-caregiver-family"></div>
                 <span>{t("familyCaregiver")}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded bg-caregiver-volunteer"></div>
+                <span>Volunteer</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded bg-orange-100 border border-orange-300"></div>
