@@ -10,7 +10,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { addDays, subDays, format } from "date-fns";
 import { cn } from "@/lib/utils";
 
-type SegType = "paid" | "family" | "gap";
+type SegType = "caregiver" | "gap";
 
 interface RenderedShift {
   startMin: number; // within [0, 1440]
@@ -32,7 +32,6 @@ interface PrimarySegment {
 interface OverlaySegment {
   startMinute: number;
   endMinute: number;
-  type: Exclude<SegType, "gap">;
   rendered: RenderedShift;
 }
 
@@ -41,8 +40,20 @@ function timeToMinutes(time: string): number {
   return hours * 60 + minutes;
 }
 
-function shiftType(s: Shift): Exclude<SegType, "gap"> {
-  return s.caregiverType === "family_member" ? "family" : "paid";
+function caregiverClasses(s: Shift): string {
+  switch (s.caregiverType) {
+    case "family_member":
+      return "bg-caregiver-family text-caregiver-family-foreground";
+    case "volunteer":
+      return "bg-caregiver-volunteer text-caregiver-volunteer-foreground";
+    case "private_paid":
+    default:
+      return "bg-caregiver-private text-caregiver-private-foreground";
+  }
+}
+
+function shiftLabel(s: Shift): string {
+  return `${s.caregiverName} · ${s.startTime}–${s.endTime}`;
 }
 
 /**
