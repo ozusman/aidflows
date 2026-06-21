@@ -289,12 +289,6 @@ export function DailyCoverage() {
                         <span className="truncate px-1">{block.rendered.shift.caregiverName}</span>
                       )}
                       {widthPercent > 5 && block.type === "gap" && <span className="truncate px-1">Gap</span>}
-                      {block.notchLeft && (
-                        <ChevronLeft className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-3 opacity-80" />
-                      )}
-                      {block.notchRight && (
-                        <ChevronRight className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 opacity-80" />
-                      )}
                     </div>
                   );
                 })}
