@@ -133,7 +133,7 @@ function buildLayout(rendered: RenderedShift[]): {
       primaryRaw.push({
         startMinute: a,
         endMinute: b,
-        type: shiftType(p.shift),
+        type: "caregiver",
         rendered: p,
       });
       for (let j = 1; j < active.length; j++) {
@@ -141,7 +141,6 @@ function buildLayout(rendered: RenderedShift[]): {
         overlayRaw.push({
           startMinute: a,
           endMinute: b,
-          type: shiftType(s.shift),
           rendered: s,
         });
       }
