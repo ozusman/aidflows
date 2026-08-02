@@ -87,7 +87,7 @@ export default function Auth() {
     if (!validateForm()) return;
     
     setIsLoading(true);
-    const { error } = await signUp(email, password);
+    const { error } = await signUp(email, password, nextPath);
     setIsLoading(false);
     
     if (error) {
@@ -129,7 +129,7 @@ export default function Auth() {
     setError(null);
     setIsLoading(true);
     const result = await lovable.auth.signInWithOAuth('google', {
-      redirect_uri: window.location.origin,
+      redirect_uri: `${window.location.origin}${nextPath}`,
     });
     if (result.error) {
       logger.error('Google sign in error:', result.error);
