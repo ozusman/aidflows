@@ -1,6 +1,7 @@
 import { logger } from '@/lib/logger';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
 import { useAuth } from '@/hooks/useAuth';
 import { useI18n } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
@@ -28,6 +29,11 @@ export default function Auth() {
   const { user, isLoading: authLoading, signIn, signUp, resetPassword } = useAuth();
   const navigate = useNavigate();
   
+  const [searchParams] = useSearchParams();
+  const rawNext = searchParams.get('next');
+  // Only allow same-origin relative paths.
+  const nextPath = rawNext && /^\/(?!\/)/.test(rawNext) ? rawNext : '/';
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -39,9 +45,10 @@ export default function Auth() {
   // Redirect if already logged in
   useEffect(() => {
     if (user && !authLoading) {
-      navigate('/');
+      navigate(nextPath);
     }
-  }, [user, authLoading, navigate]);
+  }, [user, authLoading, navigate, nextPath]);
+
 
   const validateForm = () => {
     const result = authSchema.safeParse({ email, password });
@@ -80,7 +87,7 @@ export default function Auth() {
     if (!validateForm()) return;
     
     setIsLoading(true);
-    const { error } = await signUp(email, password);
+    const { error } = await signUp(email, password, nextPath);
     setIsLoading(false);
     
     if (error) {
@@ -122,7 +129,7 @@ export default function Auth() {
     setError(null);
     setIsLoading(true);
     const result = await lovable.auth.signInWithOAuth('google', {
-      redirect_uri: window.location.origin,
+      redirect_uri: `${window.location.origin}${nextPath}`,
     });
     if (result.error) {
       logger.error('Google sign in error:', result.error);

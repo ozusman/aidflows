@@ -1,0 +1,242 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://jllablsoqogfplecqkyn.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "aidflow-mcp",
+      "version": "0.1.0",
+      "title": "AidFlow"
+    },
+    "tools": [
+      {
+        "name": "list_shifts",
+        "title": "List shifts",
+        "description": "List the signed-in user's caregiver shifts, optionally filtered by date range, caregiver name, or payment status. Returns date, times, hours, caregiver, location, costs and payment status.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "from_date": {
+              "type": "string",
+              "description": "Only include shifts on or after this ISO date (YYYY-MM-DD)."
+            },
+            "to_date": {
+              "type": "string",
+              "description": "Only include shifts on or before this ISO date (YYYY-MM-DD)."
+            },
+            "caregiver_name": {
+              "type": "string",
+              "description": "Filter to shifts whose caregiver name contains this text."
+            },
+            "payment_status": {
+              "type": "string",
+              "enum": [
+                "paid",
+                "unpaid"
+              ],
+              "description": "Filter by payment status."
+            },
+            "limit": {
+              "type": "number",
+              "description": "Maximum number of shifts to return (default 50, max 200)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_caregivers",
+        "title": "List caregivers",
+        "description": "List the signed-in user's caregivers with their type (private_paid, family_member, volunteer) and hourly rate.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "shift_summary",
+        "title": "Summarize shifts",
+        "description": "Summarize the signed-in user's shifts over a date range: total hours, total payment, total expenses (travel + parking), and per-caregiver breakdown.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "from_date": {
+              "type": "string",
+              "description": "Start of the range, ISO date (YYYY-MM-DD)."
+            },
+            "to_date": {
+              "type": "string",
+              "description": "End of the range, ISO date (YYYY-MM-DD)."
+            }
+          },
+          "required": [
+            "from_date",
+            "to_date"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_shift",
+        "title": "Create shift",
+        "description": "Create a new caregiver shift for the signed-in user. Payment amount is computed from the caregiver's hourly rate unless explicitly provided.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "description": "Shift date, ISO (YYYY-MM-DD)."
+            },
+            "start_time": {
+              "type": "string",
+              "description": "Start time, HH:mm."
+            },
+            "end_time": {
+              "type": "string",
+              "description": "End time, HH:mm. May be earlier than start for overnight shifts."
+            },
+            "caregiver_name": {
+              "type": "string",
+              "description": "Caregiver name."
+            },
+            "caregiver_type": {
+              "type": "string",
+              "enum": [
+                "private_paid",
+                "family_member",
+                "volunteer"
+              ],
+              "description": "Caregiver type. Only private_paid shifts are billable."
+            },
+            "location_type": {
+              "type": "string",
+              "enum": [
+                "hospital",
+                "home",
+                "institution"
+              ],
+              "description": "Location type."
+            },
+            "location_name": {
+              "type": "string",
+              "description": "Location name, e.g. hospital or ward name."
+            },
+            "payment_amount": {
+              "type": "number",
+              "description": "Override the computed labor payment amount."
+            },
+            "payment_method": {
+              "type": "string",
+              "enum": [
+                "bank_transfer",
+                "paybox",
+                "bit",
+                "cash"
+              ],
+              "description": "Payment method (default bank_transfer)."
+            },
+            "payment_status": {
+              "type": "string",
+              "enum": [
+                "paid",
+                "unpaid"
+              ],
+              "description": "Payment status (default unpaid)."
+            },
+            "travel_cost": {
+              "type": "number",
+              "description": "Expenses amount (default 0)."
+            },
+            "notes": {
+              "type": "string",
+              "description": "Free-text notes about the shift."
+            }
+          },
+          "required": [
+            "date",
+            "start_time",
+            "end_time",
+            "caregiver_name",
+            "caregiver_type",
+            "location_type",
+            "location_name"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "set_payment_status",
+        "title": "Set shift payment status",
+        "description": "Mark one of the signed-in user's shifts as paid or unpaid, optionally setting the payment date.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "shift_id": {
+              "type": "string",
+              "description": "The shift id, as returned by list_shifts."
+            },
+            "payment_status": {
+              "type": "string",
+              "enum": [
+                "paid",
+                "unpaid"
+              ],
+              "description": "New payment status."
+            },
+            "payment_date": {
+              "type": "string",
+              "description": "ISO date (YYYY-MM-DD) the payment was made. Only used when marking as paid."
+            }
+          },
+          "required": [
+            "shift_id",
+            "payment_status"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
