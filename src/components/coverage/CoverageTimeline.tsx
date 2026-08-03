@@ -125,7 +125,8 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
               )}
               style={{ width: `${widthPercent}%` }}
             >
-              {block.rendered && <TruncatedLabel text={label} />}
+              {hasOverlayHere && block.type === "caregiver" && <StripeFill />}
+              {block.rendered && <TruncatedLabel text={label} className="relative" />}
               {block.type === "gap" && <TruncatedLabel text={gapLabel || uncoveredLabel} />}
             </div>
           );
@@ -155,8 +156,7 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
               bottom: `${laneOffset}px`,
             }}
           >
-            <StripeFill />
-            <TruncatedLabel text={label} className="relative" />
+            <TruncatedLabel text={label} />
           </div>
         );
       })}
