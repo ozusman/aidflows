@@ -81,6 +81,7 @@ const translations = {
     
     // Daily Coverage
     dailyCoverage: 'כיסוי יומי',
+    weeklyCoverage: 'כיסוי שבועי',
     selectDate: 'בחירת תאריך',
     covered: 'מכוסה',
     uncovered: 'לא מכוסה',
@@ -240,6 +241,7 @@ const translations = {
     
     // Daily Coverage
     dailyCoverage: 'Daily Coverage',
+    weeklyCoverage: 'Weekly Coverage',
     selectDate: 'Select Date',
     covered: 'Covered',
     uncovered: 'Uncovered',
