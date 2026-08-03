@@ -1,4 +1,5 @@
 import { useI18n } from "@/lib/i18n";
+import { Badge } from "@/components/ui/badge";
 
 export function CoverageLegend() {
   const { t } = useI18n();
@@ -26,12 +27,8 @@ export function CoverageLegend() {
 
 export function CoverageStatus({ coveragePercent }: { coveragePercent: number }) {
   return coveragePercent === 100 ? (
-    <span className="rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 border border-green-200">
-      ✓ Full Coverage
-    </span>
+    <Badge className="bg-green-100 text-green-800 border-green-200">✓ Full Coverage</Badge>
   ) : (
-    <span className="rounded-full px-2.5 py-0.5 text-xs font-medium bg-orange-100 text-orange-700 border border-orange-500">
-      ⚠ Gaps Detected
-    </span>
+    <Badge className="bg-orange-100 text-orange-700 border border-orange-500">⚠ Gaps Detected</Badge>
   );
 }
