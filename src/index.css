@@ -70,15 +70,15 @@
     --shift-gap: 0 0% 92%;
 
     /* Caregiver type tokens — three roles per type (dot indicator, badge bg, badge fg). Badge fg meets WCAG AA on badge bg. */
-    --caregiver-private-dot: 40 84% 79%;   /* #F6DA9D */
-    --caregiver-private-bg: 40 83% 86%;    /* #F9E7BF */
-    --caregiver-private-fg: 24 64% 24%;    /* #643A17 */
-    --caregiver-family-dot: 80 95% 47%;    /* #9AEA06 */
-    --caregiver-family-bg: 82 89% 76%;     /* #D2F88C */
-    --caregiver-family-fg: 144 79% 21%;    /* #0B5D32 */
-    --caregiver-volunteer-dot: 266 100% 86%; /* #DAB8FF */
-    --caregiver-volunteer-bg: 266 100% 92%;  /* #E9D4FF */
-    --caregiver-volunteer-fg: 273 73% 32%;   /* #59168B */
+    --caregiver-private-dot: 209 74% 55%;  /* blue dot */
+    --caregiver-private-bg: 208 74% 91%;   /* #D7E9F9 */
+    --caregiver-private-fg: 209 73% 22%;   /* #0F3960 */
+    --caregiver-family-dot: 86 70% 45%;    /* green dot */
+    --caregiver-family-bg: 86 93% 75%;     /* #C9FB86 */
+    --caregiver-family-fg: 144 61% 20%;    /* #14532D */
+    --caregiver-volunteer-dot: 269 70% 65%; /* purple dot */
+    --caregiver-volunteer-bg: 269 96% 90%;  /* #E5CEFE */
+    --caregiver-volunteer-fg: 274 66% 32%;  /* #581C87 */
 
     --font-sans:
       ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
