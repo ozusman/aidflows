@@ -12,7 +12,7 @@ const translations = {
     
     // Navigation
     navShifts: 'משמרות',
-    navDailyCoverage: 'כיסוי יומי',
+    navDailyCoverage: 'כיסוי',
     navWeeklySummary: 'סיכום שבועי',
     navNewShift: 'משמרת חדשה',
     
@@ -81,6 +81,7 @@ const translations = {
     
     // Daily Coverage
     dailyCoverage: 'כיסוי יומי',
+    weeklyCoverage: 'כיסוי שבועי',
     selectDate: 'בחירת תאריך',
     covered: 'מכוסה',
     uncovered: 'לא מכוסה',
@@ -171,7 +172,7 @@ const translations = {
     
     // Navigation
     navShifts: 'Shifts',
-    navDailyCoverage: 'Daily Coverage',
+    navDailyCoverage: 'Coverage',
     navWeeklySummary: 'Weekly Summary',
     navNewShift: 'New Shift',
     
@@ -240,6 +241,7 @@ const translations = {
     
     // Daily Coverage
     dailyCoverage: 'Daily Coverage',
+    weeklyCoverage: 'Weekly Coverage',
     selectDate: 'Select Date',
     covered: 'Covered',
     uncovered: 'Uncovered',
