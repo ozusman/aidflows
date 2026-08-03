@@ -70,15 +70,15 @@
     --shift-gap: 0 0% 92%;
 
     /* Caregiver type tokens — three roles per type (dot indicator, badge bg, badge fg). Badge fg meets WCAG AA on badge bg. */
-    --caregiver-private-dot: 40 84% 79%;   /* #F6DA9D */
-    --caregiver-private-bg: 40 83% 86%;    /* #F9E7BF */
-    --caregiver-private-fg: 24 64% 24%;    /* #643A17 */
-    --caregiver-family-dot: 80 95% 47%;    /* #9AEA06 */
-    --caregiver-family-bg: 82 89% 76%;     /* #D2F88C */
-    --caregiver-family-fg: 144 79% 21%;    /* #0B5D32 */
-    --caregiver-volunteer-dot: 266 100% 86%; /* #DAB8FF */
-    --caregiver-volunteer-bg: 266 100% 92%;  /* #E9D4FF */
-    --caregiver-volunteer-fg: 273 73% 32%;   /* #59168B */
+    --caregiver-private-dot: 209 74% 55%;  /* blue dot */
+    --caregiver-private-bg: 208 74% 91%;   /* #D7E9F9 */
+    --caregiver-private-fg: 209 73% 22%;   /* #0F3960 */
+    --caregiver-family-dot: 86 70% 45%;    /* green dot */
+    --caregiver-family-bg: 86 93% 75%;     /* #C9FB86 */
+    --caregiver-family-fg: 144 61% 20%;    /* #14532D */
+    --caregiver-volunteer-dot: 269 70% 65%; /* purple dot */
+    --caregiver-volunteer-bg: 269 96% 90%;  /* #E5CEFE */
+    --caregiver-volunteer-fg: 274 66% 32%;  /* #581C87 */
 
     --font-sans:
       ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
@@ -160,15 +160,15 @@
     --radius: 0.75rem;
 
     /* Caregiver type tokens (dark mode) */
-    --caregiver-private-dot: 40 70% 60%;
-    --caregiver-private-bg: 24 50% 18%;
-    --caregiver-private-fg: 40 85% 85%;
-    --caregiver-family-dot: 80 80% 50%;
+    --caregiver-private-dot: 209 70% 62%;
+    --caregiver-private-bg: 209 50% 18%;
+    --caregiver-private-fg: 208 85% 88%;
+    --caregiver-family-dot: 86 70% 50%;
     --caregiver-family-bg: 144 50% 16%;
-    --caregiver-family-fg: 82 80% 82%;
-    --caregiver-volunteer-dot: 266 80% 72%;
-    --caregiver-volunteer-bg: 273 45% 22%;
-    --caregiver-volunteer-fg: 266 90% 90%;
+    --caregiver-family-fg: 86 80% 82%;
+    --caregiver-volunteer-dot: 269 75% 72%;
+    --caregiver-volunteer-bg: 274 45% 22%;
+    --caregiver-volunteer-fg: 269 90% 90%;
   }
 }
 
