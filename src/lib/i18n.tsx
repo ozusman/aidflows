@@ -12,7 +12,7 @@ const translations = {
     
     // Navigation
     navShifts: 'משמרות',
-    navDailyCoverage: 'כיסוי יומי',
+    navDailyCoverage: 'כיסוי',
     navWeeklySummary: 'סיכום שבועי',
     navNewShift: 'משמרת חדשה',
     
@@ -172,7 +172,7 @@ const translations = {
     
     // Navigation
     navShifts: 'Shifts',
-    navDailyCoverage: 'Daily Coverage',
+    navDailyCoverage: 'Coverage',
     navWeeklySummary: 'Weekly Summary',
     navNewShift: 'New Shift',
     
