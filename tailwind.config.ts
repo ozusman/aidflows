@@ -76,21 +76,25 @@ export default {
 			'caregiver-private': {
 				DEFAULT: 'hsl(var(--caregiver-private-bg))',
 				foreground: 'hsl(var(--caregiver-private-fg))',
-				dot: 'hsl(var(--caregiver-private-dot))'
+				dot: 'hsl(var(--caregiver-private-dot))',
+				marker: 'hsl(var(--caregiver-private-marker))'
 			},
 			'caregiver-family': {
 				DEFAULT: 'hsl(var(--caregiver-family-bg))',
 				foreground: 'hsl(var(--caregiver-family-fg))',
-				dot: 'hsl(var(--caregiver-family-dot))'
+				dot: 'hsl(var(--caregiver-family-dot))',
+				marker: 'hsl(var(--caregiver-family-marker))'
 			},
 			'caregiver-volunteer': {
 				DEFAULT: 'hsl(var(--caregiver-volunteer-bg))',
 				foreground: 'hsl(var(--caregiver-volunteer-fg))',
-				dot: 'hsl(var(--caregiver-volunteer-dot))'
+				dot: 'hsl(var(--caregiver-volunteer-dot))',
+				marker: 'hsl(var(--caregiver-volunteer-marker))'
 			}
   		},
   		boxShadow: {
-  			overlap: 'var(--shadow-overlap)'
+  			overlap: 'var(--shadow-overlap)',
+  			shift: 'var(--shadow-shift)'
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
