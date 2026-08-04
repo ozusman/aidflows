@@ -41,17 +41,14 @@ function TruncatedLabel({ text, className }: { text: string; className?: string 
 }
 
 /** Diagonal stripe fill used on overlapping blocks (tinted by the block's type color). */
-
-
-/** Diagonal stripe fill used on overlapping blocks. */
-function StripeFill() {
+function StripeFill({ className }: { className?: string }) {
   return (
     <span
       aria-hidden
-      className="pointer-events-none absolute inset-0 opacity-60"
+      className={cn("pointer-events-none absolute inset-0 opacity-60", className)}
       style={{
         backgroundImage:
-          "repeating-linear-gradient(70deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 4px)",
+          "repeating-linear-gradient(110deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 8px)",
       }}
     />
   );
