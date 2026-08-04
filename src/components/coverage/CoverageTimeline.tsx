@@ -169,7 +169,7 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
           <div
             key={`o-${index}`}
             className={cn(
-              "absolute h-1/2 rounded-[4px] shadow-md flex items-center justify-center text-[11px] font-medium overflow-hidden",
+              "absolute h-1/2 rounded-[4px] shadow-overlap flex items-center justify-center text-[11px] font-medium overflow-hidden",
               caregiverClasses(block.rendered.shift),
             )}
             style={{
