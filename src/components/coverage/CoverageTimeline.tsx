@@ -187,6 +187,7 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
           </div>
         );
       })}
+      </div>
     </div>
   );
 }
