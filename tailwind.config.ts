@@ -69,6 +69,10 @@ export default {
 			'shift-family': 'hsl(var(--shift-family))',
 			'shift-gap': 'hsl(var(--shift-gap))',
 			'hover-light': 'hsl(var(--hover-light))',
+			'coverage-gap': {
+				DEFAULT: 'hsl(var(--coverage-gap-bg))',
+				foreground: 'hsl(var(--coverage-gap-fg))'
+			},
 			'caregiver-private': {
 				DEFAULT: 'hsl(var(--caregiver-private-bg))',
 				foreground: 'hsl(var(--caregiver-private-fg))',

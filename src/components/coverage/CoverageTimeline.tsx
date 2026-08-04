@@ -40,15 +40,8 @@ function TruncatedLabel({ text, className }: { text: string; className?: string 
   );
 }
 
-/** Thin leading accent bar shown on the start edge of a block. */
-function AccentBar() {
-  return (
-    <span
-      aria-hidden
-      className="pointer-events-none absolute left-0 top-1 bottom-1 w-[3px] rounded-sm bg-current"
-    />
-  );
-}
+/** Diagonal stripe fill used on overlapping blocks (tinted by the block's type color). */
+
 
 /** Diagonal stripe fill used on overlapping blocks. */
 function StripeFill() {
@@ -119,13 +112,13 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
     layout.primary.some((b) => b.type === "caregiver") || layout.overlay.length > 0;
 
   if (!hasShifts) {
-    return <div className="relative h-14 rounded-md bg-muted" dir="ltr" />;
+    return <div className="relative h-12 rounded-lg bg-muted" dir="ltr" />;
   }
 
   return (
-    <div className="relative h-14 rounded-md bg-muted overflow-hidden" dir="ltr">
+    <div className="relative h-12 rounded-lg bg-muted overflow-hidden" dir="ltr">
       {/* Primary track */}
-      <div className="absolute inset-0 flex">
+      <div className="absolute inset-0 flex gap-[2px]">
         {layout.primary.map((block, index) => {
           const widthPercent = ((block.endMinute - block.startMinute) / DAY_MINUTES) * 100;
           const hasOverlayHere = layout.overlay.some(
@@ -136,16 +129,23 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
             <div
               key={`p-${index}`}
               className={cn(
-                "relative h-full flex text-xs font-medium rounded-md overflow-hidden justify-center",
-                hasOverlayHere ? "items-start pt-1.5" : "items-center",
+                "relative h-full flex text-xs font-medium rounded-[4px] overflow-hidden justify-center",
+                hasOverlayHere ? "items-start pt-1" : "items-center",
                 block.type === "caregiver" && block.rendered && caregiverClasses(block.rendered.shift),
-                block.type === "gap" && "bg-orange-100 text-orange-700 items-center",
+                block.type === "gap" && "bg-coverage-gap text-coverage-gap-foreground items-center",
               )}
               style={{ width: `${widthPercent}%` }}
             >
               {hasOverlayHere && block.type === "caregiver" && <StripeFill />}
-              {block.type === "caregiver" && <AccentBar />}
-              {block.rendered && <TruncatedLabel text={label} className="relative" />}
+              {block.rendered && (
+                <TruncatedLabel
+                  text={label}
+                  className={cn(
+                    "relative",
+                    hasOverlayHere && "rounded-[4px] bg-background/60",
+                  )}
+                />
+              )}
               {block.type === "gap" && (
                 <TruncatedLabel text={`⚠ ${gapLabel || uncoveredLabel}`} />
               )}
@@ -153,8 +153,6 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
           );
         })}
       </div>
-
-
 
       {/* Overlap blocks: half-height, anchored to the bottom edge */}
       {layout.overlay.map((block, index) => {
@@ -167,7 +165,7 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
           <div
             key={`o-${index}`}
             className={cn(
-              "absolute h-1/2 rounded-md flex items-center justify-center text-[11px] font-medium overflow-hidden",
+              "absolute h-1/2 rounded-[4px] shadow-md flex items-center justify-center text-[11px] font-medium overflow-hidden",
               caregiverClasses(block.rendered.shift),
             )}
             style={{
@@ -176,12 +174,10 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
               bottom: `${laneOffset}px`,
             }}
           >
-            <AccentBar />
             <TruncatedLabel text={label} className="relative" />
           </div>
         );
       })}
-
     </div>
   );
 }

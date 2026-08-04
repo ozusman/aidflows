@@ -69,6 +69,11 @@
     --shift-family: 220 9% 46%;
     --shift-gap: 0 0% 92%;
 
+    /* Coverage gap (uncovered) — approved palette #fbeee4 / #c2410c */
+    --coverage-gap-bg: 26 74% 94%;
+    --coverage-gap-fg: 17 88% 40%;
+
+
     /* Caregiver type tokens — three roles per type (dot indicator, badge bg, badge fg). Badge fg meets WCAG AA on badge bg. */
     --caregiver-private-dot: 209 74% 55%;  /* blue dot */
     --caregiver-private-bg: 208 74% 91%;   /* #D7E9F9 */
@@ -169,6 +174,10 @@
     --caregiver-volunteer-dot: 269 75% 72%;
     --caregiver-volunteer-bg: 274 45% 22%;
     --caregiver-volunteer-fg: 269 90% 90%;
+
+    --coverage-gap-bg: 20 35% 18%;
+    --coverage-gap-fg: 26 85% 78%;
+
   }
 }
 
