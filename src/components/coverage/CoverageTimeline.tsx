@@ -111,11 +111,16 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
     layout.primary.some((b) => b.type === "caregiver") || layout.overlay.length > 0;
 
   if (!hasShifts) {
-    return <div className="relative h-12 rounded-[4px] bg-background" dir="ltr" />;
+    return (
+      <div className="relative rounded-[4px] bg-background overflow-hidden pb-1" dir="ltr">
+        <div className="relative h-12" dir="ltr" />
+      </div>
+    );
   }
 
   return (
-    <div className="relative h-12 rounded-[4px] bg-background mb-1" dir="ltr">
+    <div className="relative rounded-[4px] bg-background overflow-hidden pb-1" dir="ltr">
+      <div className="relative h-12" dir="ltr">
       {/* Primary track */}
       <div className="absolute inset-0 flex gap-[2px]">
         {layout.primary.map((block, index) => {
@@ -182,6 +187,7 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
           </div>
         );
       })}
+      </div>
     </div>
   );
 }
