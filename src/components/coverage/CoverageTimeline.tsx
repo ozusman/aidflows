@@ -115,7 +115,7 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
   }
 
   return (
-    <div className="relative h-12 rounded-[4px] bg-background overflow-hidden" dir="ltr">
+    <div className="relative h-12 rounded-[4px] bg-background" dir="ltr">
       {/* Primary track */}
       <div className="absolute inset-0 flex gap-[2px]">
         {layout.primary.map((block, index) => {
