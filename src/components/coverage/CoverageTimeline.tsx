@@ -115,9 +115,9 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
   }
 
   return (
-    <div className="relative h-12 rounded-[4px] bg-background mb-1" dir="ltr">
+    <div className="relative h-12 rounded-[4px] bg-background" dir="ltr">
       {/* Primary track */}
-      <div className="absolute inset-0 flex gap-[2px]">
+      <div className="absolute inset-0 flex items-center gap-[2px]">
         {layout.primary.map((block, index) => {
           const widthPercent = ((block.endMinute - block.startMinute) / DAY_MINUTES) * 100;
           const hasOverlayHere = layout.overlay.some(
@@ -128,8 +128,9 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
             <div
               key={`p-${index}`}
               className={cn(
-                "relative h-full flex text-xs font-medium rounded-[4px] overflow-hidden justify-center",
-                hasOverlayHere ? "items-start pt-1" : "items-center",
+                // 4px internal padding on all sides; base shift is 46px inside an overlap group.
+                "relative p-1 flex text-xs font-medium rounded-[4px] overflow-hidden justify-center",
+                hasOverlayHere ? "h-[46px] items-start" : "h-full items-center",
                 block.type === "caregiver" && block.rendered && caregiverClasses(block.rendered.shift),
                 block.type === "gap" && "bg-coverage-gap text-coverage-gap-foreground items-center",
               )}
@@ -138,50 +139,70 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
               {hasOverlayHere && block.type === "caregiver" && block.rendered && (
                 <StripeFill className={caregiverStripeClasses(block.rendered.shift)} />
               )}
-              {block.rendered && (
-                <TruncatedLabel
-                  text={label}
+              {block.type === "caregiver" && block.rendered && (
+                <span
+                  aria-hidden
                   className={cn(
-                    "relative",
-                    hasOverlayHere && [
-                      "rounded-[4px] mx-[2px]",
-                      caregiverPillClasses(block.rendered.shift),
-                    ],
+                    "pointer-events-none absolute inset-y-1 left-1 w-[3px] rounded-full",
+                    caregiverMarkerClasses(block.rendered.shift),
                   )}
                 />
               )}
+              {block.rendered && (
+                <span className="relative flex min-w-0 max-w-full items-center px-1">
+                  <TruncatedLabel
+                    text={label}
+                    className={cn(
+                      hasOverlayHere && ["rounded-[4px]", caregiverPillClasses(block.rendered.shift)],
+                    )}
+                  />
+                </span>
+              )}
               {block.type === "gap" && (
-                <TruncatedLabel text={`⚠ ${gapLabel || uncoveredLabel}`} />
+                <span className="relative flex min-w-0 max-w-full items-center px-1">
+                  <TruncatedLabel text={`⚠ ${gapLabel || uncoveredLabel}`} />
+                </span>
               )}
             </div>
           );
         })}
       </div>
 
-      {/* Overlap blocks: half-height, anchored to the bottom edge */}
-      {layout.overlay.map((block, index) => {
-        const leftPercent = (block.startMinute / DAY_MINUTES) * 100;
-        const widthPercent = ((block.endMinute - block.startMinute) / DAY_MINUTES) * 100;
-        const label = shiftLabel(block.rendered.shift);
-        // Deeper lanes shrink slightly so 3+ overlaps stay inside the row.
-        const laneOffset = Math.min(block.lane, maxLane) * 3;
-        return (
-          <div
-            key={`o-${index}`}
-            className={cn(
-              "absolute h-1/2 rounded-[4px] shadow-overlap flex items-center justify-center text-[11px] font-medium overflow-hidden mb-0",
-              caregiverClasses(block.rendered.shift),
-            )}
-            style={{
-              left: `${leftPercent}%`,
-              width: `${widthPercent}%`,
-              bottom: `${laneOffset}px`,
-            }}
-          >
-            <TruncatedLabel text={label} className="relative" />
-          </div>
-        );
-      })}
+      {/* Overlap group: 1px vertical inset inside the 48px row */}
+      <div className="pointer-events-none absolute inset-x-0 inset-y-px">
+        {layout.overlay.map((block, index) => {
+          const leftPercent = (block.startMinute / DAY_MINUTES) * 100;
+          const widthPercent = ((block.endMinute - block.startMinute) / DAY_MINUTES) * 100;
+          const label = shiftLabel(block.rendered.shift);
+          // Lane 0 sits flush at the group's bottom; deeper lanes only for 3+ simultaneous shifts.
+          const laneOffset = Math.min(block.lane, maxLane) * 3;
+          return (
+            <div
+              key={`o-${index}`}
+              className={cn(
+                "pointer-events-auto absolute h-6 p-1 rounded-[4px] shadow-overlap flex items-center justify-center text-[11px] font-medium",
+                caregiverClasses(block.rendered.shift),
+              )}
+              style={{
+                left: `${leftPercent}%`,
+                width: `${widthPercent}%`,
+                bottom: `${laneOffset}px`,
+              }}
+            >
+              <span
+                aria-hidden
+                className={cn(
+                  "pointer-events-none absolute inset-y-1 left-1 w-[3px] rounded-full",
+                  caregiverMarkerClasses(block.rendered.shift),
+                )}
+              />
+              <span className="relative flex min-w-0 max-w-full items-center px-1">
+                <TruncatedLabel text={label} />
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
