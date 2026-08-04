@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, ReactNode } from "react";
+import { useLayoutEffect, useRef, useState, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
@@ -17,18 +17,26 @@ function TruncatedLabel({ text, className }: { text: string; className?: string 
   const ref = useRef<HTMLSpanElement>(null);
   const [truncated, setTruncated] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
     const check = () => setTruncated(el.scrollWidth > el.clientWidth + 1);
     check();
     const ro = new ResizeObserver(check);
     ro.observe(el);
+    if (el.parentElement) ro.observe(el.parentElement);
     return () => ro.disconnect();
   }, [text]);
 
   const span = (
-    <span ref={ref} className={cn("truncate px-1", className)}>
+    <span
+      ref={ref}
+      className={cn(
+        "block min-w-0 max-w-full overflow-hidden text-ellipsis whitespace-nowrap px-1",
+        truncated && "cursor-pointer select-none",
+        className,
+      )}
+    >
       {text}
     </span>
   );
