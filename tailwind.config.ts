@@ -89,6 +89,9 @@ export default {
 				dot: 'hsl(var(--caregiver-volunteer-dot))'
 			}
   		},
+  		boxShadow: {
+  			overlap: 'var(--shadow-overlap)'
+  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
