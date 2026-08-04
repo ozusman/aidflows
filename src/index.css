@@ -85,6 +85,11 @@
     --caregiver-volunteer-bg: 269 96% 90%;  /* #E5CEFE */
     --caregiver-volunteer-fg: 274 66% 32%;  /* #581C87 */
 
+    /* Figma start-marker colors */
+    --caregiver-private-marker: 209 73% 22%;   /* #0F3960 */
+    --caregiver-family-marker: 140 57% 22%;    /* #185629 */
+    --caregiver-volunteer-marker: 281 72% 32%; /* #5F178E */
+
     --font-sans:
       ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
       "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
