@@ -117,14 +117,14 @@ export function WeeklyCoverage() {
         <CardContent>
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 shrink-0" />
+              <div className="w-9 shrink-0" />
               <div className="flex-1">
                 <HourAxis />
               </div>
             </div>
             {rows.map((row) => (
               <div key={row.date} className="flex items-center gap-3">
-                <div className="w-10 shrink-0 text-sm text-muted-foreground">{row.label}</div>
+                <div className="w-9 shrink-0 text-sm font-medium text-foreground">{row.label}</div>
                 <div className="flex-1">
                   <CoverageTimeline layout={row.layout} gapLabel="Gap" uncoveredLabel={t("uncovered")} />
                 </div>

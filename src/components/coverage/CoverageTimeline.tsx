@@ -40,15 +40,8 @@ function TruncatedLabel({ text, className }: { text: string; className?: string 
   );
 }
 
-/** Thin leading accent bar shown on the start edge of a block. */
-function AccentBar() {
-  return (
-    <span
-      aria-hidden
-      className="pointer-events-none absolute left-0 top-1 bottom-1 w-[3px] rounded-sm bg-current"
-    />
-  );
-}
+/** Diagonal stripe fill used on overlapping blocks (tinted by the block's type color). */
+
 
 /** Diagonal stripe fill used on overlapping blocks. */
 function StripeFill() {
