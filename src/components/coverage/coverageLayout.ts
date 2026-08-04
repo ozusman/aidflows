@@ -62,16 +62,16 @@ export function caregiverStripeClasses(s: Shift): string {
   }
 }
 
-/** Shift-start marker color per caregiver type. */
+/** Shift-start marker color per caregiver type (exact Figma marker colors). */
 export function caregiverMarkerClasses(s: Shift): string {
   switch (s.caregiverType) {
     case "family_member":
-      return "bg-caregiver-family-foreground";
+      return "bg-caregiver-family-marker";
     case "volunteer":
-      return "bg-caregiver-volunteer-foreground";
+      return "bg-caregiver-volunteer-marker";
     case "private_paid":
     default:
-      return "bg-caregiver-private-foreground";
+      return "bg-caregiver-private-marker";
   }
 }
 

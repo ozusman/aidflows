@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, ReactNode } from "react";
+import { useLayoutEffect, useRef, useState, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
@@ -17,18 +17,26 @@ function TruncatedLabel({ text, className }: { text: string; className?: string 
   const ref = useRef<HTMLSpanElement>(null);
   const [truncated, setTruncated] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
     const check = () => setTruncated(el.scrollWidth > el.clientWidth + 1);
     check();
     const ro = new ResizeObserver(check);
     ro.observe(el);
+    if (el.parentElement) ro.observe(el.parentElement);
     return () => ro.disconnect();
   }, [text]);
 
   const span = (
-    <span ref={ref} className={cn("truncate px-1", className)}>
+    <span
+      ref={ref}
+      className={cn(
+        "block min-w-0 max-w-full overflow-hidden text-ellipsis whitespace-nowrap px-1",
+        truncated && "cursor-pointer select-none",
+        className,
+      )}
+    >
       {text}
     </span>
   );
@@ -132,6 +140,7 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
                 // 4px internal padding on all sides; base shift is 46px inside an overlap group.
                 "relative p-1 flex text-xs font-medium rounded-[4px] overflow-hidden justify-center",
                 hasOverlayHere ? "h-[46px] items-start" : "h-full items-center",
+                block.type === "caregiver" && "shadow-shift",
                 block.type === "caregiver" && block.rendered && caregiverClasses(block.rendered.shift),
                 block.type === "gap" && "bg-coverage-gap text-coverage-gap-foreground items-center",
               )}
@@ -150,20 +159,15 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
                 />
               )}
               {block.rendered && (
-                <span className="relative flex min-w-0 max-w-full items-center px-1">
-                  <TruncatedLabel
-                    text={label}
-                    className={cn(
-                      hasOverlayHere && ["rounded-[4px]", caregiverPillClasses(block.rendered.shift)],
-                    )}
-                  />
-                </span>
+                <TruncatedLabel
+                  text={label}
+                  className={cn(
+                    "relative",
+                    hasOverlayHere && ["rounded-[4px]", caregiverPillClasses(block.rendered.shift)],
+                  )}
+                />
               )}
-              {block.type === "gap" && (
-                <span className="relative flex min-w-0 max-w-full items-center px-1">
-                  <TruncatedLabel text={`⚠ ${gapLabel || uncoveredLabel}`} />
-                </span>
-              )}
+              {block.type === "gap" && <TruncatedLabel text={`⚠ ${gapLabel || uncoveredLabel}`} className="relative" />}
             </div>
           );
         })}
@@ -175,7 +179,7 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
           const leftPercent = (block.startMinute / DAY_MINUTES) * 100;
           const widthPercent = ((block.endMinute - block.startMinute) / DAY_MINUTES) * 100;
           const label = shiftLabel(block.rendered.shift);
-          // Lane 0 sits flush at the group's bottom; deeper lanes only for 3+ simultaneous shifts.
+          // Lane 0 sits 2px above the group's bottom so the shadow stays inside the base shift.
           const laneOffset = Math.min(block.lane, maxLane) * 3;
           return (
             <div
@@ -187,7 +191,7 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
               style={{
                 left: `${leftPercent}%`,
                 width: `${widthPercent}%`,
-                bottom: `${laneOffset}px`,
+                bottom: `${2 + laneOffset}px`,
               }}
             >
               <span
@@ -197,13 +201,12 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
                   caregiverMarkerClasses(block.rendered.shift),
                 )}
               />
-              <span className="relative flex min-w-0 max-w-full items-center px-1">
-                <TruncatedLabel text={label} />
-              </span>
+              <TruncatedLabel text={label} className="relative" />
             </div>
           );
         })}
       </div>
+
     </div>
   );
 }
