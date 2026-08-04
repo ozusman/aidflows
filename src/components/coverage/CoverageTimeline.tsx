@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import {
   DayLayout,
   caregiverClasses,
+  caregiverMarkerClasses,
   caregiverStripeClasses,
   caregiverPillClasses,
   shiftLabel,
