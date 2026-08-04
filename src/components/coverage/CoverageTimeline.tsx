@@ -40,19 +40,30 @@ function TruncatedLabel({ text, className }: { text: string; className?: string 
   );
 }
 
+/** Thin leading accent bar shown on the start edge of a block. */
+function AccentBar() {
+  return (
+    <span
+      aria-hidden
+      className="pointer-events-none absolute left-0 top-1 bottom-1 w-[3px] rounded-sm bg-current"
+    />
+  );
+}
+
 /** Diagonal stripe fill used on overlapping blocks. */
 function StripeFill() {
   return (
     <span
       aria-hidden
-      className="pointer-events-none absolute inset-0 opacity-40"
+      className="pointer-events-none absolute inset-0 opacity-60"
       style={{
         backgroundImage:
-          "repeating-linear-gradient(45deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 6px)",
+          "repeating-linear-gradient(70deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 4px)",
       }}
     />
   );
 }
+
 
 export function HourGrid({ children }: { children?: ReactNode }) {
   return (
