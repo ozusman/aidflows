@@ -49,6 +49,32 @@ export function caregiverClasses(s: Shift): string {
   }
 }
 
+/** Stripe ink color per caregiver type (darker "dot" tone of the same hue). */
+export function caregiverStripeClasses(s: Shift): string {
+  switch (s.caregiverType) {
+    case "family_member":
+      return "text-caregiver-family-dot";
+    case "volunteer":
+      return "text-caregiver-volunteer-dot";
+    case "private_paid":
+    default:
+      return "text-caregiver-private-dot";
+  }
+}
+
+/** Translucent label pill tinted with the caregiver type color. */
+export function caregiverPillClasses(s: Shift): string {
+  switch (s.caregiverType) {
+    case "family_member":
+      return "bg-caregiver-family/60";
+    case "volunteer":
+      return "bg-caregiver-volunteer/60";
+    case "private_paid":
+    default:
+      return "bg-caregiver-private/60";
+  }
+}
+
 export function shiftLabel(s: Shift): string {
   return `${s.caregiverName} · ${s.startTime}–${s.endTime}`;
 }
