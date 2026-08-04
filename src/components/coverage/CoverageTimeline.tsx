@@ -114,6 +114,13 @@ interface CoverageTimelineProps {
 
 export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageTimelineProps) {
   const maxLane = layout.overlay.reduce((m, o) => Math.max(m, o.lane), -1);
+  // A day with no shifts at all renders as a plain neutral track (no gap styling).
+  const hasShifts =
+    layout.primary.some((b) => b.type === "caregiver") || layout.overlay.length > 0;
+
+  if (!hasShifts) {
+    return <div className="relative h-14 rounded-md bg-muted" dir="ltr" />;
+  }
 
   return (
     <div className="relative h-14 rounded-md bg-muted overflow-hidden" dir="ltr">
