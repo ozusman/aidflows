@@ -4,6 +4,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import {
   DayLayout,
   caregiverClasses,
+  caregiverStripeClasses,
+  caregiverPillClasses,
   shiftLabel,
 } from "./coverageLayout";
 
@@ -41,17 +43,14 @@ function TruncatedLabel({ text, className }: { text: string; className?: string 
 }
 
 /** Diagonal stripe fill used on overlapping blocks (tinted by the block's type color). */
-
-
-/** Diagonal stripe fill used on overlapping blocks. */
-function StripeFill() {
+function StripeFill({ className }: { className?: string }) {
   return (
     <span
       aria-hidden
-      className="pointer-events-none absolute inset-0 opacity-60"
+      className={cn("pointer-events-none absolute inset-0 opacity-60", className)}
       style={{
         backgroundImage:
-          "repeating-linear-gradient(70deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 4px)",
+          "repeating-linear-gradient(110deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 8px)",
       }}
     />
   );
@@ -136,13 +135,18 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
               )}
               style={{ width: `${widthPercent}%` }}
             >
-              {hasOverlayHere && block.type === "caregiver" && <StripeFill />}
+              {hasOverlayHere && block.type === "caregiver" && block.rendered && (
+                <StripeFill className={caregiverStripeClasses(block.rendered.shift)} />
+              )}
               {block.rendered && (
                 <TruncatedLabel
                   text={label}
                   className={cn(
                     "relative",
-                    hasOverlayHere && "rounded-[4px] bg-background/60",
+                    hasOverlayHere && [
+                      "rounded-[4px] mx-[2px]",
+                      caregiverPillClasses(block.rendered.shift),
+                    ],
                   )}
                 />
               )}
