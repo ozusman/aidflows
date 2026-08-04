@@ -62,6 +62,19 @@ export function caregiverStripeClasses(s: Shift): string {
   }
 }
 
+/** Shift-start marker color per caregiver type. */
+export function caregiverMarkerClasses(s: Shift): string {
+  switch (s.caregiverType) {
+    case "family_member":
+      return "bg-caregiver-family-foreground";
+    case "volunteer":
+      return "bg-caregiver-volunteer-foreground";
+    case "private_paid":
+    default:
+      return "bg-caregiver-private-foreground";
+  }
+}
+
 /** Translucent label pill tinted with the caregiver type color. */
 export function caregiverPillClasses(s: Shift): string {
   switch (s.caregiverType) {
