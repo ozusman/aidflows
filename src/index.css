@@ -183,6 +183,10 @@
     --caregiver-volunteer-dot: 269 75% 72%;
     --caregiver-volunteer-bg: 274 45% 22%;
     --caregiver-volunteer-fg: 269 90% 90%;
+    --caregiver-private-marker: 208 85% 88%;
+    --caregiver-family-marker: 86 80% 82%;
+    --caregiver-volunteer-marker: 269 90% 90%;
+    --shadow-shift: 0px 1px 0px 0px hsl(0 0% 0% / 0.3);
 
     --coverage-gap-bg: 20 35% 18%;
     --coverage-gap-fg: 26 85% 78%;
