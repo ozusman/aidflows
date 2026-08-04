@@ -40,19 +40,30 @@ function TruncatedLabel({ text, className }: { text: string; className?: string 
   );
 }
 
+/** Thin leading accent bar shown on the start edge of a block. */
+function AccentBar() {
+  return (
+    <span
+      aria-hidden
+      className="pointer-events-none absolute left-0 top-1 bottom-1 w-[3px] rounded-sm bg-current"
+    />
+  );
+}
+
 /** Diagonal stripe fill used on overlapping blocks. */
 function StripeFill() {
   return (
     <span
       aria-hidden
-      className="pointer-events-none absolute inset-0 opacity-40"
+      className="pointer-events-none absolute inset-0 opacity-60"
       style={{
         backgroundImage:
-          "repeating-linear-gradient(45deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 6px)",
+          "repeating-linear-gradient(70deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 4px)",
       }}
     />
   );
 }
+
 
 export function HourGrid({ children }: { children?: ReactNode }) {
   return (
@@ -105,9 +116,9 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
   const maxLane = layout.overlay.reduce((m, o) => Math.max(m, o.lane), -1);
 
   return (
-    <div className="relative h-12 rounded-md bg-muted overflow-hidden" dir="ltr">
+    <div className="relative h-14 rounded-md bg-muted overflow-hidden" dir="ltr">
       {/* Primary track */}
-      <div className="absolute inset-0 flex gap-0.5">
+      <div className="absolute inset-0 flex">
         {layout.primary.map((block, index) => {
           const widthPercent = ((block.endMinute - block.startMinute) / DAY_MINUTES) * 100;
           const hasOverlayHere = layout.overlay.some(
@@ -119,15 +130,18 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
               key={`p-${index}`}
               className={cn(
                 "relative h-full flex text-xs font-medium rounded-md overflow-hidden justify-center",
-                hasOverlayHere ? "items-start pt-1" : "items-center",
+                hasOverlayHere ? "items-start pt-1.5" : "items-center",
                 block.type === "caregiver" && block.rendered && caregiverClasses(block.rendered.shift),
-                block.type === "gap" && "bg-orange-100 border-2 border-orange-500 text-orange-700 items-center",
+                block.type === "gap" && "bg-orange-100 text-orange-700 items-center",
               )}
               style={{ width: `${widthPercent}%` }}
             >
               {hasOverlayHere && block.type === "caregiver" && <StripeFill />}
+              {block.type === "caregiver" && <AccentBar />}
               {block.rendered && <TruncatedLabel text={label} className="relative" />}
-              {block.type === "gap" && <TruncatedLabel text={gapLabel || uncoveredLabel} />}
+              {block.type === "gap" && (
+                <TruncatedLabel text={`⚠ ${gapLabel || uncoveredLabel}`} />
+              )}
             </div>
           );
         })}
@@ -147,7 +161,7 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
           <div
             key={`o-${index}`}
             className={cn(
-              "absolute h-1/2 rounded-md border border-background flex items-center justify-center text-[11px] font-medium overflow-hidden",
+              "absolute h-1/2 rounded-md flex items-center justify-center text-[11px] font-medium overflow-hidden",
               caregiverClasses(block.rendered.shift),
             )}
             style={{
@@ -156,10 +170,12 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
               bottom: `${laneOffset}px`,
             }}
           >
-            <TruncatedLabel text={label} />
+            <AccentBar />
+            <TruncatedLabel text={label} className="relative" />
           </div>
         );
       })}
+
     </div>
   );
 }

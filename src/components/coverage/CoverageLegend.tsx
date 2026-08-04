@@ -18,7 +18,7 @@ export function CoverageLegend() {
         <span>Volunteer</span>
       </div>
       <div className="flex items-center gap-2">
-        <div className="w-4 h-4 rounded bg-orange-100 border-2 border-orange-500" />
+        <div className="w-4 h-4 rounded bg-orange-100" />
         <span>{t("uncovered")}</span>
       </div>
     </div>
