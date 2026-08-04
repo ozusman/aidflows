@@ -154,8 +154,7 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
         })}
       </div>
 
-      {/* Hour gridlines above the blocks */}
-      <HourGrid />
+
 
       {/* Overlap blocks: half-height, anchored to the bottom edge */}
       {layout.overlay.map((block, index) => {
