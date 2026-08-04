@@ -133,13 +133,18 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
               )}
               style={{ width: `${widthPercent}%` }}
             >
-              {hasOverlayHere && block.type === "caregiver" && <StripeFill />}
+              {hasOverlayHere && block.type === "caregiver" && block.rendered && (
+                <StripeFill className={caregiverStripeClasses(block.rendered.shift)} />
+              )}
               {block.rendered && (
                 <TruncatedLabel
                   text={label}
                   className={cn(
                     "relative",
-                    hasOverlayHere && "rounded-[4px] bg-background/60",
+                    hasOverlayHere && [
+                      "rounded-[4px] mx-[2px]",
+                      caregiverPillClasses(block.rendered.shift),
+                    ],
                   )}
                 />
               )}
