@@ -17,36 +17,44 @@ function TruncatedLabel({ text, className }: { text: string; className?: string 
   const ref = useRef<HTMLSpanElement>(null);
   const [truncated, setTruncated] = useState(false);
 
+  const measure = () => {
+    const el = ref.current;
+    if (!el) return;
+    setTruncated(el.scrollWidth > el.clientWidth + 1);
+  };
+
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const check = () => setTruncated(el.scrollWidth > el.clientWidth + 1);
-    check();
-    const ro = new ResizeObserver(check);
+    measure();
+    const ro = new ResizeObserver(measure);
     ro.observe(el);
     if (el.parentElement) ro.observe(el.parentElement);
     return () => ro.disconnect();
   }, [text]);
 
-  const span = (
-    <span
-      ref={ref}
-      className={cn(
-        "block min-w-0 max-w-full overflow-hidden text-ellipsis whitespace-nowrap px-1",
-        truncated && "cursor-pointer select-none",
-        className,
-      )}
-    >
-      {text}
-    </span>
-  );
-
-  if (!truncated) return span;
-
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>{span}</TooltipTrigger>
-      <TooltipContent>{text}</TooltipContent>
+    <Tooltip open={truncated ? undefined : false}>
+      <TooltipTrigger asChild>
+        <span
+          className={cn(
+            "flex w-full min-w-0 max-w-full items-center justify-center overflow-hidden pl-[7px] pr-1",
+            className,
+          )}
+          onPointerEnter={measure}
+        >
+          <span
+            ref={ref}
+            className={cn(
+              "block w-full min-w-0 max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-center",
+              truncated && "cursor-pointer select-none",
+            )}
+          >
+            {text}
+          </span>
+        </span>
+      </TooltipTrigger>
+      {truncated && <TooltipContent>{text}</TooltipContent>}
     </Tooltip>
   );
 }
