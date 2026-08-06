@@ -146,9 +146,8 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
               key={`p-${index}`}
               className={cn(
                 // 4px internal padding on all sides; base shift is 46px inside an overlap group.
-                "relative p-1 flex text-xs font-medium rounded-[4px] overflow-hidden justify-center",
+                "relative p-1 flex text-xs font-medium rounded-[4px] overflow-hidden justify-center shadow-shift min-w-0",
                 hasOverlayHere ? "h-[46px] items-start" : "h-full items-center",
-                block.type === "caregiver" && "shadow-shift",
                 block.type === "caregiver" && block.rendered && caregiverClasses(block.rendered.shift),
                 block.type === "gap" && "bg-coverage-gap text-coverage-gap-foreground items-center",
               )}
