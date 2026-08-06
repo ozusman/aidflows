@@ -17,36 +17,44 @@ function TruncatedLabel({ text, className }: { text: string; className?: string 
   const ref = useRef<HTMLSpanElement>(null);
   const [truncated, setTruncated] = useState(false);
 
+  const measure = () => {
+    const el = ref.current;
+    if (!el) return;
+    setTruncated(el.scrollWidth > el.clientWidth + 1);
+  };
+
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const check = () => setTruncated(el.scrollWidth > el.clientWidth + 1);
-    check();
-    const ro = new ResizeObserver(check);
+    measure();
+    const ro = new ResizeObserver(measure);
     ro.observe(el);
     if (el.parentElement) ro.observe(el.parentElement);
     return () => ro.disconnect();
   }, [text]);
 
-  const span = (
-    <span
-      ref={ref}
-      className={cn(
-        "block min-w-0 max-w-full overflow-hidden text-ellipsis whitespace-nowrap px-1",
-        truncated && "cursor-pointer select-none",
-        className,
-      )}
-    >
-      {text}
-    </span>
-  );
-
-  if (!truncated) return span;
-
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>{span}</TooltipTrigger>
-      <TooltipContent>{text}</TooltipContent>
+    <Tooltip open={truncated ? undefined : false}>
+      <TooltipTrigger asChild>
+        <span
+          className={cn(
+            "flex w-full min-w-0 max-w-full items-center justify-center overflow-hidden pl-[7px] pr-1",
+            className,
+          )}
+          onPointerEnter={measure}
+        >
+          <span
+            ref={ref}
+            className={cn(
+              "block w-full min-w-0 max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-center",
+              truncated && "cursor-pointer select-none",
+            )}
+          >
+            {text}
+          </span>
+        </span>
+      </TooltipTrigger>
+      {truncated && <TooltipContent>{text}</TooltipContent>}
     </Tooltip>
   );
 }
@@ -138,9 +146,8 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
               key={`p-${index}`}
               className={cn(
                 // 4px internal padding on all sides; base shift is 46px inside an overlap group.
-                "relative p-1 flex text-xs font-medium rounded-[4px] overflow-hidden justify-center",
+                "relative p-1 flex text-xs font-medium rounded-[4px] overflow-hidden justify-center shadow-shift min-w-0",
                 hasOverlayHere ? "h-[46px] items-start" : "h-full items-center",
-                block.type === "caregiver" && "shadow-shift",
                 block.type === "caregiver" && block.rendered && caregiverClasses(block.rendered.shift),
                 block.type === "gap" && "bg-coverage-gap text-coverage-gap-foreground items-center",
               )}
@@ -179,19 +186,19 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
           const leftPercent = (block.startMinute / DAY_MINUTES) * 100;
           const widthPercent = ((block.endMinute - block.startMinute) / DAY_MINUTES) * 100;
           const label = shiftLabel(block.rendered.shift);
-          // Lane 0 sits 2px above the group's bottom so the shadow stays inside the base shift.
+          // Lane 0 sits 1px above the group's bottom so no gap shows under the foreground shift.
           const laneOffset = Math.min(block.lane, maxLane) * 3;
           return (
             <div
               key={`o-${index}`}
               className={cn(
-                "pointer-events-auto absolute h-6 p-1 rounded-[4px] shadow-overlap flex items-center justify-center text-[11px] font-medium",
+                "pointer-events-auto absolute h-6 p-1 min-w-0 rounded-[4px] shadow-overlap flex items-center justify-center text-[11px] font-medium",
                 caregiverClasses(block.rendered.shift),
               )}
               style={{
                 left: `${leftPercent}%`,
                 width: `${widthPercent}%`,
-                bottom: `${2 + laneOffset}px`,
+                bottom: `${1 + laneOffset}px`,
               }}
             >
               <span
