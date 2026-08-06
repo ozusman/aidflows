@@ -186,19 +186,19 @@ export function CoverageTimeline({ layout, gapLabel, uncoveredLabel }: CoverageT
           const leftPercent = (block.startMinute / DAY_MINUTES) * 100;
           const widthPercent = ((block.endMinute - block.startMinute) / DAY_MINUTES) * 100;
           const label = shiftLabel(block.rendered.shift);
-          // Lane 0 sits 2px above the group's bottom so the shadow stays inside the base shift.
+          // Lane 0 sits 1px above the group's bottom so no gap shows under the foreground shift.
           const laneOffset = Math.min(block.lane, maxLane) * 3;
           return (
             <div
               key={`o-${index}`}
               className={cn(
-                "pointer-events-auto absolute h-6 p-1 rounded-[4px] shadow-overlap flex items-center justify-center text-[11px] font-medium",
+                "pointer-events-auto absolute h-6 p-1 min-w-0 rounded-[4px] shadow-overlap flex items-center justify-center text-[11px] font-medium",
                 caregiverClasses(block.rendered.shift),
               )}
               style={{
                 left: `${leftPercent}%`,
                 width: `${widthPercent}%`,
-                bottom: `${2 + laneOffset}px`,
+                bottom: `${1 + laneOffset}px`,
               }}
             >
               <span
