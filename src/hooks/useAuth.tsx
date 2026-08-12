@@ -20,24 +20,52 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+    let recoveryTimer: ReturnType<typeof setTimeout> | undefined;
+
+    const applySession = (nextSession: Session | null) => {
+      if (!isMounted) return;
+      setSession(nextSession);
+      setUser(nextSession?.user ?? null);
+      setIsLoading(false);
+    };
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setIsLoading(false);
+        if (recoveryTimer) {
+          clearTimeout(recoveryTimer);
+          recoveryTimer = undefined;
+        }
+
+        // Explicit sign-out (or a real token revocation) always clears state.
+        if (event === 'SIGNED_OUT' || session) {
+          applySession(session);
+          return;
+        }
+
+        // A null session on any other event is usually a transient refresh
+        // hiccup (preview iframe reloads, backgrounded tabs, flaky network).
+        // Re-verify before dropping the user to the sign-in screen.
+        recoveryTimer = setTimeout(async () => {
+          const { data } = await supabase.auth.getSession();
+          applySession(data.session ?? null);
+        }, 1500);
       }
     );
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setIsLoading(false);
+      applySession(session);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      if (recoveryTimer) clearTimeout(recoveryTimer);
+      subscription.unsubscribe();
+    };
   }, []);
+
 
   const signIn = useCallback(async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
